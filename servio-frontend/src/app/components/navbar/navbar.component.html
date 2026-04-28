@@ -1,0 +1,33 @@
+<nav class="navbar shadow-elegant">
+    <div class="navbar-container">
+
+        <a routerLink="/" class="brand-link">
+            <div class="brand-logo shadow-glow">
+                <mat-icon>stars_2</mat-icon>
+            </div>
+            <span class="brand-text">Servio</span>
+        </a>
+
+        <div class="nav-links">
+            <a routerLink="/explore" class="nav-item">Explorar</a>
+            <a routerLink="/services" class="nav-item">
+                <mat-icon class="icon-search">search</mat-icon> Serviços
+            </a>
+        </div>
+
+        <div class="nav-actions">
+            @if(!authService.isAuthenticated()){
+            <ng-container>
+                <a routerLink="/auth/login" class="btn-login">Entrar</a>
+                <a routerLink="/auth/signup"
+                    class="btn-primary btn-signup">Cadastrar</a>
+            </ng-container>}
+
+            <ng-container *ngIf="authService.isAuthenticated()">
+                <a routerLink="/dashboard" class="nav-item">Meu Painel</a>
+                <div class="user-avatar">M</div>
+            </ng-container>
+        </div>
+
+    </div>
+</nav>
