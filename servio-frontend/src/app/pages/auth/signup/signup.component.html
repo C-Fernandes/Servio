@@ -1,0 +1,94 @@
+<div class="auth-layout">
+    <div class="auth-card shadow-elegant">
+
+        <div class="auth-header">
+            <div class="brand-logo shadow-glow">
+                <mat-icon>stars_2</mat-icon>
+            </div>
+            <h2 class="auth-title">Criar conta</h2>
+            <p class="auth-subtitle">Escolha seu perfil e comece agora</p>
+        </div>
+
+        <div class="role-toggle">
+            <button
+                type="button"
+                [class.active]="selectedRole() === 'CLIENT'"
+                (click)="toggleRole('CLIENT')">
+                <mat-icon class="icon-small">person</mat-icon> Cliente
+            </button>
+            <button
+                type="button"
+                [class.active]="selectedRole() === 'PROVIDER'"
+                (click)="toggleRole('PROVIDER')">
+                <mat-icon class="icon-small">work</mat-icon> Prestador
+            </button>
+        </div>
+
+        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()"
+            class="auth-form">
+
+            <div *ngIf="errorMessage()" class="alert-error">
+                {{ errorMessage() }}
+            </div>
+
+            <div class="form-group">
+                <label for="fullName">Nome completo</label>
+                <input id="fullName" type="text" formControlName="fullName"
+                    class="form-input" />
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input id="email" type="email" formControlName="email"
+                    class="form-input" />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input id="password" type="password" formControlName="password"
+                    class="form-input" />
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Telefone (opcional)</label>
+                <input id="phone" type="tel" formControlName="phone"
+                    class="form-input" />
+            </div>
+
+            <ng-container *ngIf="selectedRole() === 'PROVIDER'">
+
+                <div class="form-group">
+                    <label for="professionalTitle">Título profissional *</label>
+                    <input id="professionalTitle" type="text"
+                        formControlName="professionalTitle" class="form-input"
+                        placeholder="Ex: Designer UI/UX Sênior" />
+                </div>
+
+                <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <textarea id="bio" formControlName="bio"
+                        class="form-input textarea" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="experienceYears">Anos de experiência</label>
+                    <input id="experienceYears" type="number" min="0"
+                        formControlName="experienceYears" class="form-input" />
+                </div>
+
+            </ng-container>
+
+            <button type="submit" class="btn btn-primary btn-lg btn-block"
+                [disabled]="isLoading()">
+                <i *ngIf="isLoading()" class="icon-spinner animate-spin"></i>
+                <span *ngIf="!isLoading()">Criar conta</span>
+            </button>
+
+            <p class="auth-footer">
+                <span>Já tem conta?</span>
+                <a routerLink="/auth/login" class="link-primary"> Entrar</a>
+            </p>
+
+        </form>
+    </div>
+</div>
