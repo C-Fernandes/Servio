@@ -17,6 +17,10 @@
   border: 1px solid rgba(15, 23, 42, 0.1);
   border-radius: 1rem;
   padding: 24px;
+  margin: 1.5rem 0;
+  box-shadow:
+    0 10px 25px -5px rgba(79, 70, 229, 0.15),
+    0 8px 10px -6px rgba(79, 70, 229, 0.1);
 }
 .auth-header {
   display: flex;
