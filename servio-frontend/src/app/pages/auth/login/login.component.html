@@ -1,0 +1,61 @@
+<div class="auth-layout">
+    <div class="auth-card shadow-elegant">
+
+        <div class="auth-header">
+            <a routerLink="/" class="brand-link">
+                <div class="brand-logo shadow-glow">
+                    <mat-icon>stars_2</mat-icon>
+                </div>
+                <span class="brand-text">Servio</span>
+            </a>
+            <h1 class="auth-title">Entrar</h1>
+            <p class="auth-subtitle">Acesse sua conta
+                para continuar</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+            @if(errorMessage()){
+            <div class="alert-error">
+                {{ errorMessage() }}
+            </div>}
+
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input
+                    id="email"
+                    type="email"
+                    formControlName="email"
+                    class="form-input"
+                    placeholder="seu@email.com" />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input
+                    id="password"
+                    type="password"
+                    formControlName="password"
+                    class="form-input"
+                    placeholder="••••••••" />
+            </div>
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="isLoading() || loginForm.invalid">
+                @if(isLoading()){
+                <i class="icon-spinner animate-spin"></i>
+                } @else {
+                <span>Entrar</span>
+                }
+            </button>
+
+            <p class="auth-footer">
+                <span>Não tem conta?</span>
+                <a routerLink="/auth/signup" class="link-primary">
+                    Cadastre-se</a>
+            </p>
+        </form>
+
+    </div>
+</div>

@@ -1,1 +1,89 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  // Indigo (Primary)
+  --color-indigo-50: #eef2ff;
+  --color-indigo-100: #e0e7ff;
+  --color-indigo-500: #6366f1;
+  --color-indigo-600: #4f46e5;
+  --color-indigo-700: #4338ca;
+
+  // Teal (Secondary)
+  --color-teal-50: #f0fdfa;
+  --color-teal-100: #ccfbf1;
+  --color-teal-500: #14b8a6;
+  --color-teal-600: #0d9488;
+  --color-teal-700: #0f766e;
+
+  // Rose/Coral (Tertiary)
+  --color-rose-50: #fff1f2;
+  --color-rose-100: #ffe4e6;
+  --color-rose-500: #f43f5e;
+  --color-rose-600: #e11d48;
+  --color-rose-700: #be123c;
+
+  --color-bg-base: #ffffff;
+  --color-bg-soft: #f8f9fb; // Fundo cinza
+
+  --color-text-main: #0f172a; // Títulos
+  --color-text-muted: #64748b; // Parágrafos
+
+  // PRIMARY
+  --color-primary: var(--color-indigo-600);
+  --color-primary-hover: var(--color-indigo-700);
+  --color-primary-light: var(--color-indigo-100);
+
+  // SECONDARY
+  --color-secondary: var(--color-teal-600);
+  --color-secondary-hover: var(--color-teal-700);
+  --color-secondary-light: var(--color-teal-100);
+
+  // TERTIARY
+  --color-tertiary: var(--color-rose-600);
+  --color-tertiary-hover: var(--color-rose-700);
+  --color-tertiary-light: var(--color-rose-100);
+
+  // GRADIENTS
+  --gradient-primary: linear-gradient(135deg, hsl(250 84% 60%), hsl(280 90% 65%));
+  --gradient-vibrant: linear-gradient(
+    135deg,
+    hsl(250 84% 60%) 0%,
+    hsl(280 90% 65%) 50%,
+    hsl(320 90% 65%) 100%
+  );
+  --gradient-secondary: linear-gradient(
+    135deg,
+    var(--color-teal-600) 0%,
+    var(--color-teal-500) 100%
+  );
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    Segoe UI Symbol,
+    'Noto Color Emoji';
+}
+
+.mat-icon {
+  font-family: 'Material Symbols Outlined', sans-serif !important;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  padding: 12px 32px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
