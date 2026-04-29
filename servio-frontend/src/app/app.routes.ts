@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { LayoutComponent } from './layouts/layout/layout.component';
 
 export const routes: Routes = [
 
@@ -15,6 +16,22 @@ export const routes: Routes = [
                 title: 'Registrar | Servio'
             }
 
+        ]
+    }, {
+        path: 'dashboard',
+        component: LayoutComponent,
+        children: [
+            {
+                path: 'provider',
+                loadComponent: () => import('./pages/dashboards/dashboard-provider/dashboard-provider.component').then(m => m.DashboardProviderComponent),
+                title: 'Painel do Prestador | Servio'
+            },
+
+            {
+                path: '',
+                redirectTo: 'prestador',
+                pathMatch: 'full'
+            }
         ]
     },
 ];
