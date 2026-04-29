@@ -1,0 +1,138 @@
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: var(--color-bg-base);
+  border-right: 1px solid var(--color-indigo-50);
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  box-sizing: border-box;
+  justify-content: space-between;
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 8px 14px 8px;
+    border-bottom: 1px solid #e1e4ea;
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--gradient-vibrant);
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+
+    .brand-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
+  }
+
+  .nav-section {
+    margin: 5px 0 0 0;
+    gap: 4px;
+    .section-title {
+      font-size: 12px;
+      color: var(--color-text-primary);
+      margin: 8px;
+      text-transform: none;
+    }
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--color-text-primary);
+    font-size: 14px;
+    font-weight: 400;
+    transition: all 0.2s ease;
+
+    .mat-icon {
+      font-size: 16px;
+      color: var(--color-text-primary);
+    }
+
+    &:hover {
+      background-color: #f2f4f8;
+    }
+
+    &.active {
+      background-color: var(--color-bg-soft);
+      color: var(--color-text-main);
+    }
+  }
+
+  .user-footer {
+    border-top: 1px solid var(--color-bg-soft);
+    padding-top: 16px;
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+
+      border-top: 1px solid #e1e4ea;
+
+      .avatar {
+        width: 32px;
+        height: 32px;
+        background-image: var(--gradient-vibrant);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      .user-info {
+        display: flex;
+        flex-direction: column;
+
+        .user-name {
+          font-size: 14px;
+          color: var(--color-text-main);
+        }
+
+        .user-role {
+          font-size: 12px;
+          color: var(--color-text-muted);
+        }
+      }
+    }
+
+    .logout-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px;
+      background: transparent;
+      border: none;
+      color: var(--color-text-main);
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+      border-radius: 12px;
+
+      &:hover {
+        background-color: var(--color-rose-50);
+        color: var(--color-rose-600);
+      }
+      mat-icon {
+        font-size: 16px;
+      }
+    }
+  }
+}

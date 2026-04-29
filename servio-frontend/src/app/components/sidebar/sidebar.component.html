@@ -1,0 +1,49 @@
+<aside class="sidebar">
+    <div class="sidebar-container"> <div class="brand">
+            <div class="logo-icon">
+                <span class="mat-icon">auto_awesome</span>
+            </div>
+            <span class="brand-name">Servio</span>
+        </div>
+
+        <nav class="nav-section">
+            <p class="section-title">Painéis</p>
+            <a routerLink="/prestador" routerLinkActive="active"
+                class="nav-item">
+                <span class="mat-icon">work</span>
+                <span>Painel Prestador</span>
+            </a>
+            <a routerLink="/cliente" routerLinkActive="active" class="nav-item">
+                <span class="mat-icon">shopping_bag</span>
+                <span>Painel Cliente</span>
+            </a>
+        </nav>
+
+        <nav class="nav-section">
+            <p class="section-title">Marketplace</p>
+            <a routerLink="/inicio" routerLinkActive="active" class="nav-item">
+                <span class="mat-icon">home</span>
+                <span>Início</span>
+            </a>
+            <a routerLink="/explorar" routerLinkActive="active"
+                class="nav-item">
+                <span class="mat-icon">search</span>
+                <span>Explorar serviços</span>
+            </a>
+        </nav>
+    </div>
+    <div class="user-footer">
+        <div class="user-profile">
+            <div class="avatar">{{ user.photo }}</div>
+            <div class="user-info">
+                <span class="user-name">{{ user.name }}</span>
+                <span class="user-role">{{ user.role }}</span>
+            </div>
+        </div>
+
+        <button class="logout-btn" (click)="logout()">
+            <span class="mat-icon">logout</span>
+            <span>Sair</span>
+        </button>
+    </div>
+</aside>
