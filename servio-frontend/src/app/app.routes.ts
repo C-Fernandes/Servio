@@ -26,10 +26,15 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/dashboards/dashboard-provider/dashboard-provider.component').then(m => m.DashboardProviderComponent),
                 title: 'Painel do Prestador | Servio'
             },
+            {
+                path: 'client',
+                loadComponent: () => import('./pages/dashboards/dashboard-client/dashboard-client.component').then(m => m.DashboardClientComponent),
+                title: 'Painel do Cliente | Servio'
+            },
 
             {
                 path: '',
-                redirectTo: 'prestador',
+                redirectTo: 'client',
                 pathMatch: 'full'
             }
         ]

@@ -1,0 +1,52 @@
+<header class="page-header">
+    <div class="breadcrumb">
+        <span class="mat-icon">side_navigation</span>
+        <span class="breadcrumb-text">Painel</span>
+    </div>
+    <h1 class="page-title">Meu painel</h1>
+    <p class="page-subtitle">Acompanhe suas reservas e gastos</p>
+</header>
+
+<section class="stats-grid">
+    <div class="card">
+        <div class="card-icon-wrapper blue-bg">
+            <span class="mat-icon">shopping_bag</span>
+        </div>
+        <div class="card-info">
+            <p class="label">Pedidos ativos</p>
+            <h2 class="value">0</h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-icon-wrapper indigo-bg">
+            <span class="mat-icon">payments</span>
+        </div>
+        <div class="card-info">
+            <p class="label">Pedidos concluídos</p>
+            <h2 class="value">0</h2>
+        </div>
+    </div>
+
+    <div class="card primary-gradient">
+        <div class="card-icon-wrapper glass">
+            <span class="mat-icon">account_balance_wallet</span>
+        </div>
+        <div class="card-info">
+            <p class="label">Total gasto</p>
+            <h2 class="value">R$ 0,00</h2>
+        </div>
+    </div>
+</section>
+
+<nav class="tabs-container">
+    <button class="tab-btn active">Reservas</button>
+    <button class="tab-btn">Transações</button>
+</nav>
+
+<section class="empty-state-card">
+    <p class="empty-message">
+        Você ainda não fez nenhuma reserva.
+        <a routerLink="/explorar" class="link">Explorar serviços</a>
+    </p>
+</section>
