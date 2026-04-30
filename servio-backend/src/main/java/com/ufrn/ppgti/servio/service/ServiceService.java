@@ -40,7 +40,7 @@ public class ServiceService {
 
     @Transactional
     public ServiceResponseDTO save(ServiceRequestDTO dto) {
-        validarPreco(dto.getPrice());
+        validatePrice(dto.getPrice());
 
         com.ufrn.ppgti.servio.model.Service entity = mapper.toEntity(dto);
         entity = repository.save(entity);
@@ -49,7 +49,7 @@ public class ServiceService {
 
     @Transactional
     public ServiceResponseDTO update(Long id, ServiceRequestDTO dto) {
-        validarPreco(dto.getPrice());
+        validatePrice(dto.getPrice());
 
         com.ufrn.ppgti.servio.model.Service service = repository.findById(id)
                 .orElseThrow(() -> new BusinessException("Serviço não encontrado."));
@@ -69,7 +69,7 @@ public class ServiceService {
         repository.deleteById(id);
     }
 
-    private void validarPreco(Double price) {
+    private void validatePrice(Double price) {
         if (price == null || price <= 0) {
             throw new BusinessException("O preço deve ser um valor positivo.");
         }

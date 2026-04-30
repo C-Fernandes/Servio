@@ -4,14 +4,30 @@ import java.util.List;
 
 import com.ufrn.ppgti.servio.dto.CategoryDTO;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+
 public class ServiceRequestDTO {
 
+    @NotBlank(message = "O título é obrigatório.")
+    @Size(min = 5, max = 100, message = "O título deve ter entre 5 e 100 caracteres.")
     private String title;
+
+    @NotBlank(message = "A descrição é obrigatória.")
+    @Size(min = 10, message = "A descrição deve ter pelo menos 10 caracteres.")
     private String description;
+
+    @NotNull(message = "O preço é obrigatório.")
+    @Positive(message = "O preço deve ser um valor positivo.")
     private Double price;
 
+    @NotNull(message = "O provedor é obrigatório.")
     private Long provider;
 
+    @NotEmpty(message = "O serviço deve pertencer a pelo menos uma categoria.")
     private List<CategoryDTO> categories;
 
     public String getTitle() {
