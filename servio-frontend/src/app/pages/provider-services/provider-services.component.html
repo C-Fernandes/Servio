@@ -1,0 +1,70 @@
+<header class="page-header">
+    <div class="header-content">
+        <div class="text-side">
+            <div class="breadcrumb">
+                <span class="mat-icon">side_navigation</span>
+                <span class="breadcrumb-text">Painel Prestador</span>
+            </div>
+            <h1 class="page-title">Meus serviços</h1>
+            <p class="page-subtitle">Cadastre, edite e gerencie tudo o que você
+                oferece</p>
+        </div>
+        <!-- Botão de Ação alinhado à direita como na imagem -->
+        <button class="btn-primary-action">
+            <span class="mat-icon">add</span>
+            Novo serviço
+        </button>
+    </div>
+</header>
+
+<!-- Stats Grid reutilizando o estilo do seu Dashboard -->
+<section class="stats-grid">
+    <div class="card stats-card">
+        <div class="card-icon blue">
+            <span class="mat-icon">work</span>
+        </div>
+        <div class="card-content">
+            <p class="card-label">Total de serviços</p>
+            <h2 class="card-value">{{ services.length }}</h2>
+        </div>
+    </div>
+
+    <div class="card stats-card">
+        <div class="card-icon gray">
+            <span class="mat-icon">visibility</span>
+        </div>
+        <div class="card-content">
+            <p class="card-label">Ativos</p>
+            <h2 class="card-value">5</h2>
+        </div>
+    </div>
+
+    <div class="card stats-card primary-gradient">
+        <div class="card-icon">
+            <span class="mat-icon">star</span>
+        </div>
+        <div class="card-content">
+            <p class="card-label">Ticket médio</p>
+            <h2 class="card-value">R$ 1.020,00</h2>
+        </div>
+    </div>
+</section>
+
+<!-- Busca -->
+<div class="search-area">
+    <div class="search-container">
+        <span class="mat-icon">search</span>
+        <input type="text" placeholder="Buscar por título ou descrição..."
+            class="search-input">
+    </div>
+</div>
+
+<div class="services-grid">
+    @for (item of services; track item.id) {
+    <app-service-card [service]="item"></app-service-card>
+    } @empty {
+    <div class="empty-state">
+        <p>Nenhum serviço cadastrado ainda.</p>
+    </div>
+    }
+</div>

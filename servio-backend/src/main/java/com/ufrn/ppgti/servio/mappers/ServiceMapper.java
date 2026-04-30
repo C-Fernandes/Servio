@@ -41,7 +41,7 @@ public class ServiceMapper {
         dto.setDescription(entity.getDescription());
         dto.setPrice(entity.getPrice());
 
-        // Mapeia o perfil do prestador usando o mapper especializado
+    
         dto.setProvider(providerMapper.toResponseDTO(entity.getProvider()));
 
         if (entity.getCategories() != null) {
