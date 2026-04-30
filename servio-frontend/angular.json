@@ -23,15 +23,20 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/app/styles"
+              ]
+            },
             "assets": [
               {
                 "glob": "**/*",
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ]
+           "styles": [
+            "src/app/styles/styles.scss"
+          ],
           },
           "configurations": {
             "production": {
@@ -88,7 +93,7 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/app/styles/styles.scss"
             ]
           }
         }

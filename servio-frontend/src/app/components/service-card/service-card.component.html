@@ -1,0 +1,27 @@
+<article class="service-card">
+    <div class="card-thumb">
+        <span class="category-badge">{{ service.category }}</span>
+        <div class="image-placeholder"></div>
+    </div>
+
+    <div class="card-content">
+        <h3 class="title">{{ service.title }}</h3>
+        <p class="desc">{{ service.description }}</p>
+        <p class="author">por {{ service.provider }}</p>
+
+        <div class="card-footer">
+            <div class="meta-info">
+                <span class="rating">
+                    <span class="mat-icon">star</span> {{ service.rating }} ({{
+                    service.reviews }})
+                </span>
+                <span class="duration">
+                    <span class="mat-icon">schedule</span> {{ service.duration
+                    }}
+                </span>
+            </div>
+            <span class="price-tag">R$ {{ service.price | number:'1.2-2'
+                }}</span>
+        </div>
+    </div>
+</article>

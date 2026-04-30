@@ -8,33 +8,33 @@
 </header>
 
 <section class="stats-grid">
-    <div class="card">
-        <div class="card-icon-wrapper blue-bg">
+    <div class="card stats-card">
+        <div class="card-icon blue">
             <span class="mat-icon">shopping_bag</span>
         </div>
-        <div class="card-info">
-            <p class="label">Pedidos ativos</p>
-            <h2 class="value">0</h2>
+        <div class="card-content">
+            <p class="card-label">Pedidos ativos</p>
+            <h2 class="card-value">0</h2>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-icon-wrapper indigo-bg">
+    <div class="card stats-card">
+        <div class="card-icon gray">
             <span class="mat-icon">payments</span>
         </div>
-        <div class="card-info">
-            <p class="label">Pedidos concluídos</p>
-            <h2 class="value">0</h2>
+        <div class="card-content">
+            <p class="card-label">Pedidos concluídos</p>
+            <h2 class="card-value">0</h2>
         </div>
     </div>
 
-    <div class="card primary-gradient">
-        <div class="card-icon-wrapper glass">
+    <div class="card stats-card primary-gradient">
+        <div class="card-icon">
             <span class="mat-icon">account_balance_wallet</span>
         </div>
-        <div class="card-info">
-            <p class="label">Total gasto</p>
-            <h2 class="value">R$ 0,00</h2>
+        <div class="card-content">
+            <p class="card-label">Total gasto</p>
+            <h2 class="card-value">R$ 0,00</h2>
         </div>
     </div>
 </section>
@@ -44,7 +44,7 @@
     <button class="tab-btn">Transações</button>
 </nav>
 
-<section class="empty-state-card">
+<section class="empty-state-card card stats-card">
     <p class="empty-message">
         Você ainda não fez nenhuma reserva.
         <a routerLink="/explorar" class="link">Explorar serviços</a>

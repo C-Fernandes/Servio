@@ -1,0 +1,61 @@
+<header class="page-header">
+    <div class="breadcrumb">
+        <span class="mat-icon">side_navigation</span>
+        <span class="breadcrumb-text">Servio</span>
+    </div>
+    <h1 class="page-title">Explorar serviços</h1>
+    <p class="page-subtitle">Encontre profissionais qualificados para o seu
+        projeto</p>
+</header>
+
+<div class="explorer-layout">
+    <aside class="filters-panel">
+        <div class="filter-header">
+            <span class="mat-icon">tune</span>
+            <span>Filtros</span>
+        </div>
+
+        <div class="filter-group">
+            <label>Categoria</label>
+            <select class="filter-input">
+                <option value>Todas</option>
+                <option *ngFor="let cat of categories"
+                    [value]="cat">{{cat}}</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <div class="label-with-value">
+                <label>Preço máximo</label>
+                <span class="current-value">R$ 2.000,00</span>
+            </div>
+            <input type="range" class="range-slider" min="0" max="5000"
+                step="50">
+        </div>
+
+        <div class="filter-group">
+            <label>Avaliação mínima</label>
+            <select class="filter-input">
+                <option value>Qualquer</option>
+                <option value="4">4+ Estrelas</option>
+                <option value="5">5 Estrelas</option>
+            </select>
+        </div>
+    </aside>
+
+    <section class="results-area">
+        <div class="search-container">
+            <span class="mat-icon">search</span>
+            <input type="text" placeholder="Buscar serviços..."
+                class="search-input">
+        </div>
+
+        <div class="services-grid">
+            @for (item of services; track item.title) {
+            <app-service-card [service]="item"></app-service-card>
+            } @empty {
+            <p>Nenhum serviço encontrado.</p>
+            }
+        </div>
+    </section>
+</div>

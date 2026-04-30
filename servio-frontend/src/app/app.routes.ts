@@ -18,7 +18,7 @@ export const routes: Routes = [
 
         ]
     }, {
-        path: 'dashboard',
+        path: '',
         component: LayoutComponent,
         children: [
             {
@@ -33,8 +33,13 @@ export const routes: Routes = [
             },
 
             {
+                path: 'explore',
+                loadComponent: () => import('./pages/marketplace/marketplace.component').then(m => m.MarketplaceComponent),
+                title: 'Explorar Serviços | Servio'
+            },
+            {
                 path: '',
-                redirectTo: 'client',
+                redirectTo: 'explore',
                 pathMatch: 'full'
             }
         ]
