@@ -1,16 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ServiceCardComponent } from '../../components/service-card/service-card.component';
+import { ServiceModalComponent } from '../../components/service-modal/service-modal.component';
 
 @Component({
   selector: 'app-provider-services',
-  imports: [CommonModule, ServiceCardComponent],
+  imports: [CommonModule, ServiceCardComponent, ServiceModalComponent],
   templateUrl: './provider-services.component.html',
   styleUrl: './provider-services.component.scss',
 })
 export class ProviderServicesComponent {
   services: any[] = [];
-
+  isModalOpen = false;
   constructor() { }
 
   ngOnInit(): void {
@@ -35,5 +36,18 @@ export class ProviderServicesComponent {
         active: true
       }
     ];
+  }
+
+  openModal() {
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  onServiceSaved(serviceData: any) {
+    console.log('Dados recebidos do modal:', serviceData);
+    this.closeModal();
   }
 }

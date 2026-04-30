@@ -9,15 +9,13 @@
             <p class="page-subtitle">Cadastre, edite e gerencie tudo o que você
                 oferece</p>
         </div>
-        <!-- Botão de Ação alinhado à direita como na imagem -->
-        <button class="btn-primary-action">
+        <button class="btn-primary-action" (click)="openModal()">
             <span class="mat-icon">add</span>
             Novo serviço
         </button>
     </div>
 </header>
 
-<!-- Stats Grid reutilizando o estilo do seu Dashboard -->
 <section class="stats-grid">
     <div class="card stats-card">
         <div class="card-icon blue">
@@ -50,7 +48,6 @@
     </div>
 </section>
 
-<!-- Busca -->
 <div class="search-area">
     <div class="search-container">
         <span class="mat-icon">search</span>
@@ -68,3 +65,9 @@
     </div>
     }
 </div>
+@if (isModalOpen) {
+<app-service-modal
+    (closeEvent)="closeModal()"
+    (saveEvent)="onServiceSaved($event)">
+</app-service-modal>
+}
