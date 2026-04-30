@@ -2,6 +2,7 @@ package com.ufrn.ppgti.servio.dto.response;
 
 import java.util.List;
 
+import com.ufrn.ppgti.servio.dto.CategoryDTO;
 import com.ufrn.ppgti.servio.model.Category;
 import com.ufrn.ppgti.servio.model.ProviderProfile;
 
@@ -13,9 +14,9 @@ public class ServiceResponseDTO {
     private String description;
     private Double price;
 
-    private ProviderProfile provider;
+    private ProviderProfileResponseDTO provider;
 
-    private List<Category> categories;
+    private List<CategoryDTO> categories;
 
     public Long getId() {
         return this.id;
@@ -49,19 +50,19 @@ public class ServiceResponseDTO {
         this.price = price;
     }
 
-    public ProviderProfile getProvider() {
+    public ProviderProfileResponseDTO getProvider() {
         return this.provider;
     }
 
-    public void setProvider(ProviderProfile provider) {
+    public void setProvider(ProviderProfileResponseDTO provider) {
         this.provider = provider;
     }
 
-    public List<Category> getCategories() {
+    public List<CategoryDTO> getCategories() {
         return this.categories;
     }
 
-    public void setCategories(List<Category> categories) {
+    public void setCategories(List<CategoryDTO> categories) {
         this.categories = categories;
     }
 

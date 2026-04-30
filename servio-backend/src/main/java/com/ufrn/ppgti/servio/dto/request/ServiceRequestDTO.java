@@ -2,7 +2,7 @@ package com.ufrn.ppgti.servio.dto.request;
 
 import java.util.List;
 
-import com.ufrn.ppgti.servio.model.Category;
+import com.ufrn.ppgti.servio.dto.CategoryDTO;
 
 public class ServiceRequestDTO {
 
@@ -12,7 +12,7 @@ public class ServiceRequestDTO {
 
     private Long provider;
 
-    private List<Category> categories;
+    private List<CategoryDTO> categories;
 
     public String getTitle() {
         return this.title;
@@ -46,11 +46,11 @@ public class ServiceRequestDTO {
         this.provider = provider;
     }
 
-    public List<Category> getCategories() {
+    public List<CategoryDTO> getCategories() {
         return this.categories;
     }
 
-    public void setCategories(List<Category> categories) {
+    public void setCategories(List<CategoryDTO> categories) {
         this.categories = categories;
     }
 
