@@ -22,6 +22,11 @@ export const routes: Routes = [
         component: LayoutComponent,
         children: [
             {
+                path: 'service/details',
+                loadComponent: () => import('./pages/service-details/service-details.component').then(m => m.ServiceDetailsComponent),
+                title: 'Detalhes do Serviço | Servio'
+            },
+            {
                 path: 'my-services',
                 loadComponent: () => import('./pages/provider-services/provider-services.component').then(m => m.ProviderServicesComponent),
                 title: 'Meus Serviços | Servio'
