@@ -1,25 +1,31 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { Observable, tap } from 'rxjs';
-export interface AuthResponseDto {
-  token: string;
-  type: string;
-  userId: number;
-  role: string;
-}
-@Injectable({
+import { environment } from '../../environments/environment';
+import { AuthResponse } from '../models/User';
+import { Observable, tap } from 'rxjs'; @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private http = inject(HttpClient);
 
-  private readonly API_URL = 'http://localhost:8080/api/auth';
+  private readonly API_URL = `${environment.apiUrl}/auth`;
   private readonly TOKEN_KEY = 'servio_auth_token';
 
-  isAuthenticated = signal<boolean>(this.hasToken());
+  isAuthenticated = signal<boolean>(!!localStorage.getItem(this.TOKEN_KEY));
 
-  login(email: string, password: string): Observable<AuthResponseDto> {
-    return this.http.post<AuthResponseDto>(`${this.API_URL}/login`, { email, password }).pipe(
+  login(credentials: any): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.API_URL}/login`, credentials).pipe(
+      tap((response) => {
+        if (response.token) {
+          this.saveToken(response.token);
+          this.isAuthenticated.set(true);
+        }
+      })
+    );
+  }
+
+  register(userData: any): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.API_URL}/register`, userData).pipe(
       tap((response) => {
         if (response.token) {
           this.saveToken(response.token);
@@ -40,9 +46,5 @@ export class AuthService {
 
   private saveToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
-  }
-
-  private hasToken(): boolean {
-    return !!this.getToken();
   }
 }

@@ -62,11 +62,18 @@ export class SignupComponent {
 
     console.log('Enviando para o Spring Boot:', formData);
 
-    // Simulação de chamada HTTP
-    setTimeout(() => {
-      this.isLoading.set(false);
-      // Aqui entraria o this.authService.register(formData).subscribe(...)
-      // this.router.navigate(['/auth/login']);
-    }, 1500);
+
+    this.isLoading.set(false);
+    this.authService.register(formData).subscribe({
+      next: (res) => {
+        console.log('Token recebido:', res.token);
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        this.errorMessage.set("Erro ao cadastrar. Verifique os dados.");
+        this.isLoading.set(false);
+      }
+    });
+
   }
 }

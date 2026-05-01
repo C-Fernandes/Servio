@@ -32,14 +32,13 @@ export class LoginComponent {
 
     const { email, password } = this.loginForm.getRawValue();
 
-    this.authService.login(email, password).subscribe({
+    this.authService.login({ email, password }).subscribe({
       next: (response) => {
-        this.isLoading.set(false);
-        this.router.navigate(['/']);
+        this.router.navigate(['/home']);
       },
       error: (err) => {
+        this.errorMessage.set('Email ou senha inválidos');
         this.isLoading.set(false);
-        this.errorMessage.set(`Credenciais inválidas. Verifique seu e-mail e senha.`);
       }
     });
   }
