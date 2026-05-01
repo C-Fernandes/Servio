@@ -65,4 +65,20 @@ public class Service {
     public void setProvider(ProviderProfile provider) {
         this.provider = provider;
     }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<Category> getCategories() {
+        return this.categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
 }

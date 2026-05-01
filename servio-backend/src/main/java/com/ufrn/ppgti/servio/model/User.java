@@ -12,6 +12,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -33,6 +35,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    private String phone;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
@@ -42,9 +46,17 @@ public class User {
 
     @OneToMany(mappedBy = "client")
     private List<Order> orders;
+    private String street;
+    private String number;
+    private String complement;
+    private String neighborhood;// bairro
+
+    @ManyToOne
+    @JoinColumn(name = "cep_id")
+    private Locality locality;
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -52,7 +64,7 @@ public class User {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -60,7 +72,7 @@ public class User {
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public void setEmail(String email) {
@@ -68,7 +80,7 @@ public class User {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {
@@ -76,7 +88,7 @@ public class User {
     }
 
     public Role getRole() {
-        return role;
+        return this.role;
     }
 
     public void setRole(Role role) {
@@ -84,7 +96,7 @@ public class User {
     }
 
     public ProviderProfile getProviderProfile() {
-        return providerProfile;
+        return this.providerProfile;
     }
 
     public void setProviderProfile(ProviderProfile providerProfile) {
@@ -92,10 +104,59 @@ public class User {
     }
 
     public List<Order> getOrders() {
-        return orders;
+        return this.orders;
     }
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
     }
+
+    public String getStreet() {
+        return this.street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getNumber() {
+        return this.number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getComplement() {
+        return this.complement;
+    }
+
+    public void setComplement(String complement) {
+        this.complement = complement;
+    }
+
+    public String getNeighborhood() {
+        return this.neighborhood;
+    }
+
+    public void setNeighborhood(String neighborhood) {
+        this.neighborhood = neighborhood;
+    }
+
+    public Locality getLocality() {
+        return this.locality;
+    }
+
+    public void setLocality(Locality locality) {
+        this.locality = locality;
+    }
+
+    public String getPhone() {
+        return this.phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
 }

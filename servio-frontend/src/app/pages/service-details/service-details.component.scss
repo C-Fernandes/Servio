@@ -1,0 +1,491 @@
+@use 'header';
+
+/* =========================================
+   Layout Principal
+   ========================================= */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin-bottom: 24px;
+
+  .separator {
+    font-size: 16px;
+  }
+  .current {
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+}
+
+.service-details-layout {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar-panel {
+  width: 380px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* =========================================
+   Área do Hero (Imagem e Ações)
+   ========================================= */
+.hero-image-wrapper {
+  position: relative;
+  height: 400px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  background-color: var(--color-bg-soft);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-tags {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    gap: 8px;
+
+    .tag {
+      padding: 6px 12px;
+      background: white;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      &.success {
+        .mat-icon {
+          font-size: 16px;
+          color: var(--color-secondary);
+        }
+      }
+    }
+  }
+
+  .hero-actions {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border-radius: 50%;
+      background: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--color-text-primary);
+      transition: background 0.2s;
+
+      &:hover {
+        background: var(--color-bg-soft);
+      }
+    }
+  }
+}
+
+/* =========================================
+   Cabeçalho do Serviço (Meta infos)
+   ========================================= */
+.service-header {
+  margin-bottom: 24px;
+
+  .service-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 12px;
+  }
+
+  .service-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    color: var(--color-text-muted);
+    font-size: 14px;
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      .stars {
+        color: var(--color-text-primary);
+        letter-spacing: 2px;
+      }
+      .highlight {
+        font-weight: 600;
+        color: var(--color-text-primary);
+      }
+      .mat-icon {
+        font-size: 18px;
+      }
+      strong {
+        color: var(--color-text-primary);
+      }
+    }
+
+    .dot-separator {
+      color: var(--color-text-muted);
+      opacity: 0.5;
+    }
+  }
+}
+
+/* =========================================
+   Badges de Confiança
+   ========================================= */
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+
+  .trust-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: white;
+    border: 1px solid var(--color-indigo-50);
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--color-text-primary);
+
+    .mat-icon {
+      font-size: 20px;
+      &.icon-gray {
+        color: var(--color-text-muted);
+      }
+      &.icon-purple {
+        color: #a855f7;
+      }
+      &.icon-teal {
+        color: var(--color-secondary);
+      }
+    }
+  }
+}
+
+/* =========================================
+   Abas e Conteúdo (Descrição)
+   ========================================= */
+.tabs-container {
+  display: flex;
+  background: #f0f1f5;
+  padding: 4px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+
+  .tab-btn {
+    flex: 1;
+    padding: 6px 12px;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &.active {
+      background: white;
+      color: var(--color-text-primary);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+  }
+}
+
+.tab-content {
+  background: white;
+  border: 1px solid var(--color-indigo-50);
+  border-radius: 16px;
+  padding: 24px;
+
+  h3 {
+    font-size: 18px;
+    color: var(--color-text-primary);
+    margin: 0 0 12px;
+  }
+
+  p {
+    color: var(--color-text-muted);
+    font-size: 16px;
+    line-height: 1.6;
+    border-bottom: 1px solid #e1e4ea;
+    padding: 0 0 20px;
+  }
+
+  .features-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--color-text-muted);
+      font-size: 14px;
+
+      .mat-icon {
+        color: var(--color-text-muted);
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+/* =========================================
+   Sidebar: Card de Checkout / Preço
+   ========================================= */
+.pricing-card {
+  background: white;
+  border-radius: 20px;
+  border: 1px solid var(--color-indigo-50);
+  overflow: hidden;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+
+  .pricing-header {
+    padding: 20px;
+    color: white;
+    background: var(--gradient-vibrant);
+
+    .subtitle {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.9;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .price {
+      font-size: 36px;
+      font-weight: 700;
+      margin: 0 0 4px;
+    }
+
+    .duration {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+  }
+
+  .pricing-body {
+    padding: 20px;
+
+    .slots-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+
+      .title-with-icon {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--color-text-primary);
+
+        .mat-icon {
+          font-size: 18px;
+          color: var(--color-text-muted);
+        }
+      }
+
+      .badge {
+        background: var(--color-bg-soft);
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--color-text-muted);
+      }
+    }
+
+    .slots-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+
+      .slot-btn {
+        padding: 10px;
+        border: 1px solid var(--color-indigo-50);
+        border-radius: 12px;
+        background: white;
+        font-size: 13px;
+        color: var(--color-text-muted);
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+          border-color: var(--color-primary);
+          color: var(--color-primary);
+        }
+      }
+    }
+
+    .price-breakdown {
+      border-top: 1px solid var(--color-indigo-50);
+      border-bottom: 1px solid var(--color-indigo-50);
+      padding: 16px 0;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        color: var(--color-text-muted);
+
+        .value {
+          color: var(--color-text-primary);
+        }
+      }
+    }
+
+    .price-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--color-text-primary);
+      margin-bottom: 24px;
+
+      .value-highlight {
+        color: #d946ef; /* Tom de magenta/rosa para destacar o valor total */
+      }
+    }
+
+    .reserve-btn {
+      width: 100%;
+      padding: 8px 16px;
+      background: #e8b4ff; /* Lilás suave semelhante ao do print */
+      color: white;
+      font-weight: 600;
+      font-size: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-bottom: 16px;
+      transition: filter 0.2s;
+
+      &:hover {
+        filter: brightness(0.95);
+      }
+
+      .mat-icon {
+        font-size: 18px;
+      }
+    }
+
+    .secure-checkout {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--color-text-muted);
+
+      .mat-icon {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+/* =========================================
+   Sidebar: Card do Profissional
+   ========================================= */
+.provider-card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid var(--color-indigo-50);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--color-indigo-600);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .provider-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .name {
+      font-weight: 600;
+      color: var(--color-text-primary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 14px;
+
+      .verified {
+        font-size: 16px;
+        color: var(--color-primary);
+      }
+    }
+
+    .role {
+      font-size: 13px;
+      color: var(--color-text-muted);
+    }
+  }
+}
