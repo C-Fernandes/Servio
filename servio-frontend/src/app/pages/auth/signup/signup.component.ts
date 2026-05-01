@@ -22,7 +22,7 @@ export class SignupComponent {
   selectedRole = signal<UserRole>('PROVIDER');
 
   signupForm = this.fb.nonNullable.group({
-    fullName: ['', Validators.required],
+    name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     phone: [''],
