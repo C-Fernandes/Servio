@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './layouts/layout/layout.component';
+import { authGuard } from './guards/auth/auth-guard';
 
 export const routes: Routes = [
 
@@ -24,27 +25,28 @@ export const routes: Routes = [
             {
                 path: 'service/details',
                 loadComponent: () => import('./pages/service-details/service-details.component').then(m => m.ServiceDetailsComponent),
+                canActivate: [authGuard],
                 title: 'Detalhes do Serviço | Servio'
             },
             {
                 path: 'my-services',
-                loadComponent: () => import('./pages/provider-services/provider-services.component').then(m => m.ProviderServicesComponent),
+                loadComponent: () => import('./pages/provider-services/provider-services.component').then(m => m.ProviderServicesComponent), canActivate: [authGuard],
                 title: 'Meus Serviços | Servio'
             },
             {
                 path: 'provider',
-                loadComponent: () => import('./pages/dashboards/dashboard-provider/dashboard-provider.component').then(m => m.DashboardProviderComponent),
+                loadComponent: () => import('./pages/dashboards/dashboard-provider/dashboard-provider.component').then(m => m.DashboardProviderComponent), canActivate: [authGuard],
                 title: 'Painel do Prestador | Servio'
             },
             {
                 path: 'client',
-                loadComponent: () => import('./pages/dashboards/dashboard-client/dashboard-client.component').then(m => m.DashboardClientComponent),
+                loadComponent: () => import('./pages/dashboards/dashboard-client/dashboard-client.component').then(m => m.DashboardClientComponent), canActivate: [authGuard],
                 title: 'Painel do Cliente | Servio'
             },
 
             {
                 path: 'explore',
-                loadComponent: () => import('./pages/marketplace/marketplace.component').then(m => m.MarketplaceComponent),
+                loadComponent: () => import('./pages/marketplace/marketplace.component').then(m => m.MarketplaceComponent), canActivate: [authGuard],
                 title: 'Explorar Serviços | Servio'
             },
             {
