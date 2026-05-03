@@ -3,6 +3,7 @@ package com.ufrn.ppgti.servio.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ufrn.ppgti.servio.dto.request.ServiceRequestDTO;
 import com.ufrn.ppgti.servio.dto.response.ServiceResponseDTO;
@@ -39,9 +42,12 @@ public class ServiceController {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<ServiceResponseDTO> create(@Valid @RequestBody ServiceRequestDTO dto) {
-        ServiceResponseDTO response = service.save(dto);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ServiceResponseDTO> create(
+            @RequestPart("service") @Valid ServiceRequestDTO dto,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+
+        ServiceResponseDTO response = service.save(dto, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

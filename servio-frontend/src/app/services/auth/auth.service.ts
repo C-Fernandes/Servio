@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { AuthResponse } from '../models/User';
-import { Observable, tap } from 'rxjs'; @Injectable({
+import { Observable, tap } from 'rxjs'; import { environment } from '../../../environments/environment';
+import { AuthResponse } from '../../models/User';
+@Injectable({
   providedIn: 'root',
 })
 export class AuthService {

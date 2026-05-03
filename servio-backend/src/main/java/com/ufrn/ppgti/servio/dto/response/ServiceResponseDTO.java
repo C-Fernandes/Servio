@@ -17,6 +17,7 @@ public class ServiceResponseDTO {
     private ProviderProfileResponseDTO provider;
 
     private List<CategoryDTO> categories;
+    private String imageUrl;
 
     public Long getId() {
         return this.id;
@@ -64,6 +65,14 @@ public class ServiceResponseDTO {
 
     public void setCategories(List<CategoryDTO> categories) {
         this.categories = categories;
+    }
+
+    public String getImageUrl() {
+        return this.imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
 }

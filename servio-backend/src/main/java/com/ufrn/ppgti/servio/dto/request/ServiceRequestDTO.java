@@ -24,11 +24,9 @@ public class ServiceRequestDTO {
     @Positive(message = "O preço deve ser um valor positivo.")
     private Double price;
 
-    @NotNull(message = "O provedor é obrigatório.")
-    private Long provider;
-
     @NotEmpty(message = "O serviço deve pertencer a pelo menos uma categoria.")
     private List<CategoryDTO> categories;
+    private String imageUrl;
 
     public String getTitle() {
         return this.title;
@@ -54,14 +52,6 @@ public class ServiceRequestDTO {
         this.price = price;
     }
 
-    public Long getProvider() {
-        return this.provider;
-    }
-
-    public void setProvider(Long provider) {
-        this.provider = provider;
-    }
-
     public List<CategoryDTO> getCategories() {
         return this.categories;
     }
@@ -70,4 +60,11 @@ public class ServiceRequestDTO {
         this.categories = categories;
     }
 
+    public String getImageUrl() {
+        return this.imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }
