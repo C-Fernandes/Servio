@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth/auth.service';
 import { MatIconModule } from '@angular/material/icon';
+import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,7 @@ export class LoginComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-
+  private toast = inject(ToastService);
   isLoading = signal<boolean>(false);
   errorMessage = signal<string | null>(null);
 
@@ -35,10 +36,11 @@ export class LoginComponent {
     this.authService.login({ email, password }).subscribe({
       next: (response) => {
         console.log('Login bem-sucedido:', response);
+        this.toast.showToast('Login realizado com sucesso!', 'success');
         this.router.navigate(['/']);
       },
-      error: (err) => {
-        this.errorMessage.set('Email ou senha inválidos');
+      error: () => {
+        this.toast.showToast('Email e/ou senha inválidos', 'error');
         this.isLoading.set(false);
       }
     });

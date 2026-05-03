@@ -1,0 +1,19 @@
+@if (toast.show()) {
+<div class="toast-card" [ngClass]="toast.type()">
+    <div class="toast-content">
+        <span class="mat-icon">
+            @if (toast.type() === 'success') { check_circle }
+            @else if (toast.type() === 'error') { error }
+            @else { info }
+        </span>
+
+        <span class="message">{{ toast.message() }}</span>
+    </div>
+
+    <button class="close-btn" (click)="close()">
+        <span class="mat-icon">close</span>
+    </button>
+
+    <div class="progress-bar"></div>
+</div>
+}
