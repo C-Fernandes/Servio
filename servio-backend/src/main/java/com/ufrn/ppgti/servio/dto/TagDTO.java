@@ -1,11 +1,11 @@
 package com.ufrn.ppgti.servio.dto;
 
-public class CategoryDTO {
+public class TagDTO {
     private Long id;
 
     private String name;
 
-    public CategoryDTO(Long id, String name) {
+    public TagDTO(Long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -25,4 +25,5 @@ public class CategoryDTO {
     public void setName(String name) {
         this.name = name;
     }
+
 }

@@ -1,22 +1,39 @@
 <article class="service-card">
     <div class="card-thumb">
         <span class="category-badge">{{ service.category }}</span>
-        <div class="image-placeholder"></div>
+        @if (service.image) {
+        <img [src]="'data:image/jpeg;base64,' + service.image"
+            [alt]="service.title"
+            class="card-image">
+        } @else {
+        <div class="image-placeholder">
+            <span class="mat-icon">image_not_supported</span>
+        </div>
+        }
     </div>
 
     <div class="card-content">
         <h3 class="title">{{ service.title }}</h3>
         <p class="desc">{{ service.description }}</p>
+        @if (service.tags && service.tags.length > 0) {
+        <div class="tags-container">
+            @for (tag of service.tags; track tag) {
+            <span class="tag-badge">{{ tag }}</span>
+            }
+        </div>
+        }
+
         <p class="author">por {{ service.provider }}</p>
 
         <div class="card-footer">
             <div class="meta-info">
                 <span class="rating">
-                    <span class="mat-icon">star</span> {{ service.rating }} ({{
-                    service.reviews }})
+                    <!--<span class="mat-icon">star</span> {{ service.rating }} ({{
+                    service.reviews }})-->
                 </span>
                 <span class="duration">
-                    <span class="mat-icon">schedule</span> {{ service.duration
+                    <span class="mat-icon">schedule</span> {{
+                    service.durationInMinutes
                     }}
                 </span>
             </div>

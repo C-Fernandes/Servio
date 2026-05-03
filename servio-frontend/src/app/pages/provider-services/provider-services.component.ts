@@ -3,6 +3,8 @@ import { Component, inject } from '@angular/core';
 import { ServiceCardComponent } from '../../components/service-card/service-card.component';
 import { ServiceModalComponent } from '../../components/service-modal/service-modal.component';
 import { ServiceService } from '../../services/service/service.service';
+import { Service } from '../../models/Service';
+import { ToastService } from '../../services/toast/toast.service';
 
 @Component({
   selector: 'app-provider-services',
@@ -14,6 +16,7 @@ export class ProviderServicesComponent {
   services: any[] = [];
   isModalOpen = false;
   private serviceService = inject(ServiceService);
+  private toast = inject(ToastService);
   ngOnInit(): void {
     this.loadServices();
   }
@@ -22,6 +25,7 @@ export class ProviderServicesComponent {
     this.serviceService.findAll().subscribe({
       next: (data) => {
         this.services = data;
+        console.log('Serviços carregados:', this.services);
       },
       error: (err) => {
         console.error('Erro ao carregar serviços:', err);
@@ -29,44 +33,40 @@ export class ProviderServicesComponent {
     });
   }
   onServiceSaved(serviceData: any) {
-    // 1. Cria o FormData para enviar texto e arquivo juntos
     const formData = new FormData();
 
-    // 2. Monta o objeto no formato exato que o backend (ServiceRequestDTO) espera
     const serviceRequestDTO = {
       title: serviceData.title,
       description: serviceData.description,
       price: serviceData.price,
-      provider: 1, // Usando 1 provisoriamente (como discutimos antes)
-      categories: [
-        { id: Number(serviceData.category) }
-      ]
+      durationInMinutes: serviceData.durationInMinutes,
+
+      category: Number(serviceData.category),
+
+      tags: serviceData.tags
     };
 
     formData.append('service', new Blob([JSON.stringify(serviceRequestDTO)], {
       type: 'application/json'
     }));
 
-    // 4. Anexa a imagem (se o usuário tiver selecionado uma)
+
     if (serviceData.imageFile) {
       formData.append('image', serviceData.imageFile);
     }
 
-    // 5. Envia para a API usando o service
     this.serviceService.create(formData).subscribe({
       next: (newService) => {
-        // Quando o backend confirmar que salvou, adicionamos o novo serviço na lista 
-        // para ele aparecer na tela imediatamente, sem precisar recarregar a página
+        this.toast.showToast('Serviço criado com sucesso!', 'success');
         this.services.push(newService);
         this.closeModal();
       },
       error: (err) => {
+        this.toast.showToast('Erro ao criar serviço. Por favor, tente novamente.', 'error');
         console.error('Erro ao salvar serviço:', err);
-        // Aqui você pode adicionar um aviso na tela se quiser (ex: MatSnackBar)
       }
     });
   }
-
   openModal() {
     this.isModalOpen = true;
   }

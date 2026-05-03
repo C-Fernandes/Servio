@@ -4,13 +4,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.nio.file.Path;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,10 +17,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ufrn.ppgti.servio.dto.response.ServiceResponseDTO;
 import com.ufrn.ppgti.servio.dto.request.ServiceRequestDTO;
 import com.ufrn.ppgti.servio.exceptions.BusinessException;
+import com.ufrn.ppgti.servio.repository.CategoryRepository;
 import com.ufrn.ppgti.servio.repository.ServiceRepository;
-
+import com.ufrn.ppgti.servio.repository.TagRepository;
 import com.ufrn.ppgti.servio.mappers.ServiceMapper;
+import com.ufrn.ppgti.servio.model.Category;
 import com.ufrn.ppgti.servio.model.ProviderProfile;
+import com.ufrn.ppgti.servio.model.Tag;
 import com.ufrn.ppgti.servio.model.User;
 
 @Service
@@ -32,26 +34,38 @@ public class ServiceService {
     private final ServiceRepository repository;
     private final ServiceMapper mapper;
     private final AuthService authService;
+    private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
 
     public ServiceService(ServiceRepository repository, ServiceMapper mapper,
-            AuthService authService) {
+            AuthService authService, CategoryRepository categoryRepository, TagRepository tagRepository) {
         this.repository = repository;
         this.mapper = mapper;
         this.authService = authService;
+        this.categoryRepository = categoryRepository;
+        this.tagRepository = tagRepository;
     }
 
     @Transactional(readOnly = true)
     public List<ServiceResponseDTO> findAll() {
         return repository.findAll().stream()
-                .map(mapper::toResponseDTO)
+                .map(entity -> {
+                    ServiceResponseDTO dto = mapper.toResponseDTO(entity);
+
+                    dto.setImage(extractBase64(entity.getImageUrl()));
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public ServiceResponseDTO findById(Long id) {
-        return repository.findById(id)
-                .map(mapper::toResponseDTO)
+        com.ufrn.ppgti.servio.model.Service entity = repository.findById(id)
                 .orElseThrow(() -> new BusinessException("Serviço não encontrado."));
+
+        ServiceResponseDTO dto = mapper.toResponseDTO(entity);
+        dto.setImage(extractBase64(entity.getImageUrl()));
+        return dto;
     }
 
     @Transactional
@@ -72,7 +86,18 @@ public class ServiceService {
 
         com.ufrn.ppgti.servio.model.Service entity = mapper.toEntity(dto);
         entity.setProvider(provider);
+        Category category = categoryRepository.findById(dto.getCategory())
+                .orElseThrow(() -> new BusinessException("Categoria não encontrada."));
+        entity.setCategory(category);
+        System.out.println("Tags IDs recebidos: " + dto.getTags());
+        if (dto.getTags() != null && !dto.getTags().isEmpty()) {
+            List<Tag> tags = tagRepository.findAllById(dto.getTags());
+            entity.setTags(tags);
+        }
         entity = repository.save(entity);
+        ServiceResponseDTO responseDTO = mapper.toResponseDTO(entity);
+
+        responseDTO.setImage(extractBase64(entity.getImageUrl()));
         return mapper.toResponseDTO(entity);
     }
 
@@ -124,5 +149,25 @@ public class ServiceService {
         } catch (IOException e) {
             throw new BusinessException("Erro ao salvar a imagem do serviço.");
         }
+    }
+
+    private String extractBase64(String imageUrl) {
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            return null;
+        }
+
+        try {
+            String fileName = imageUrl.startsWith("/") ? imageUrl.substring(1) : imageUrl;
+
+            Path path = Paths.get(fileName);
+
+            if (Files.exists(path)) {
+                byte[] bytes = Files.readAllBytes(path);
+                return Base64.getEncoder().encodeToString(bytes);
+            }
+        } catch (IOException e) {
+            System.err.println("Erro ao converter imagem para Base64: " + e.getMessage());
+        }
+        return null;
     }
 }

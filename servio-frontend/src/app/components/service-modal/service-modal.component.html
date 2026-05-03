@@ -30,19 +30,51 @@
                 </div>
                 <div class="form-group">
                     <label>Duração (min)</label>
-                    <input type="number" formControlName="duration"
+                    <input type="number" formControlName="durationInMinutes"
                         placeholder="60">
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Categoria *</label>
+                <label>Category *</label>
                 <select formControlName="category" class="select-arrow">
-                    <option value disabled selected>Escolha</option>
-                    <option value="1">Desenvolvimento</option>
-                    <option value="2">Design & Criação</option>
-                    <option value="3">Marketing Digital</option>
+                    <option value disabled selected>Choose a category</option>
+                    @for (cat of categories; track cat.id) {
+                    <option [value]="cat.id">{{ cat.name }}</option>
+                    }
                 </select>
+            </div>
+
+            <div class="form-group">
+                <label>Tags ({{selectedTags.length}}/6)</label>
+                <div class="tags-field-container">
+                    <div class="tags-chips-wrapper">
+                        @for (tag of selectedTags; track tag.id) {
+                        <span class="tag-chip">
+                            {{ tag.name }}
+                            <i class="mat-icon"
+                                (click)="removeTag(tag.id)">close</i>
+                        </span>
+                        }
+                    </div>
+
+                    <input type="text"
+                        formControlName="tagInput"
+                        placeholder="Search tags (e.g., Remote, Urgent)"
+                        (input)="onTagTyping($event)"
+                        (focus)="onTagFocus()"
+                        (blur)="hideSuggestionsWithDelay()">
+
+                    @if (filteredSuggestions.length > 0) {
+                    <ul class="autocomplete-list">
+                        @for (suggestion of filteredSuggestions; track
+                        suggestion.id) {
+                        <li (click)="addTag(suggestion)">{{ suggestion.name
+                            }}</li>
+                        }
+                    </ul>
+                    }
+                </div>
             </div>
 
             <div class="form-group">

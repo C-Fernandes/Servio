@@ -24,9 +24,11 @@ public class ServiceRequestDTO {
     @Positive(message = "O preço deve ser um valor positivo.")
     private Double price;
 
-    @NotEmpty(message = "O serviço deve pertencer a pelo menos uma categoria.")
-    private List<CategoryDTO> categories;
+    @NotNull(message = "A categoria é obrigatória.")
+    private Long category;
+    private List<Long> tags;
     private String imageUrl;
+    private int durationInMinutes;
 
     public String getTitle() {
         return this.title;
@@ -52,12 +54,20 @@ public class ServiceRequestDTO {
         this.price = price;
     }
 
-    public List<CategoryDTO> getCategories() {
-        return this.categories;
+    public Long getCategory() {
+        return this.category;
     }
 
-    public void setCategories(List<CategoryDTO> categories) {
-        this.categories = categories;
+    public void setCategory(Long category) {
+        this.category = category;
+    }
+
+    public List<Long> getTags() {
+        return this.tags;
+    }
+
+    public void setTags(List<Long> tags) {
+        this.tags = tags;
     }
 
     public String getImageUrl() {
@@ -67,4 +77,13 @@ public class ServiceRequestDTO {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public int getDurationInMinutes() {
+        return this.durationInMinutes;
+    }
+
+    public void setDurationInMinutes(int durationInMinutes) {
+        this.durationInMinutes = durationInMinutes;
+    }
+
 }

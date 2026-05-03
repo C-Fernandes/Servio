@@ -2,10 +2,6 @@ package com.ufrn.ppgti.servio.dto.response;
 
 import java.util.List;
 
-import com.ufrn.ppgti.servio.dto.CategoryDTO;
-import com.ufrn.ppgti.servio.model.Category;
-import com.ufrn.ppgti.servio.model.ProviderProfile;
-
 public class ServiceResponseDTO {
 
     private Long id;
@@ -14,10 +10,13 @@ public class ServiceResponseDTO {
     private String description;
     private Double price;
 
-    private ProviderProfileResponseDTO provider;
+    private String provider;
 
-    private List<CategoryDTO> categories;
-    private String imageUrl;
+    private String image;
+    private int durationInMinutes;
+    private boolean active;
+    private String category;
+    private List<String> tags;
 
     public Long getId() {
         return this.id;
@@ -51,28 +50,56 @@ public class ServiceResponseDTO {
         this.price = price;
     }
 
-    public ProviderProfileResponseDTO getProvider() {
+    public String getProvider() {
         return this.provider;
     }
 
-    public void setProvider(ProviderProfileResponseDTO provider) {
+    public void setProvider(String provider) {
         this.provider = provider;
     }
 
-    public List<CategoryDTO> getCategories() {
-        return this.categories;
+    public String getImage() {
+        return this.image;
     }
 
-    public void setCategories(List<CategoryDTO> categories) {
-        this.categories = categories;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public String getImageUrl() {
-        return this.imageUrl;
+    public int getDurationInMinutes() {
+        return this.durationInMinutes;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setDurationInMinutes(int durationInMinutes) {
+        this.durationInMinutes = durationInMinutes;
+    }
+
+    public boolean isActive() {
+        return this.active;
+    }
+
+    public boolean getActive() {
+        return this.active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public List<String> getTags() {
+        return this.tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
 }
