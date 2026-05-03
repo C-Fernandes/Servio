@@ -7,13 +7,16 @@
         </div>
 
         <nav class="nav-section">
+            @if (isProviderOrAdmin) {
             <p class="section-title">Painéis</p>
-
+            }@else { <p class="section-title">Painel</p>}
+            @if (isProviderOrAdmin) {
             <a routerLink="/provider" routerLinkActive="active"
                 class="nav-item">
                 <span class="mat-icon">work</span>
                 <span>Painel Prestador</span>
             </a>
+            }
             <a routerLink="/client" routerLinkActive="active" class="nav-item">
                 <span class="mat-icon">shopping_bag</span>
                 <span>Painel Cliente</span>
@@ -27,6 +30,7 @@
             </a>
         </nav>
 
+        @if (isProviderOrAdmin) {
         <nav class="nav-section">
             <p class="section-title">Gerenciamento</p>
 
@@ -36,13 +40,17 @@
                 <span>Meus serviços</span>
             </a>
         </nav>
+        }
     </div>
     <div class="user-footer">
         <div class="user-profile">
             <div class="avatar">{{ user.photo }}</div>
             <div class="user-info">
                 <span class="user-name">{{ user.name }}</span>
-                <span class="user-role">{{ user.role }}</span>
+                <span class="user-role">
+                    {{ user.role === 'PROVIDER' ? 'Prestador' : (user.role ===
+                    'ADMIN' ? 'Admin' : 'Cliente') }}
+                </span>
             </div>
         </div>
 

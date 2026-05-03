@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -8,13 +9,21 @@ import { RouterModule } from '@angular/router';
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent {
+  private authService = inject(AuthService);
+  private router = inject(Router);
   user = {
-    name: 'Pedro Prestador',
-    role: 'Prestador',
-    photo: 'PE'
+    name: 'Usuário',
+    role: this.authService.getUserRole() || 'CLIENT',
+    photo: 'US'
   };
 
   logout() {
-    console.log('Saindo...');
+    this.authService.logout();
+    this.router.navigate(['/auth/login']);
+  }
+
+  get isProviderOrAdmin(): boolean {
+    const role = this.authService.getUserRole();
+    return role === 'PROVIDER' || role === 'ADMIN';
   }
 }

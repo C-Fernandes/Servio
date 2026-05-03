@@ -30,17 +30,22 @@ export const routes: Routes = [
             },
             {
                 path: 'my-services',
-                loadComponent: () => import('./pages/provider-services/provider-services.component').then(m => m.ProviderServicesComponent), canActivate: [authGuard],
+                loadComponent: () => import('./pages/provider-services/provider-services.component').then(m => m.ProviderServicesComponent),
+                canActivate: [authGuard],
+                data: { roles: ['PROVIDER', 'ADMIN'] },
                 title: 'Meus Serviços | Servio'
             },
             {
                 path: 'provider',
-                loadComponent: () => import('./pages/dashboards/dashboard-provider/dashboard-provider.component').then(m => m.DashboardProviderComponent), canActivate: [authGuard],
+                loadComponent: () => import('./pages/dashboards/dashboard-provider/dashboard-provider.component').then(m => m.DashboardProviderComponent),
+                canActivate: [authGuard],
+                data: { roles: ['PROVIDER', 'ADMIN'] },
                 title: 'Painel do Prestador | Servio'
             },
             {
                 path: 'client',
-                loadComponent: () => import('./pages/dashboards/dashboard-client/dashboard-client.component').then(m => m.DashboardClientComponent), canActivate: [authGuard],
+                loadComponent: () => import('./pages/dashboards/dashboard-client/dashboard-client.component').then(m => m.DashboardClientComponent),
+                canActivate: [authGuard],
                 title: 'Painel do Cliente | Servio'
             },
 

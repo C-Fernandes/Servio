@@ -47,4 +47,26 @@ export class AuthService {
   private saveToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
   }
+  getUserRole(): string | null {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      return null;
+    }
+
+    try {
+      const payloadBase64Url = token.split('.')[1];
+      const payloadBase64 = payloadBase64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const payloadDecoded = atob(payloadBase64);
+      const payloadJson = JSON.parse(payloadDecoded);
+      if (payloadJson.role) {
+        return payloadJson.role.replace('ROLE_', '');
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Erro ao tentar ler a role do token JWT:', error);
+      return null;
+    }
+  }
 }

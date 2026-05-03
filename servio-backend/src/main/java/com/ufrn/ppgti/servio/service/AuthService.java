@@ -44,7 +44,7 @@ public class AuthService {
 
         userRepository.save(user);
 
-        String token = jwtService.generateToken(user.getId());
+        String token = jwtService.generateToken(user.getId(), user.getRole().name());
 
         return new AuthResponseDTO(token);
     }
@@ -57,7 +57,7 @@ public class AuthService {
             throw new RuntimeException("Senha inválida");
         }
 
-        String token = jwtService.generateToken(user.getId());
+        String token = jwtService.generateToken(user.getId(), user.getRole().name());
 
         return new AuthResponseDTO(token);
     }

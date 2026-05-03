@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ufrn.ppgti.servio.annotations.Client;
+import com.ufrn.ppgti.servio.annotations.Provider;
 import com.ufrn.ppgti.servio.dto.request.ServiceRequestDTO;
 import com.ufrn.ppgti.servio.dto.response.ServiceResponseDTO;
 import com.ufrn.ppgti.servio.service.ServiceService;
@@ -32,16 +34,19 @@ public class ServiceController {
         this.service = service;
     }
 
+    @Client
     @GetMapping
     public ResponseEntity<List<ServiceResponseDTO>> findAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
+    @Client
     @GetMapping("/{id}")
     public ResponseEntity<ServiceResponseDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
+    @Provider
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ServiceResponseDTO> create(
             @RequestPart("service") @Valid ServiceRequestDTO dto,
@@ -51,11 +56,13 @@ public class ServiceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Provider
     @PutMapping("/{id}")
     public ResponseEntity<ServiceResponseDTO> update(@PathVariable Long id, @Valid @RequestBody ServiceRequestDTO dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 
+    @Provider
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
