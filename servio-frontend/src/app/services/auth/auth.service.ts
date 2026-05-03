@@ -9,7 +9,7 @@ export class AuthService {
   private http = inject(HttpClient);
 
   private readonly API_URL = `${environment.apiUrl}/auth`;
-  private readonly TOKEN_KEY = 'servio_auth_token';
+  private readonly TOKEN_KEY = 'token';
 
   isAuthenticated = signal<boolean>(!!localStorage.getItem(this.TOKEN_KEY));
 
@@ -47,26 +47,36 @@ export class AuthService {
   private saveToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
   }
-  getUserRole(): string | null {
+  private decodeToken(): any {
     const token = localStorage.getItem('token');
-
-    if (!token) {
-      return null;
-    }
+    if (!token) return null;
 
     try {
-      const payloadBase64Url = token.split('.')[1];
-      const payloadBase64 = payloadBase64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const payloadDecoded = atob(payloadBase64);
-      const payloadJson = JSON.parse(payloadDecoded);
-      if (payloadJson.role) {
-        return payloadJson.role.replace('ROLE_', '');
-      }
+      const payloadBase64 = token.split('.')[1];
 
-      return null;
-    } catch (error) {
-      console.error('Erro ao tentar ler a role do token JWT:', error);
+      const base64 = payloadBase64.replace(/-/g, '+').replace(/_/g, '/');
+
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+
+      return JSON.parse(jsonPayload);
+    } catch (e) {
+      console.error('Erro crítico na decodificação do token:', e);
       return null;
     }
+  }
+
+  getUserName(): string | null {
+    const payload = this.decodeToken();
+    return payload ? payload.name : null;
+  }
+
+  getUserRole(): string | null {
+    const payload = this.decodeToken();
+    return payload ? payload.role : null;
   }
 }

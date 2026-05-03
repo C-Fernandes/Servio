@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
@@ -31,6 +32,7 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
+    @Transactional
     public AuthResponseDTO register(RegisterRequestDTO dto) {
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new RuntimeException("E-mail já cadastrado");
@@ -40,11 +42,21 @@ public class AuthService {
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setRole(dto.getRole() != null ? dto.getRole() : Role.CLIENT);
+
+        Role role = dto.getRole() != null ? dto.getRole() : Role.CLIENT;
+        user.setRole(role);
+
+        if (role == Role.PROVIDER) {
+            ProviderProfile profile = new ProviderProfile();
+            profile.setUser(user);
+            profile.setBio(dto.getBio());
+            profile.setExperience(dto.getExperience());
+            user.setProviderProfile(profile);
+        }
 
         userRepository.save(user);
 
-        String token = jwtService.generateToken(user.getId(), user.getRole().name());
+        String token = jwtService.generateToken(user.getId(), user.getRole().name(), user.getName());
 
         return new AuthResponseDTO(token);
     }
@@ -57,7 +69,7 @@ public class AuthService {
             throw new RuntimeException("Senha inválida");
         }
 
-        String token = jwtService.generateToken(user.getId(), user.getRole().name());
+        String token = jwtService.generateToken(user.getId(), user.getRole().name(), user.getName());
 
         return new AuthResponseDTO(token);
     }

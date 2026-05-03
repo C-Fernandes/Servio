@@ -14,11 +14,22 @@ export class SidebarComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   private toast = inject(ToastService);
-  user = {
-    name: 'Usuário',
-    role: this.authService.getUserRole() || 'CLIENT',
-    photo: 'US'
-  };
+
+  user: any = { name: 'Usuário', role: 'CLIENT', photo: 'US' };
+
+  ngOnInit() {
+    this.updateUserInfo();
+  }
+  updateUserInfo() {
+
+    const name = this.authService.getUserName() || 'Usuário';
+    const role = this.authService.getUserRole() || 'CLIENT';
+    this.user = {
+      name: name,
+      role: role,
+      photo: name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)
+    };
+  }
 
   logout() {
     this.authService.logout();

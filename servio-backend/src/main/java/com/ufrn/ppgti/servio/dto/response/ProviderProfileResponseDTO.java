@@ -3,7 +3,7 @@ package com.ufrn.ppgti.servio.dto.response;
 public class ProviderProfileResponseDTO {
     private Long id;
     private String bio;
-    private String experience;
+    private int experience;
     private String name;
 
     private String street;
@@ -31,11 +31,11 @@ public class ProviderProfileResponseDTO {
         this.bio = bio;
     }
 
-    public String getExperience() {
+    public int getExperience() {
         return experience;
     }
 
-    public void setExperience(String experience) {
+    public void setExperience(int experience) {
         this.experience = experience;
     }
 

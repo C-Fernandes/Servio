@@ -22,6 +22,7 @@ import com.ufrn.ppgti.servio.repository.ServiceRepository;
 
 import com.ufrn.ppgti.servio.mappers.ServiceMapper;
 import com.ufrn.ppgti.servio.model.ProviderProfile;
+import com.ufrn.ppgti.servio.model.User;
 
 @Service
 public class ServiceService {
@@ -30,13 +31,13 @@ public class ServiceService {
 
     private final ServiceRepository repository;
     private final ServiceMapper mapper;
-    private final ProviderProfileService providerProfileService;
+    private final AuthService authService;
 
     public ServiceService(ServiceRepository repository, ServiceMapper mapper,
-            ProviderProfileService providerProfileService) {
+            AuthService authService) {
         this.repository = repository;
         this.mapper = mapper;
-        this.providerProfileService = providerProfileService;
+        this.authService = authService;
     }
 
     @Transactional(readOnly = true)
@@ -55,10 +56,13 @@ public class ServiceService {
 
     @Transactional
     public ServiceResponseDTO save(ServiceRequestDTO dto, MultipartFile image) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long providerId = Long.parseLong(authentication.getName());
+        User user = authService.getAuthenticadUser();
 
-        ProviderProfile provider = providerProfileService.findByIdEntity(providerId);
+        if (user.getProviderProfile() == null) {
+            throw new BusinessException("Apenas prestadores podem cadastrar serviços.");
+        }
+
+        ProviderProfile provider = user.getProviderProfile();
         validatePrice(dto.getPrice());
 
         if (image != null && !image.isEmpty()) {
