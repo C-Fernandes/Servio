@@ -1,10 +1,16 @@
 <article class="service-card">
     <div class="card-thumb">
-        <span class="category-badge">{{ service.category }}</span>
+        @if (variant === 'marketplace') {
+        <span class="image-badge category-badge">{{ service.category }}</span>
+        } @else {
+        <span class="image-badge status-badge" [class.active]="service.active">
+            {{ service.active ? 'Ativo' : 'Inativo' }}
+        </span>
+        }
+
         @if (service.image) {
         <img [src]="'data:image/jpeg;base64,' + service.image"
-            [alt]="service.title"
-            class="card-image">
+            [alt]="service.title" class="card-image">
         } @else {
         <div class="image-placeholder">
             <span class="mat-icon">image_not_supported</span>
@@ -15,6 +21,8 @@
     <div class="card-content">
         <h3 class="title">{{ service.title }}</h3>
         <p class="desc">{{ service.description }}</p>
+
+        @if (variant === 'marketplace') {
         @if (service.tags && service.tags.length > 0) {
         <div class="tags-container">
             @for (tag of service.tags; track tag) {
@@ -22,23 +30,46 @@
             }
         </div>
         }
-
         <p class="author">por {{ service.provider }}</p>
-
-        <div class="card-footer">
-            <div class="meta-info">
-                <span class="rating">
-                    <!--<span class="mat-icon">star</span> {{ service.rating }} ({{
-                    service.reviews }})-->
-                </span>
-                <span class="duration">
-                    <span class="mat-icon">schedule</span> {{
-                    service.durationInMinutes
-                    }}
-                </span>
-            </div>
+        } @else {
+        <div class="provider-meta">
+            <span class="category-pill">{{ service.category }}</span>
             <span class="price-tag">R$ {{ service.price | number:'1.2-2'
                 }}</span>
         </div>
+        }
     </div>
+
+    <div class="card-footer">
+        @if (variant === 'marketplace') {
+        <div class="meta-info">
+            <span class="rating">
+                <span class="mat-icon">star_border</span> 5.0 (1)
+            </span>
+            <span class="duration">
+                <span class="mat-icon">schedule</span> {{
+                service.durationInMinutes }}min
+            </span>
+        </div>
+        <span class="price-tag">R$ {{ service.price | number:'1.2-2' }}</span>
+        } @else {
+        <div class="provider-actions-left">
+            <span class="mat-icon visibility-icon">visibility</span>
+            <label class="switch">
+                <input type="checkbox" [checked]="service.active"
+                    (change)="onToggleStatus($event)">
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+        <div class="provider-actions-right">
+            <button class="btn-text">Ver</button>
+            <button class="btn-icon" (click)="onEdit()"><span
+                    class="mat-icon">edit</span></button>
+            <button class="btn-icon delete" (click)="onDelete()"><span
+                    class="mat-icon">delete_outline</span></button>
+        </div>
+        }
+    </div>
+
 </article>

@@ -15,6 +15,8 @@ import { ToastService } from '../../services/toast/toast.service';
 export class ProviderServicesComponent {
   services: any[] = [];
   isModalOpen = false;
+
+  serviceToEdit: any = null;
   private serviceService = inject(ServiceService);
   private toast = inject(ToastService);
   ngOnInit(): void {
@@ -40,9 +42,7 @@ export class ProviderServicesComponent {
       description: serviceData.description,
       price: serviceData.price,
       durationInMinutes: serviceData.durationInMinutes,
-
       category: Number(serviceData.category),
-
       tags: serviceData.tags
     };
 
@@ -50,22 +50,41 @@ export class ProviderServicesComponent {
       type: 'application/json'
     }));
 
-
     if (serviceData.imageFile) {
       formData.append('image', serviceData.imageFile);
     }
 
-    this.serviceService.create(formData).subscribe({
-      next: (newService) => {
-        this.toast.showToast('Serviço criado com sucesso!', 'success');
-        this.services.push(newService);
-        this.closeModal();
-      },
-      error: (err) => {
-        this.toast.showToast('Erro ao criar serviço. Por favor, tente novamente.', 'error');
-        console.error('Erro ao salvar serviço:', err);
-      }
-    });
+    if (this.serviceToEdit) {
+
+      this.serviceService.update(this.serviceToEdit.id, formData).subscribe({
+        next: (updatedService) => {
+          this.toast.showToast('Serviço atualizado com sucesso!', 'success');
+          const index = this.services.findIndex(s => s.id === this.serviceToEdit.id);
+          if (index !== -1) {
+            this.services[index] = updatedService;
+          }
+
+          this.closeModal();
+        },
+        error: (err) => {
+          this.toast.showToast('Erro ao atualizar serviço.', 'error');
+          console.error('Erro ao atualizar serviço:', err);
+        }
+      });
+
+    } else {
+      this.serviceService.create(formData).subscribe({
+        next: (newService) => {
+          this.toast.showToast('Serviço criado com sucesso!', 'success');
+          this.services.push(newService);
+          this.closeModal();
+        },
+        error: (err) => {
+          this.toast.showToast('Erro ao criar serviço. Por favor, tente novamente.', 'error');
+          console.error('Erro ao salvar serviço:', err);
+        }
+      });
+    }
   }
   openModal() {
     this.isModalOpen = true;
@@ -73,6 +92,45 @@ export class ProviderServicesComponent {
 
   closeModal() {
     this.isModalOpen = false;
+  } openEditModal(service: any) {
+    console.log('Editing service:', service);
+    this.serviceToEdit = service;
+
+    // Future: pass 'serviceToEdit' to <app-service-modal> via @Input 
+    // to pre-fill the form.
+    this.isModalOpen = true;
+  }
+
+  deleteService(service: any) {
+    if (confirm(`Tem certeza que deseja deletar o serviço "${service.title}"?`)) {
+
+      // API integration example:
+      /*
+      this.serviceService.delete(service.id).subscribe({
+        next: () => {
+          this.services = this.services.filter(s => s.id !== service.id);
+          this.toast.showToast('Serviço deletado com sucesso!', 'success');
+        },
+        error: (err) => {
+          this.toast.showToast('Erro ao deletar serviço.', 'error');
+          console.error('Error deleting service:', err);
+        }
+      });
+      */
+
+      // Temporary UI behavior:
+      this.services = this.services.filter(s => s.id !== service.id);
+      this.toast.showToast('Serviço removido (Apenas visualização)!', 'success');
+    }
+  }
+
+  toggleStatus(service: any) {
+    console.log('New service status:', service.active);
+
+    // API integration example:
+    // this.serviceService.update(service.id, { active: service.active }).subscribe(...)
+
+    this.toast.showToast(`Serviço ${service.active ? 'ativado' : 'inativado'} com sucesso!`, 'success');
   }
 
 

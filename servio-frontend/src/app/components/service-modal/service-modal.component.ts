@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TagService } from '../../services/tag/tag.service';
 import { CategoryService } from '../../services/category/category.service';
+import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 
 @Component({
   selector: 'app-service-modal',
@@ -11,6 +12,7 @@ import { CategoryService } from '../../services/category/category.service';
   styleUrl: './service-modal.component.scss',
 })
 export class ServiceModalComponent {
+  @Input() serviceToEdit: any = null;
   @Output() closeEvent = new EventEmitter<void>();
   @Output() saveEvent = new EventEmitter<any>();
 
@@ -40,11 +42,38 @@ export class ServiceModalComponent {
   }
 
   ngOnInit(): void {
-    this.categoryService.findAll().subscribe(res => this.categories = res);
+    forkJoin({
+      categories: this.categoryService.findAll(),
+      tags: this.tagService.findAll()
+    }).subscribe(({ categories, tags }) => {
+      this.categories = categories;
+      this.allTags = tags;
 
-    this.tagService.findAll().subscribe(res => this.allTags = res);
+      if (this.serviceToEdit) {
+        this.populateForm();
+      }
+    });
   }
 
+  populateForm() {
+    const selectedCategory = this.categories.find(c => c.name === this.serviceToEdit.category);
+
+    this.serviceForm.patchValue({
+      title: this.serviceToEdit.title,
+      description: this.serviceToEdit.description,
+      price: this.serviceToEdit.price,
+      durationInMinutes: this.serviceToEdit.durationInMinutes,
+      category: selectedCategory ? selectedCategory.id : ''
+    });
+
+    if (this.serviceToEdit.tags && this.serviceToEdit.tags.length > 0) {
+      this.selectedTags = this.allTags.filter(t => this.serviceToEdit.tags.includes(t.name));
+    }
+
+    if (this.serviceToEdit.image) {
+      this.previewUrl = 'data:image/jpeg;base64,' + this.serviceToEdit.image;
+    }
+  }
   getSelectedCategoryName(): string {
     const categoryId = this.serviceForm.get('category')?.value;
     const category = this.categories.find(c => c.id === Number(categoryId));
