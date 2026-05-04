@@ -1,12 +1,13 @@
+@if (serviceData(); as data) {
+
 <header class="page-header">
     <div class="breadcrumb">
         <span class="breadcrumb-text">Início</span>
         <span class="mat-icon separator">chevron_right</span>
         <span class="breadcrumb-text">Serviços</span>
         <span class="mat-icon separator">chevron_right</span>
-        <span class="breadcrumb-text">Design & Criação</span>
         <span class="mat-icon separator">chevron_right</span>
-        <span class="breadcrumb-text current">Identidade Visual Completa</span>
+        <span class="breadcrumb-text current">{{ data.title }}</span>
     </div>
 </header>
 
@@ -14,13 +15,14 @@
     <main class="main-content">
         <div class="hero-image-wrapper">
             <img
-                src="https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1000&auto=format&fit=crop"
-                alt="Identidade Visual">
-
+                [src]="data.image ? 'data:image/jpeg;base64,' + data.image : 'assets/default-service.png'"
+                [alt]="data.title">
             <div class="hero-tags">
-                <span class="tag">Design & Criação</span>
+                <span class="tag">{{ data.category }}</span>
+                @if (data.active) {
                 <span class="tag success"><span
                         class="mat-icon">check_circle</span> Disponível</span>
+                }
             </div>
 
             <div class="hero-actions">
@@ -32,7 +34,7 @@
         </div>
 
         <div class="service-header">
-            <h1 class="service-title">Identidade Visual Completa</h1>
+            <h1 class="service-title">{{ data.title }}</h1>
             <div class="service-meta">
                 <div class="meta-item">
                     <span class="stars">★★★★★</span>
@@ -42,11 +44,11 @@
                 <span class="dot-separator">•</span>
                 <div class="meta-item">
                     <span class="mat-icon">schedule</span>
-                    <span>300 min</span>
+                    <span>{{ data.durationInMinutes }} min</span>
                 </div>
                 <span class="dot-separator">•</span>
                 <div class="meta-item">
-                    <span>por <strong>Pedro Prestador</strong></span>
+                    <span>por <strong>{{ data.provider }}</strong></span>
                 </div>
             </div>
         </div>
@@ -77,19 +79,16 @@
 
         <div class="tab-content">
             <h3>Sobre o serviço</h3>
-            <p>Logo, paleta de cores, tipografia e manual da marca.</p>
+            <p>{{ data.description }}</p>
 
-            <h3>O que está incluso</h3>
-            <ul class="features-list">
-                <li><span class="mat-icon">check_circle</span> Atendimento
-                    personalizado</li>
-                <li><span class="mat-icon">check_circle</span> Entrega no prazo
-                    combinado</li>
-                <li><span class="mat-icon">check_circle</span> Revisões conforme
-                    escopo</li>
-                <li><span class="mat-icon">check_circle</span> Suporte durante a
-                    execução</li>
-            </ul>
+            @if (data.tags && data.tags.length > 0) {
+            <h3>Tags</h3>
+            <div class="tags-container">
+                @for (tag of data.tags; track tag) {
+                <span class="badge">{{ tag }}</span>
+                }
+            </div>
+            }
         </div>
     </main>
 
@@ -98,8 +97,9 @@
         <div class="pricing-card">
             <div class="pricing-header primary-gradient">
                 <span class="subtitle">A PARTIR DE</span>
-                <h2 class="price">R$ 850,00</h2>
-                <span class="duration">por sessão de 300 min</span>
+                <h2 class="price">{{ data.price | currency:'BRL' }}</h2>
+                <span class="duration">por sessão de {{ data.durationInMinutes
+                    }} min</span>
             </div>
 
             <div class="pricing-body">
@@ -108,14 +108,33 @@
                         <span class="mat-icon">calendar_month</span>
                         <span>Horários disponíveis</span>
                     </div>
-                    <span class="badge">4</span>
+                    <span class="badge">{{ data.availableSlots?.length || 0
+                        }}</span>
                 </div>
 
                 <div class="slots-grid">
-                    <button class="slot-btn">01/05/2026, 11:06</button>
-                    <button class="slot-btn">02/05/2026, 11:06</button>
-                    <button class="slot-btn">03/05/2026, 11:06</button>
-                    <button class="slot-btn">04/05/2026, 11:06</button>
+                    @if (data.availableSlots && data.availableSlots.length > 0)
+                    {
+                    @for (slot of data.availableSlots; track $index) {
+                    <button class="slot-btn">
+                        <span class="slot-date">
+                            <!-- Converte a string YYYY-MM-DD para 05/05 -->
+                            {{ slot.date + 'T00:00:00' | date:'dd/MM' }}
+                        </span>
+                        <span class="slot-time"
+                            style="font-weight: bold; font-size: 1.1em;">
+                            <!-- Corta os segundos do time (ex: de 08:00:00 para 08:00) -->
+                            {{ slot.time | slice:0:5 }}
+                        </span>
+                    </button>
+                    }
+                    } @else {
+                    <div class="no-slots"
+                        style="text-align: center; color: #666; padding: 1rem; grid-column: 1 / -1;">
+                        <span class="mat-icon">event_busy</span>
+                        <p>Nenhum horário disponível para a próxima semana.</p>
+                    </div>
+                    }
                 </div>
 
                 <div class="price-breakdown">
@@ -131,7 +150,8 @@
 
                 <div class="price-total">
                     <span>Total</span>
-                    <span class="value-highlight">R$ 850,00</span>
+                    <span class="value-highlight">{{ data.price | currency:'BRL'
+                        }}</span>
                 </div>
 
                 <button class="reserve-btn">
@@ -157,4 +177,4 @@
             </div>
         </div>
     </aside>
-</div>
+</div>}

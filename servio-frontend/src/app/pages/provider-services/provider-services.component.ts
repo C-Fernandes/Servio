@@ -106,7 +106,6 @@ export class ProviderServicesComponent {
   deleteService(service: any) {
     if (confirm(`Tem certeza que deseja deletar o serviço "${service.title}"?`)) {
 
-      // API integration example:
       /*
       this.serviceService.delete(service.id).subscribe({
         next: () => {

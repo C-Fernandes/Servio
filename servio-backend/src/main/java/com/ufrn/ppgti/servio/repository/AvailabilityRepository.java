@@ -12,5 +12,4 @@ public interface AvailabilityRepository extends JpaRepository<Availability, Long
 
     List<Availability> findByProviderId(Long providerId);
 
-    void deleteByProviderIdAndOrderIsNull(Long providerId);
 }

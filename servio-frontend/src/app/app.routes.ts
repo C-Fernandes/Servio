@@ -23,7 +23,7 @@ export const routes: Routes = [
         component: LayoutComponent,
         children: [
             {
-                path: 'service/details',
+                path: 'service/details/:id',
                 loadComponent: () => import('./pages/service-details/service-details.component').then(m => m.ServiceDetailsComponent),
                 canActivate: [authGuard],
                 title: 'Detalhes do Serviço | Servio'

@@ -2,6 +2,9 @@ package com.ufrn.ppgti.servio.dto.response;
 
 import java.util.List;
 
+import com.ufrn.ppgti.servio.dto.AvailabilityDTO;
+import com.ufrn.ppgti.servio.dto.AvailableSlotDTO;
+
 public class ServiceResponseDTO {
 
     private Long id;
@@ -17,6 +20,7 @@ public class ServiceResponseDTO {
     private boolean active;
     private String category;
     private List<String> tags;
+    private List<AvailableSlotDTO> availableSlots;
 
     public Long getId() {
         return this.id;
@@ -100,6 +104,14 @@ public class ServiceResponseDTO {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public List<AvailableSlotDTO> getAvailableSlots() {
+        return this.availableSlots;
+    }
+
+    public void setAvailableSlots(List<AvailableSlotDTO> availableSlots) {
+        this.availableSlots = availableSlots;
     }
 
 }

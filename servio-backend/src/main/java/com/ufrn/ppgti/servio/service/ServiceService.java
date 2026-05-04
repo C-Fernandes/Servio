@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -15,13 +18,18 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ufrn.ppgti.servio.dto.response.ServiceResponseDTO;
+import com.ufrn.ppgti.servio.dto.AvailableSlotDTO;
 import com.ufrn.ppgti.servio.dto.request.ServiceRequestDTO;
 import com.ufrn.ppgti.servio.exceptions.BusinessException;
 import com.ufrn.ppgti.servio.repository.CategoryRepository;
+import com.ufrn.ppgti.servio.repository.OrderRepository;
 import com.ufrn.ppgti.servio.repository.ServiceRepository;
 import com.ufrn.ppgti.servio.repository.TagRepository;
+import com.ufrn.ppgti.servio.mappers.AvailabilityMapper;
 import com.ufrn.ppgti.servio.mappers.ServiceMapper;
+import com.ufrn.ppgti.servio.model.Availability;
 import com.ufrn.ppgti.servio.model.Category;
+import com.ufrn.ppgti.servio.model.Order;
 import com.ufrn.ppgti.servio.model.ProviderProfile;
 import com.ufrn.ppgti.servio.model.Tag;
 import com.ufrn.ppgti.servio.model.User;
@@ -36,14 +44,19 @@ public class ServiceService {
     private final AuthService authService;
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
+    private final AvailabilityMapper availabilityMapper;
+    private final OrderRepository orderRepository;
 
     public ServiceService(ServiceRepository repository, ServiceMapper mapper,
-            AuthService authService, CategoryRepository categoryRepository, TagRepository tagRepository) {
+            AuthService authService, CategoryRepository categoryRepository, TagRepository tagRepository,
+            AvailabilityMapper availabilityMapper, OrderRepository orderRepository) {
         this.repository = repository;
         this.mapper = mapper;
         this.authService = authService;
         this.categoryRepository = categoryRepository;
         this.tagRepository = tagRepository;
+        this.availabilityMapper = availabilityMapper;
+        this.orderRepository = orderRepository;
     }
 
     public List<ServiceResponseDTO> findAllActive() {
@@ -81,6 +94,9 @@ public class ServiceService {
 
         ServiceResponseDTO dto = mapper.toResponseDTO(entity);
         dto.setImage(extractBase64(entity.getImageUrl()));
+
+        dto.setAvailableSlots(generateAvailableSlots(entity));
+
         return dto;
     }
 
@@ -222,4 +238,59 @@ public class ServiceService {
         }
         return null;
     }
+
+    private List<AvailableSlotDTO> generateAvailableSlots(com.ufrn.ppgti.servio.model.Service service) {
+        List<AvailableSlotDTO> slots = new ArrayList<>();
+
+        if (service.getProvider() == null || service.getProvider().getAvailabilitySlots() == null) {
+            return slots;
+        }
+
+        int duration = service.getDurationInMinutes() > 0 ? service.getDurationInMinutes() : 60;
+        LocalDate today = LocalDate.now();
+        List<Availability> rules = service.getProvider().getAvailabilitySlots();
+
+        List<Order> bookedOrders = orderRepository.findByProvider_IdAndDateBetween(
+                service.getProvider().getId(), today, today.plusDays(7));
+
+        for (int i = 0; i < 7; i++) {
+            LocalDate currentDate = today.plusDays(i);
+
+            List<Availability> dayRules = rules.stream()
+                    .filter(a -> currentDate.equals(a.getSpecificDate()) && a.getIsAvailable())
+                    .collect(Collectors.toList());
+
+            if (dayRules.isEmpty()) {
+                dayRules = rules.stream()
+                        .filter(a -> a.getSpecificDate() == null
+                                && currentDate.getDayOfWeek().equals(a.getDayOfWeek())
+                                && a.getIsAvailable())
+                        .collect(Collectors.toList());
+            }
+
+            for (Availability rule : dayRules) {
+                LocalTime slotTime = rule.getStartTime();
+                LocalTime endTime = rule.getEndTime();
+
+                while (!slotTime.plusMinutes(duration).isAfter(endTime)) {
+
+                    LocalTime currentSlotStart = slotTime;
+                    LocalTime currentSlotEnd = slotTime.plusMinutes(duration);
+
+                    boolean isTimeConflict = bookedOrders.stream()
+                            .anyMatch(order -> order.getDate().equals(currentDate) &&
+                                    currentSlotStart.isBefore(order.getEndTime()) &&
+                                    currentSlotEnd.isAfter(order.getStartTime()));
+
+                    if (!isTimeConflict) {
+                        slots.add(new AvailableSlotDTO(currentDate, currentSlotStart));
+                    }
+
+                    slotTime = slotTime.plusMinutes(duration);
+                }
+            }
+        }
+        return slots;
+    }
+
 }

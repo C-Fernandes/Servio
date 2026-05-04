@@ -1,3 +1,5 @@
+import { AvailableSlot } from "./Availability";
+
 export interface Service {
     id: number;
     title: string;
@@ -10,8 +12,10 @@ export interface Service {
     active: boolean;
     category: string;
     tags: string[];
+    availableSlots?: AvailableSlot[];
 
-}export interface Tag {
+}
+export interface Tag {
     id: number;
     name: string;
 }export interface Category {

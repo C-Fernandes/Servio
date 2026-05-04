@@ -38,7 +38,7 @@ public class AvailabilityService {
         User user = authService.getAuthenticadUser();
         ProviderProfile provider = providerRepository.findById(user.getId())
                 .orElseThrow(() -> new RuntimeException("Prestador não encontrado"));
-        availabilityRepository.deleteByProviderIdAndOrderIsNull(user.getId());
+        // availabilityRepository.deleteByProviderIdAndOrderIsNull(user.getId());
 
         List<Availability> toSave = new ArrayList<>();
         if (request.getWeeklyRules() != null) {

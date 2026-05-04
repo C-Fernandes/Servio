@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { Service } from '../../models/Service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-service-card',
@@ -9,13 +10,18 @@ import { Service } from '../../models/Service';
   styleUrl: './service-card.component.scss',
 })
 export class ServiceCardComponent {
+  private router = inject(Router);
   @Input({ required: true }) service!: Service;
   @Input() variant: 'marketplace' | 'provider' = 'marketplace';
 
   @Output() editEvent = new EventEmitter<Service>();
   @Output() deleteEvent = new EventEmitter<Service>();
   @Output() toggleEvent = new EventEmitter<Service>();
-
+  goToDetails() {
+    if (this.variant === 'marketplace') {
+      this.router.navigate(['/service/details', this.service.id]);
+    }
+  }
   onEdit() {
     this.editEvent.emit(this.service);
   }

@@ -41,9 +41,6 @@ public class Availability {
     @JoinColumn(name = "provider_profile_id", nullable = false)
     private ProviderProfile provider;
 
-    @OneToOne(mappedBy = "availabilitySlot")
-    private Order order;
-
     public Long getId() {
         return this.id;
     }
@@ -102,14 +99,6 @@ public class Availability {
 
     public void setProvider(ProviderProfile provider) {
         this.provider = provider;
-    }
-
-    public Order getOrder() {
-        return this.order;
-    }
-
-    public void setOrder(Order order) {
-        this.order = order;
     }
 
 }

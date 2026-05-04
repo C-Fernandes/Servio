@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
+import { Service } from '../../models/Service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,8 +21,8 @@ export class ServiceService {
     return this.http.get<any[]>(this.API_URL);
   }
 
-  findById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.API_URL}/${id}`);
+  findById(id: number): Observable<Service> {
+    return this.http.get<Service>(`${this.API_URL}/${id}`);
   }
 
   create(formData: FormData): Observable<any> {

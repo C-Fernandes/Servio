@@ -29,3 +29,7 @@ export interface ExtraSlot {
     startTime: string;
     endTime: string;
 }
+export interface AvailableSlot {
+    date: string;
+    time: string;
+}

@@ -1,6 +1,8 @@
 package com.ufrn.ppgti.servio.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import com.ufrn.ppgti.servio.model.enums.OrderStatus;
 
@@ -36,9 +38,12 @@ public class Order {
     @JoinColumn(name = "service_id")
     private Service service;
 
-    @OneToOne
-    @JoinColumn(name = "availability_slot_id")
-    private Availability availabilitySlot;
+    private LocalDate date;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    @ManyToOne
+    @JoinColumn(name = "provider_profile_id")
+    private ProviderProfile provider;
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Payment payment;
@@ -83,14 +88,37 @@ public class Order {
         this.service = service;
     }
 
-    public Availability getAvailabilitySlot() {
-        return this.availabilitySlot;
+    public LocalDate getDate() {
+        return this.date;
     }
 
-    public void setAvailabilitySlot(Availability availabilitySlot) {
-        this.availabilitySlot = availabilitySlot;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
+    public LocalTime getStartTime() {
+        return this.startTime;
+    }
+
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalTime getEndTime() {
+        return this.endTime;
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public ProviderProfile getProvider() {
+        return this.provider;
+    }
+
+    public void setProvider(ProviderProfile provider) {
+        this.provider = provider;
+    }
 
     public Payment getPayment() {
         return this.payment;
