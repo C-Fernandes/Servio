@@ -1,8 +1,14 @@
 package com.ufrn.ppgti.servio.model;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,17 +19,20 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "availability_slots")
-public class AvailabilitySlot {
+public class Availability {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Enumerated(EnumType.STRING)
+    private DayOfWeek dayOfWeek;
+
+    private LocalDate specificDate;
+    @Column(nullable = false)
+    private LocalTime startTime;
 
     @Column(nullable = false)
-    private LocalDateTime startTime;
-
-    @Column(nullable = false)
-    private LocalDateTime endTime;
+    private LocalTime endTime;
 
     @Column(nullable = false)
     private Boolean isAvailable = true;
@@ -35,43 +44,52 @@ public class AvailabilitySlot {
     @OneToOne(mappedBy = "availabilitySlot")
     private Order order;
 
-    public AvailabilitySlot() {
-    }
-
-    public AvailabilitySlot(LocalDateTime startTime, LocalDateTime endTime, Boolean isAvailable,
-            ProviderProfile provider) {
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.isAvailable = isAvailable;
-        this.provider = provider;
-    }
-
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public DayOfWeek getDayOfWeek() {
+        return this.dayOfWeek;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public void setDayOfWeek(DayOfWeek dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public LocalDate getSpecificDate() {
+        return this.specificDate;
+    }
+
+    public void setSpecificDate(LocalDate specificDate) {
+        this.specificDate = specificDate;
+    }
+
+    public LocalTime getStartTime() {
+        return this.startTime;
+    }
+
+    public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime() {
-        return endTime;
+    public LocalTime getEndTime() {
+        return this.endTime;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
+    public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
 
+    public Boolean isIsAvailable() {
+        return this.isAvailable;
+    }
+
     public Boolean getIsAvailable() {
-        return isAvailable;
+        return this.isAvailable;
     }
 
     public void setIsAvailable(Boolean isAvailable) {
@@ -79,7 +97,7 @@ public class AvailabilitySlot {
     }
 
     public ProviderProfile getProvider() {
-        return provider;
+        return this.provider;
     }
 
     public void setProvider(ProviderProfile provider) {
@@ -87,7 +105,7 @@ public class AvailabilitySlot {
     }
 
     public Order getOrder() {
-        return order;
+        return this.order;
     }
 
     public void setOrder(Order order) {

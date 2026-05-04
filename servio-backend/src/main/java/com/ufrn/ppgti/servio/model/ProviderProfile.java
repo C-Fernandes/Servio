@@ -37,7 +37,7 @@ public class ProviderProfile {
     private List<Service> services;
 
     @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL)
-    private List<AvailabilitySlot> availabilitySlots;
+    private List<Availability> availabilitySlots;
 
     @OneToMany(mappedBy = "provider")
     private List<FinancialTransaction> transactions;
@@ -82,11 +82,11 @@ public class ProviderProfile {
         this.services = services;
     }
 
-    public List<AvailabilitySlot> getAvailabilitySlots() {
+    public List<Availability> getAvailabilitySlots() {
         return this.availabilitySlots;
     }
 
-    public void setAvailabilitySlots(List<AvailabilitySlot> availabilitySlots) {
+    public void setAvailabilitySlots(List<Availability> availabilitySlots) {
         this.availabilitySlots = availabilitySlots;
     }
 

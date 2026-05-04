@@ -39,6 +39,11 @@
                 <span class="mat-icon">build</span>
                 <span>Meus serviços</span>
             </a>
+            <a routerLink="/calendar" routerLinkActive="active"
+                class="nav-item">
+                <span class="mat-icon">calendar_month</span>
+                <span>Agenda</span>
+            </a>
         </nav>
         }
     </div>
@@ -48,7 +53,8 @@
             <div class="user-info">
                 <span class="user-name">{{ user.name }}</span>
                 <span class="user-role">
-                    {{ user.role === 'PROVIDER' ? 'Prestador' : (user.role ===
+                    {{ user.role === 'PROVIDER' ? 'Prestador' : (user.role
+                    ===
                     'ADMIN' ? 'Admin' : 'Cliente') }}
                 </span>
             </div>

@@ -1,0 +1,99 @@
+<header class="page-header">
+    <div class="header-content">
+        <div class="text-side">
+            <div class="breadcrumb">
+                <span class="mat-icon">side_navigation</span>
+                <span class="breadcrumb-text">Painel Prestador</span>
+            </div>
+            <h1 class="page-title">Agenda</h1>
+            <p class="page-subtitle">Defina seus horários de atendimento e
+                gerencie slots avulsos</p>
+        </div>
+        <button class="btn-primary-action save-btn" (click)="saveChanges()">
+            <span class="mat-icon">save</span>
+            Salvar Alterações
+        </button>
+    </div>
+</header>
+
+<section class="agenda-section">
+    <div class="card weekly-card">
+        <div class="weekly-header">
+            <div class="card-icon purple">
+                <span class="mat-icon">schedule</span>
+            </div>
+            <div class="header-text">
+                <h3>Horário de atendimento semanal</h3>
+                <p>Defina os dias e faixas em que você atende. Ex: 08:00-12:00 e
+                    13:00-19:00.</p>
+            </div>
+        </div>
+
+        <div class="weekly-grid">
+            @for (day of weeklySchedule; track day.name) {
+            <div class="day-row">
+                <div class="day-name">{{ day.label }}</div>
+
+                <div class="day-slots">
+                    @for (slot of day.slots; track $index) {
+                    <div class="time-slot-input">
+                        <input type="time" [(ngModel)]="slot.start">
+                        <span>até</span>
+                        <input type="time" [(ngModel)]="slot.end">
+                        <button class="icon-btn delete"
+                            (click)="removeSlot(day, $index)">
+                            <span class="mat-icon">delete</span>
+                        </button>
+                    </div>
+                    } @empty {
+                    <span class="no-service">Não atende</span>
+                    }
+
+                    <button class="btn-add-slot" (click)="addSlot(day)">
+                        <span class="mat-icon">add</span>
+                        Adicionar faixa
+                    </button>
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="extra-slots-section">
+    <div class="section-header">
+        <div class="text">
+            <h3>Horários avulsos</h3>
+            <p>Slots específicos disponíveis para reserva em datas únicas</p>
+        </div>
+        <button class="btn-primary-action" (click)="openExtraSlotModal()">
+            <span class="mat-icon">add</span>
+            Novo horário
+        </button>
+    </div>
+
+    <div class="slots-grid">
+        @for (extra of extraSlots; track $index) {
+        <div class="card slot-card">
+            <div class="slot-info">
+                <div class="slot-date-row">
+                    <span class="mat-icon">calendar_today</span>
+                    <strong>{{ extra.date | date:'dd/MM/yyyy' }}</strong>
+                </div>
+                <p class="slot-duration">
+                    <span class="mat-icon">history</span>
+                    {{ extra.startTime }} às {{ extra.endTime }}
+                </p>
+            </div>
+            <button class="icon-btn delete" (click)="deleteExtraSlot($index)">
+                <span class="mat-icon">delete</span>
+            </button>
+        </div>
+        } @empty {
+        <div class="empty-state">
+            <span class="mat-icon">event_busy</span>
+            <p>Nenhum horário avulso cadastrado.</p>
+        </div>
+        }
+    </div>
+</section>

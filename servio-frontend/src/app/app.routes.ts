@@ -48,7 +48,7 @@ export const routes: Routes = [
                 canActivate: [authGuard],
                 title: 'Painel do Cliente | Servio'
             },
-
+            { path: 'calendar', loadComponent: () => import('./pages/calendar/calendar.component').then(m => m.CalendarComponent), canActivate: [authGuard], data: { roles: ['PROVIDER', 'ADMIN'] }, title: 'Calendário | Servio' },
             {
                 path: 'explore',
                 loadComponent: () => import('./pages/marketplace/marketplace.component').then(m => m.MarketplaceComponent), canActivate: [authGuard],

@@ -38,7 +38,7 @@ public class Order {
 
     @OneToOne
     @JoinColumn(name = "availability_slot_id")
-    private AvailabilitySlot availabilitySlot;
+    private Availability availabilitySlot;
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Payment payment;
@@ -83,13 +83,14 @@ public class Order {
         this.service = service;
     }
 
-    public AvailabilitySlot getAvailabilitySlot() {
+    public Availability getAvailabilitySlot() {
         return this.availabilitySlot;
     }
 
-    public void setAvailabilitySlot(AvailabilitySlot availabilitySlot) {
+    public void setAvailabilitySlot(Availability availabilitySlot) {
         this.availabilitySlot = availabilitySlot;
     }
+
 
     public Payment getPayment() {
         return this.payment;
