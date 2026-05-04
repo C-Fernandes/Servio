@@ -1,12 +1,7 @@
 package com.ufrn.ppgti.servio.mappers;
 
-import com.ufrn.ppgti.servio.dto.CategoryDTO;
-import com.ufrn.ppgti.servio.dto.TagDTO;
 import com.ufrn.ppgti.servio.dto.request.ServiceRequestDTO;
-import com.ufrn.ppgti.servio.dto.response.ProviderProfileResponseDTO;
 import com.ufrn.ppgti.servio.dto.response.ServiceResponseDTO;
-import com.ufrn.ppgti.servio.model.Category;
-import com.ufrn.ppgti.servio.model.ProviderProfile;
 import com.ufrn.ppgti.servio.model.Service;
 import com.ufrn.ppgti.servio.model.Tag;
 

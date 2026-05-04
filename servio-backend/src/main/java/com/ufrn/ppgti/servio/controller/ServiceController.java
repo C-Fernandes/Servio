@@ -57,9 +57,13 @@ public class ServiceController {
     }
 
     @Provider
-    @PutMapping("/{id}")
-    public ResponseEntity<ServiceResponseDTO> update(@PathVariable Long id, @Valid @RequestBody ServiceRequestDTO dto) {
-        return ResponseEntity.ok(service.update(id, dto));
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ServiceResponseDTO> update(
+            @PathVariable Long id,
+            @RequestPart("service") @Valid ServiceRequestDTO dto,
+            @RequestPart(value = "image", required = false) MultipartFile image) {
+
+        return ResponseEntity.ok(service.update(id, dto, image));
     }
 
     @Provider

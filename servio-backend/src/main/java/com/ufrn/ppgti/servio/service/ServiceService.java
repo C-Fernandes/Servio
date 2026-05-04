@@ -102,7 +102,7 @@ public class ServiceService {
     }
 
     @Transactional
-    public ServiceResponseDTO update(Long id, ServiceRequestDTO dto) {
+    public ServiceResponseDTO update(Long id, ServiceRequestDTO dto, MultipartFile image) {
         validatePrice(dto.getPrice());
 
         com.ufrn.ppgti.servio.model.Service service = repository.findById(id)
@@ -111,8 +111,30 @@ public class ServiceService {
         service.setTitle(dto.getTitle());
         service.setDescription(dto.getDescription());
         service.setPrice(dto.getPrice());
+        service.setDurationInMinutes(dto.getDurationInMinutes());
 
-        return mapper.toResponseDTO(repository.save(service));
+        if (dto.getCategory() != null) {
+            Category category = categoryRepository.findById(dto.getCategory())
+                    .orElseThrow(() -> new BusinessException("Categoria não encontrada."));
+            service.setCategory(category);
+        }
+
+        if (dto.getTags() != null) {
+            List<Tag> tags = tagRepository.findAllById(dto.getTags());
+            service.setTags(tags);
+        }
+
+        if (image != null && !image.isEmpty()) {
+            String imageUrl = saveImageToDisk(image);
+            service.setImageUrl(imageUrl);
+        }
+
+        service = repository.save(service);
+        ServiceResponseDTO responseDTO = mapper.toResponseDTO(service);
+
+        responseDTO.setImage(extractBase64(service.getImageUrl()));
+
+        return responseDTO;
     }
 
     @Transactional

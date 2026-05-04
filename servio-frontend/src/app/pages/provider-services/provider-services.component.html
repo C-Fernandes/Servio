@@ -58,7 +58,10 @@
 
 <div class="services-grid">
     @for (item of services; track item.id) {
-    <app-service-card [service]="item"></app-service-card>
+    <app-service-card [service]="item" variant="provider"
+        (editEvent)="openEditModal($event)"
+        (deleteEvent)="deleteService($event)"
+        (toggleEvent)="toggleStatus($event)"></app-service-card>
     } @empty {
     <div class="empty-state">
         <p>Nenhum serviço cadastrado ainda.</p>
@@ -67,6 +70,7 @@
 </div>
 @if (isModalOpen) {
 <app-service-modal
+    [serviceToEdit]="serviceToEdit"
     (closeEvent)="closeModal()"
     (saveEvent)="onServiceSaved($event)">
 </app-service-modal>
