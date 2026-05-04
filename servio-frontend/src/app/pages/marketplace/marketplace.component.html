@@ -14,10 +14,11 @@
 
         <div class="filter-group">
             <label>Categoria</label>
-            <select class="filter-input">
+            <select class="filter-input" (change)="onCategoryChange($event)">
                 <option value>Todas</option>
-                <option *ngFor="let cat of categories"
-                    [value]="cat">{{cat}}</option>
+                @for (cat of categories; track cat.id) {
+                <option [value]="cat.id">{{ cat.name }}</option>
+                }
             </select>
         </div>
 

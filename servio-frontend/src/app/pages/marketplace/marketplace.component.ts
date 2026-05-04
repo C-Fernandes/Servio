@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ServiceCardComponent } from '../../components/service-card/service-card.component';
+import { ServiceService } from '../../services/service/service.service';
+import { CategoryService } from '../../services/category/category.service';
+import { Category, Service } from '../../models/Service';
 
 @Component({
   selector: 'app-marketplace',
@@ -10,28 +13,49 @@ import { ServiceCardComponent } from '../../components/service-card/service-card
   styleUrl: './marketplace.component.scss',
 })
 export class MarketplaceComponent {
-  categories = ['Design & Criação', 'Desenvolvimento', 'Marketing Digital', 'Redação', 'Negócios'];
+  private serviceService = inject(ServiceService);
 
-  services = [
-    {
-      title: 'Identidade Visual Completa',
-      description: 'Logo, paleta de cores, tipografia e manual da marca.',
-      provider: 'Pedro Prestador',
-      category: 'Design & Criação',
-      price: 850,
-      rating: 5.0,
-      reviews: 1,
-      duration: '300min'
-    },
-    {
-      title: 'Landing Page em React',
-      description: 'Desenvolvimento de landing page responsiva e moderna.',
-      provider: 'Pedro Prestador',
-      category: 'Desenvolvimento',
-      price: 1200,
-      rating: 5.0,
-      reviews: 1,
-      duration: '240min'
+  private categoryService = inject(CategoryService);
+  categories: Category[] = [];
+
+  services: Service[] = [];
+
+  ngOnInit(): void {
+    this.loadCategories();
+    this.loadActiveServices();
+  } loadCategories() {
+    this.categoryService.findAll().subscribe({
+      next: (data) => {
+        this.categories = data;
+      },
+      error: (err) => {
+        console.error('Erro ao buscar categorias:', err);
+      }
+    });
+  }
+
+  loadActiveServices() {
+    this.serviceService.findAllActive().subscribe({
+      next: (data) => {
+        this.services = data;
+        console.log('Serviços ativos carregados:', this.services);
+      },
+      error: (err) => {
+        console.error('Erro ao buscar serviços do marketplace:', err);
+      }
+    });
+  }
+
+  onCategoryChange(event: any) {
+    const selectedId = event.target.value;
+
+    if (!selectedId) {
+      this.loadActiveServices();
+      return;
     }
-  ];
+
+    this.serviceService.findAllActive().subscribe(allServices => {
+      this.services = allServices.filter(s => s.categoryId === Number(selectedId));
+    });
+  }
 }

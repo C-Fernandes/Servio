@@ -24,7 +24,7 @@ export class ProviderServicesComponent {
   }
 
   loadServices() {
-    this.serviceService.findAll().subscribe({
+    this.serviceService.findMyServices().subscribe({
       next: (data) => {
         this.services = data;
         console.log('Serviços carregados:', this.services);
@@ -85,6 +85,8 @@ export class ProviderServicesComponent {
         }
       });
     }
+  } get activeServicesCount(): number {
+    return this.services.filter(s => s.active).length;
   }
   openModal() {
     this.isModalOpen = true;
@@ -125,12 +127,20 @@ export class ProviderServicesComponent {
   }
 
   toggleStatus(service: any) {
-    console.log('New service status:', service.active);
+    const newStatus = service.active;
 
-    // API integration example:
-    // this.serviceService.update(service.id, { active: service.active }).subscribe(...)
+    this.serviceService.toggleStatus(service.id).subscribe({
+      next: (updatedService) => {
+        service.active = updatedService.active;
+        this.toast.showToast(`Serviço ${service.active ? 'ativado' : 'inativado'} com sucesso!`, 'success');
+      },
+      error: (err) => {
+        service.active = !newStatus;
 
-    this.toast.showToast(`Serviço ${service.active ? 'ativado' : 'inativado'} com sucesso!`, 'success');
+        this.toast.showToast('Erro ao alterar o status do serviço.', 'error');
+        console.error('Erro ao atualizar status:', err);
+      }
+    });
   }
 
 

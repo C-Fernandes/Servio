@@ -46,12 +46,28 @@ public class ServiceService {
         this.tagRepository = tagRepository;
     }
 
-    @Transactional(readOnly = true)
-    public List<ServiceResponseDTO> findAll() {
-        return repository.findAll().stream()
+    public List<ServiceResponseDTO> findAllActive() {
+        return repository.findByActiveTrue().stream()
                 .map(entity -> {
                     ServiceResponseDTO dto = mapper.toResponseDTO(entity);
+                    dto.setImage(extractBase64(entity.getImageUrl()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
 
+    @Transactional(readOnly = true)
+    public List<ServiceResponseDTO> findAllByCurrentProvider() {
+        User user = authService.getAuthenticadUser();
+
+        if (user.getProviderProfile() == null) {
+            throw new BusinessException("Perfil de prestador não encontrado.");
+        }
+
+        return repository.findByProviderId(user.getProviderProfile().getId())
+                .stream()
+                .map(entity -> {
+                    ServiceResponseDTO dto = mapper.toResponseDTO(entity);
                     dto.setImage(extractBase64(entity.getImageUrl()));
                     return dto;
                 })
@@ -143,6 +159,20 @@ public class ServiceService {
             throw new BusinessException("Não é possível deletar: Serviço não encontrado.");
         }
         repository.deleteById(id);
+    }
+
+    @Transactional
+    public ServiceResponseDTO toggleStatus(Long id) {
+        com.ufrn.ppgti.servio.model.Service service = repository.findById(id)
+                .orElseThrow(() -> new BusinessException("Serviço não encontrado."));
+
+        service.setActive(!service.isActive());
+
+        service = repository.save(service);
+        ServiceResponseDTO responseDTO = mapper.toResponseDTO(service);
+        responseDTO.setImage(extractBase64(service.getImageUrl()));
+
+        return responseDTO;
     }
 
     private void validatePrice(Double price) {

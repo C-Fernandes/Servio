@@ -13,7 +13,10 @@ export class ServiceService {
 
   constructor() { }
 
-  findAll(): Observable<any[]> {
+  findMyServices(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.API_URL}/my-services`);
+  }
+  findAllActive(): Observable<any[]> {
     return this.http.get<any[]>(this.API_URL);
   }
 
@@ -32,5 +35,7 @@ export class ServiceService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.API_URL}/${id}`);
+  } toggleStatus(id: number) {
+    return this.http.patch<any>(`${this.API_URL}/${id}/status`, {});
   }
 }

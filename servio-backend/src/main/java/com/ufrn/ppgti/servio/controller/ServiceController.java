@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,7 +38,13 @@ public class ServiceController {
     @Client
     @GetMapping
     public ResponseEntity<List<ServiceResponseDTO>> findAll() {
-        return ResponseEntity.ok(service.findAll());
+        return ResponseEntity.ok(service.findAllActive());
+    }
+
+    @Provider
+    @GetMapping("/my-services")
+    public ResponseEntity<List<ServiceResponseDTO>> findMyServices() {
+        return ResponseEntity.ok(service.findAllByCurrentProvider());
     }
 
     @Client
@@ -54,6 +61,12 @@ public class ServiceController {
 
         ServiceResponseDTO response = service.save(dto, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @Provider
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<ServiceResponseDTO> toggleStatus(@PathVariable Long id) {
+        return ResponseEntity.ok(service.toggleStatus(id));
     }
 
     @Provider
