@@ -110,6 +110,7 @@ export class CalendarComponent implements OnInit {
 
   removeSlot(day: DaySchedule, index: number): void {
     day.slots.splice(index, 1);
+    this.triggerAutoSave();
   }
 
   openExtraSlotModal(): void {
