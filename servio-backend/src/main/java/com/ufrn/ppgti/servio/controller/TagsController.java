@@ -1,33 +1,53 @@
 package com.ufrn.ppgti.servio.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ufrn.ppgti.servio.dto.TagDTO;
-import com.ufrn.ppgti.servio.repository.TagRepository;
+import com.ufrn.ppgti.servio.dto.request.TagRequestDTO;
+import com.ufrn.ppgti.servio.service.TagService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/tags")
 public class TagsController {
 
-    private final TagRepository tagRepository;
+    private final TagService tagService;
 
-    public TagsController(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
+    public TagsController(TagService tagService) {
+        this.tagService = tagService;
     }
 
     @GetMapping
     public ResponseEntity<List<TagDTO>> findAll() {
-        List<TagDTO> tags = tagRepository.findAll()
-                .stream()
-                .map(tag -> new TagDTO(tag.getId(), tag.getName()))
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(tags);
+        return ResponseEntity.ok(tagService.findAll());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<TagDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(tagService.findById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<TagDTO> create(@RequestBody @Valid TagRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(tagService.create(dto));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TagDTO> update(
+            @PathVariable Long id,
+            @RequestBody @Valid TagRequestDTO dto
+    ) {
+        return ResponseEntity.ok(tagService.update(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        tagService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
