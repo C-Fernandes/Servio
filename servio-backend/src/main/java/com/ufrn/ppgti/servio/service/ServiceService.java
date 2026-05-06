@@ -46,10 +46,12 @@ public class ServiceService {
     private final TagRepository tagRepository;
     private final AvailabilityMapper availabilityMapper;
     private final OrderRepository orderRepository;
+    private final AvailabilityService availabilityService;
 
     public ServiceService(ServiceRepository repository, ServiceMapper mapper,
             AuthService authService, CategoryRepository categoryRepository, TagRepository tagRepository,
-            AvailabilityMapper availabilityMapper, OrderRepository orderRepository) {
+            AvailabilityMapper availabilityMapper, OrderRepository orderRepository,
+            AvailabilityService availabilityService) {
         this.repository = repository;
         this.mapper = mapper;
         this.authService = authService;
@@ -57,6 +59,7 @@ public class ServiceService {
         this.tagRepository = tagRepository;
         this.availabilityMapper = availabilityMapper;
         this.orderRepository = orderRepository;
+        this.availabilityService = availabilityService;
     }
 
     public List<ServiceResponseDTO> findAllActive() {
@@ -95,7 +98,7 @@ public class ServiceService {
         ServiceResponseDTO dto = mapper.toResponseDTO(entity);
         dto.setImage(extractBase64(entity.getImageUrl()));
 
-        dto.setAvailableSlots(generateAvailableSlots(entity));
+        dto.setAvailableSlots(availabilityService.generateAvailableSlots(entity));
 
         return dto;
     }
@@ -237,60 +240,6 @@ public class ServiceService {
             System.err.println("Erro ao converter imagem para Base64: " + e.getMessage());
         }
         return null;
-    }
-
-    private List<AvailableSlotDTO> generateAvailableSlots(com.ufrn.ppgti.servio.model.Service service) {
-        List<AvailableSlotDTO> slots = new ArrayList<>();
-
-        if (service.getProvider() == null || service.getProvider().getAvailabilitySlots() == null) {
-            return slots;
-        }
-
-        int duration = service.getDurationInMinutes() > 0 ? service.getDurationInMinutes() : 60;
-        LocalDate today = LocalDate.now();
-        List<Availability> rules = service.getProvider().getAvailabilitySlots();
-
-        List<Order> bookedOrders = orderRepository.findByProvider_IdAndDateBetween(
-                service.getProvider().getId(), today, today.plusDays(7));
-
-        for (int i = 0; i < 7; i++) {
-            LocalDate currentDate = today.plusDays(i);
-
-            List<Availability> dayRules = rules.stream()
-                    .filter(a -> currentDate.equals(a.getSpecificDate()) && a.getIsAvailable())
-                    .collect(Collectors.toList());
-
-            if (dayRules.isEmpty()) {
-                dayRules = rules.stream()
-                        .filter(a -> a.getSpecificDate() == null
-                                && currentDate.getDayOfWeek().equals(a.getDayOfWeek())
-                                && a.getIsAvailable())
-                        .collect(Collectors.toList());
-            }
-
-            for (Availability rule : dayRules) {
-                LocalTime slotTime = rule.getStartTime();
-                LocalTime endTime = rule.getEndTime();
-
-                while (!slotTime.plusMinutes(duration).isAfter(endTime)) {
-
-                    LocalTime currentSlotStart = slotTime;
-                    LocalTime currentSlotEnd = slotTime.plusMinutes(duration);
-
-                    boolean isTimeConflict = bookedOrders.stream()
-                            .anyMatch(order -> order.getDate().equals(currentDate) &&
-                                    currentSlotStart.isBefore(order.getEndTime()) &&
-                                    currentSlotEnd.isAfter(order.getStartTime()));
-
-                    if (!isTimeConflict) {
-                        slots.add(new AvailableSlotDTO(currentDate, currentSlotStart));
-                    }
-
-                    slotTime = slotTime.plusMinutes(duration);
-                }
-            }
-        }
-        return slots;
     }
 
 }

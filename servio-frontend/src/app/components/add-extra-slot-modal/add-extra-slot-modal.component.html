@@ -1,0 +1,32 @@
+<div class="modal-overlay" (click)="onClose()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+            <h2>Adicionar horário disponível</h2>
+            <button class="icon-btn close-btn" (click)="onClose()">
+                <span class="mat-icon">close</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Início</label>
+                <input type="datetime-local" class="custom-input"
+                    [(ngModel)]="newSlotStart">
+            </div>
+
+            <div class="form-group">
+                <label>Fim</label>
+                <input type="datetime-local" class="custom-input"
+                    [(ngModel)]="newSlotEnd">
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-gradient full-width" (click)="onConfirm()">
+                Adicionar
+            </button>
+        </div>
+
+    </div>
+</div>

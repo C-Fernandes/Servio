@@ -6,18 +6,19 @@ import { Calendar, DaySchedule, ExtraSlot } from '../../models/Availability';
 import { debounceTime, Subject } from 'rxjs';
 import { ToastComponent } from '../../components/toast/toast.component';
 import { ToastService } from '../../services/toast/toast.service';
+import { AddExtraSlotModalComponent } from '../../components/add-extra-slot-modal/add-extra-slot-modal.component';
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AddExtraSlotModalComponent],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss',
 })
 export class CalendarComponent implements OnInit {
   private availabilityService = inject(AvailabilityService);
   private autoSaveSubject = new Subject<void>();
-  private toast = inject(ToastService);
+  private toast = inject(ToastService); isModalOpen: boolean = false;
   weeklySchedule: DaySchedule[] = [
     { name: 'SUNDAY', label: 'Domingo', slots: [] },
     { name: 'MONDAY', label: 'Segunda', slots: [] },
@@ -109,19 +110,29 @@ export class CalendarComponent implements OnInit {
 
   removeSlot(day: DaySchedule, index: number): void {
     day.slots.splice(index, 1);
+    this.triggerAutoSave();
   }
 
   openExtraSlotModal(): void {
-    const mockDate = new Date().toISOString().split('T')[0];
-    this.extraSlots.push({
-      date: mockDate,
-      startTime: '09:00',
-      endTime: '10:00'
-    });
+    this.isModalOpen = true;
   }
 
-  deleteExtraSlot(index: number): void {
+  closeModal(): void {
+    this.isModalOpen = false;
+  } deleteExtraSlot(index: number): void {
     this.extraSlots.splice(index, 1);
+    this.triggerAutoSave();
+  }
+
+  handleNewExtraSlot(event: { startDate: string, startTime: string, endTime: string }): void {
+    this.extraSlots.push({
+      date: event.startDate,
+      startTime: event.startTime,
+      endTime: event.endTime
+    });
+
+    this.triggerAutoSave();
+    this.closeModal();
   }
 
 
