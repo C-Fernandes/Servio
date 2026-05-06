@@ -3,6 +3,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AvailabilityService } from '../../services/availability/availability.service';
 import { Calendar, DaySchedule, ExtraSlot } from '../../models/Availability';
+import { debounceTime, Subject } from 'rxjs';
+import { ToastComponent } from '../../components/toast/toast.component';
+import { ToastService } from '../../services/toast/toast.service';
 
 @Component({
   selector: 'app-calendar',
@@ -13,8 +16,8 @@ import { Calendar, DaySchedule, ExtraSlot } from '../../models/Availability';
 })
 export class CalendarComponent implements OnInit {
   private availabilityService = inject(AvailabilityService);
-
-  // Estrutura base da UI para a grade semanal
+  private autoSaveSubject = new Subject<void>();
+  private toast = inject(ToastService);
   weeklySchedule: DaySchedule[] = [
     { name: 'SUNDAY', label: 'Domingo', slots: [] },
     { name: 'MONDAY', label: 'Segunda', slots: [] },
@@ -30,8 +33,10 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCalendar();
+    this.autoSaveSubject.pipe(debounceTime(800)).subscribe(() => {
+      this.executeSync();
+    });
   }
-
 
   loadCalendar(): void {
     this.availabilityService.getCalendar().subscribe({
@@ -58,11 +63,7 @@ export class CalendarComponent implements OnInit {
       error: (err) => console.error('Erro ao carregar agenda', err)
     });
   }
-
-  /**
-   * Salva todo o estado da tela no Backend (Sync)
-   */
-  saveChanges(): void {
+  private executeSync(): void {
     const request: Calendar = {
       weeklyRules: [],
       extraSlots: []
@@ -88,11 +89,18 @@ export class CalendarComponent implements OnInit {
 
     this.availabilityService.syncCalendar(request).subscribe({
       next: () => {
-        alert('Agenda atualizada com sucesso!');
-        this.loadCalendar();
+        this.toast.showToast("Agenda atualizada com sucesso", "success")
       },
-      error: (err) => console.error('Erro ao salvar', err)
+      error: (err) => {
+        this.toast.showToast("Erro ao atualizar a agenda", "error");
+
+        console.error('Erro ao salvar no auto-save', err);
+      }
     });
+  }
+
+  triggerAutoSave(): void {
+    this.autoSaveSubject.next();
   }
 
   addSlot(day: DaySchedule): void {

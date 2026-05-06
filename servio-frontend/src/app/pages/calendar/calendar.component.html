@@ -9,19 +9,16 @@
             <p class="page-subtitle">Defina seus horários de atendimento e
                 gerencie slots avulsos</p>
         </div>
-        <button class="btn-primary-action save-btn" (click)="saveChanges()">
-            <span class="mat-icon">save</span>
-            Salvar Alterações
-        </button>
+
     </div>
 </header>
 
 <section class="agenda-section">
     <div class="card weekly-card">
         <div class="weekly-header">
-            <div class="card-icon purple">
-                <span class="mat-icon">schedule</span>
-            </div>
+
+            <span class="mat-icon">schedule</span>
+
             <div class="header-text">
                 <h3>Horário de atendimento semanal</h3>
                 <p>Defina os dias e faixas em que você atende. Ex: 08:00-12:00 e
@@ -37,9 +34,11 @@
                 <div class="day-slots">
                     @for (slot of day.slots; track $index) {
                     <div class="time-slot-input">
-                        <input type="time" [(ngModel)]="slot.start">
+                        <input type="time" [(ngModel)]="slot.start"
+                            (ngModelChange)="triggerAutoSave()">
                         <span>até</span>
-                        <input type="time" [(ngModel)]="slot.end">
+                        <input type="time" [(ngModel)]="slot.end"
+                            (ngModelChange)="triggerAutoSave()">
                         <button class="icon-btn delete"
                             (click)="removeSlot(day, $index)">
                             <span class="mat-icon">delete</span>

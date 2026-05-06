@@ -83,9 +83,12 @@ body {
 }
 
 button {
-  padding: 12px 32px;
+  padding: 8px 16px;
   border-radius: 12px;
   font-size: 14px;
+  background: var(--gradient-primary);
+  border: transparent;
+  color: white;
 }
 .stats-grid {
   display: grid;

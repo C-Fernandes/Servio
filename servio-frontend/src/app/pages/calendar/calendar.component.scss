@@ -15,24 +15,19 @@
   .weekly-header {
     display: flex;
     gap: 16px;
-
-    align-items: flex-start;
-
-    .card-icon.purple {
-      background: #f5f3ff;
-      color: #7c3aed;
-      padding: 10px;
-      border-radius: 12px;
+    align-items: center;
+    .mat-icon {
+      color: #6043ef;
+      font-size: 20px;
     }
-
     h3 {
       margin: 0;
-      font-size: 1.1rem;
       color: var(--color-text-dark);
+      font-size: 16px;
     }
     p {
       margin: 4px 0 0;
-      font-size: 0.9rem;
+      font-size: 14px;
       color: var(--color-text-muted);
     }
   }
@@ -46,9 +41,9 @@
 
   .day-name {
     width: 120px;
-    font-weight: 600;
     color: var(--color-text-dark);
     padding-top: 8px;
+    font-size: 14px;
   }
 
   .day-slots {
@@ -69,16 +64,16 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #f8f9fa;
+
   padding: 8px 16px;
   border-radius: 50px;
   width: fit-content;
 
   input[type='time'] {
-    border: 1px solid #e2e8f0;
+    border: transparent;
     padding: 4px 8px;
     border-radius: 8px;
-    background: white;
+    background: #f8f9fa;
     font-family: inherit;
   }
 
@@ -95,7 +90,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  font-weight: 600;
+  display: flex;
   cursor: pointer;
   width: fit-content;
   padding: 4px 0;
@@ -108,7 +103,15 @@
   }
 }
 
-// Estilos Horários Avulsos
+.btn-primary-action {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 4px;
+}
+
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -159,8 +162,10 @@
 
 .icon-btn.delete {
   color: #94a3b8;
+  padding: 0;
   cursor: pointer;
   background: none;
+  font-size: 40px;
   border: none;
   &:hover {
     color: var(--color-rose-600);
