@@ -3,7 +3,6 @@ package com.ufrn.ppgti.servio.model;
 import java.util.List;
 
 import com.ufrn.ppgti.servio.model.enums.Role;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,15 +40,19 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
+    @Column(nullable = false)
+    private Boolean deleted = false;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ProviderProfile providerProfile;
 
     @OneToMany(mappedBy = "client")
     private List<Order> orders;
+
     private String street;
     private String number;
     private String complement;
-    private String neighborhood;// bairro
+    private String neighborhood;
 
     @ManyToOne
     @JoinColumn(name = "cep_id")
@@ -93,6 +96,14 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 
     public ProviderProfile getProviderProfile() {
@@ -158,5 +169,4 @@ public class User {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
 }

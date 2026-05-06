@@ -1,5 +1,6 @@
 package com.ufrn.ppgti.servio.controller;
 
+import com.ufrn.ppgti.servio.dto.request.UserUpdateRequestDTO;
 import com.ufrn.ppgti.servio.dto.response.UserResponseDTO;
 import com.ufrn.ppgti.servio.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,14 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.findById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> update(
+            @PathVariable Long id,
+            @RequestBody UserUpdateRequestDTO dto
+    ) {
+        return ResponseEntity.ok(userService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
