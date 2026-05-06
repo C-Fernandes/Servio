@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,6 +17,7 @@ import com.ufrn.ppgti.servio.security.SecurityFilter;
 
 @Configuration
 public class SecurityConfig {
+
     private final SecurityFilter securityFilter;
 
     public SecurityConfig(SecurityFilter securityFilter) {
@@ -36,8 +38,18 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/category/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/category/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/category/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.POST, "/tags/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/tags/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/tags/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 
@@ -45,5 +57,4 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }
