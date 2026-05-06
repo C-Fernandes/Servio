@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ufrn.ppgti.servio.dto.response.ServiceResponseDTO;
-import com.ufrn.ppgti.servio.dto.AvailableSlotDTO;
 import com.ufrn.ppgti.servio.dto.request.ServiceRequestDTO;
 import com.ufrn.ppgti.servio.exceptions.BusinessException;
 import com.ufrn.ppgti.servio.repository.CategoryRepository;
@@ -27,9 +23,7 @@ import com.ufrn.ppgti.servio.repository.ServiceRepository;
 import com.ufrn.ppgti.servio.repository.TagRepository;
 import com.ufrn.ppgti.servio.mappers.AvailabilityMapper;
 import com.ufrn.ppgti.servio.mappers.ServiceMapper;
-import com.ufrn.ppgti.servio.model.Availability;
 import com.ufrn.ppgti.servio.model.Category;
-import com.ufrn.ppgti.servio.model.Order;
 import com.ufrn.ppgti.servio.model.ProviderProfile;
 import com.ufrn.ppgti.servio.model.Tag;
 import com.ufrn.ppgti.servio.model.User;
@@ -63,7 +57,7 @@ public class ServiceService {
     }
 
     public List<ServiceResponseDTO> findAllActive() {
-        return repository.findByActiveTrue().stream()
+        return repository.findByActiveTrueAndDeletedFalse().stream()
                 .map(entity -> {
                     ServiceResponseDTO dto = mapper.toResponseDTO(entity);
                     dto.setImage(extractBase64(entity.getImageUrl()));
@@ -80,7 +74,7 @@ public class ServiceService {
             throw new BusinessException("Perfil de prestador não encontrado.");
         }
 
-        return repository.findByProviderId(user.getProviderProfile().getId())
+        return repository.findByProviderIdAndDeletedFalse(user.getProviderProfile().getId())
                 .stream()
                 .map(entity -> {
                     ServiceResponseDTO dto = mapper.toResponseDTO(entity);
