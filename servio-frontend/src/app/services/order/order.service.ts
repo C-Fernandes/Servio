@@ -14,7 +14,9 @@ export class OrderService {
   findProviderOrders(): Observable<OrderResponseDTO[]> {
     return this.http.get<OrderResponseDTO[]>(`${this.API_URL}/provider`);
   }
-
+  findMyOrders(): Observable<OrderResponseDTO[]> {
+    return this.http.get<OrderResponseDTO[]>(`${this.API_URL}/my-orders`);
+  }
   updateStatus(id: number, status: OrderStatusEnum): Observable<OrderResponseDTO> {
     const payload: OrderStatusUpdateRequestDTO = { status };
     return this.http.patch<OrderResponseDTO>(`${this.API_URL}/${id}/status`, payload);

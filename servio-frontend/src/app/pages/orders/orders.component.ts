@@ -4,6 +4,7 @@ import { OrderService } from '../../services/order/order.service';
 import { CommonModule } from '@angular/common';
 import { ToastService } from '../../services/toast/toast.service';
 import { OrderDetailsModalComponent } from '../../components/order-details-modal/order-details-modal.component';
+import { OrderKanbanCardComponent } from '../../components/order-kanban-card/order-kanban-card.component';
 interface OrderUI {
   id: number;
   service: string;
@@ -14,7 +15,7 @@ interface OrderUI {
 }
 @Component({
   selector: 'app-orders',
-  imports: [CommonModule, OrderDetailsModalComponent],
+  imports: [CommonModule, OrderDetailsModalComponent, OrderKanbanCardComponent],
   templateUrl: './orders.component.html',
   styleUrl: './orders.component.scss',
 })

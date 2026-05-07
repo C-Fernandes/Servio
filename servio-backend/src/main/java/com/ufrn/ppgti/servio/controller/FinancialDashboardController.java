@@ -1,6 +1,8 @@
 package com.ufrn.ppgti.servio.controller;
 
+import com.ufrn.ppgti.servio.annotations.Client;
 import com.ufrn.ppgti.servio.annotations.Provider;
+import com.ufrn.ppgti.servio.dto.response.ClientFinancialDashboardResponseDTO;
 import com.ufrn.ppgti.servio.dto.response.ProviderFinancialDashboardResponseDTO;
 import com.ufrn.ppgti.servio.service.FinancialDashboardService;
 import org.springframework.http.ResponseEntity;
@@ -22,5 +24,11 @@ public class FinancialDashboardController {
     @GetMapping("/provider")
     public ResponseEntity<ProviderFinancialDashboardResponseDTO> getProviderDashboard() {
         return ResponseEntity.ok(financialDashboardService.getProviderDashboard());
+    }
+
+    @Client
+    @GetMapping("/client")
+    public ResponseEntity<ClientFinancialDashboardResponseDTO> getClientDashboard() {
+        return ResponseEntity.ok(financialDashboardService.getClientDashboard());
     }
 }

@@ -40,5 +40,8 @@ export class SidebarComponent {
   get isProviderOrAdmin(): boolean {
     const role = this.authService.getUserRole();
     return role === 'PROVIDER' || role === 'ADMIN';
+  } get isAdmin(): boolean {
+    const role = this.authService.getUserRole();
+    return role === 'ADMIN';
   }
 }
