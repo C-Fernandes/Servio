@@ -178,33 +178,10 @@
 </div>
 
 <ng-template #kanbanCard let-order>
-    <div class="card kanban-card">
-        <div class="kanban-card-body">
-            <h3 class="order-title">{{ order.service }}</h3>
-            <div class="order-meta col-meta">
-                <span><span class="mat-icon small">person</span> {{ order.client
-                    }}</span>
-                <span><span class="mat-icon small">calendar_today</span> {{
-                    order.date }}</span>
-            </div>
-            <div class="price-text">{{ order.amount |
-                currency:'BRL':'symbol':'1.2-2' }}</div>
-        </div>
-        <div class="kanban-card-footer">
-            <select class="status-select outline flex-grow"
-                [value]="order.statusUI"
-                (change)="updateStatus(order.id, $any($event.target).value)">
-                <option value="pending">Pendente</option> <option
-                    value="confirmed">Confirmado</option>
-                <option value="inProgress">Em andamento</option>
-                <option value="completed">Concluído</option>
-                <option value="cancelled">Cancelado</option>
-            </select>
-            <button class="btn-icon-only" (click)="openDetails(order.id)">
-                <span class="mat-icon">visibility</span>
-            </button>
-        </div>
-    </div>
+    <app-order-kanban-card
+        [order]="order"
+        (statusChange)="updateStatus($event.id, $event.newStatus)">
+    </app-order-kanban-card>
 </ng-template>@if (selectedOrderDetails(); as orderDetails) {
 <app-order-details-modal
     [order]="orderDetails"

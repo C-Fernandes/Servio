@@ -287,26 +287,6 @@
   }
 }
 
-.kanban-card {
-  flex-direction: column;
-  align-items: stretch;
-  padding: 16px;
-  gap: 0;
-
-  .kanban-card-body {
-    margin-bottom: 16px;
-    .price-text {
-      margin-top: 12px;
-    }
-  }
-
-  .kanban-card-footer {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-}
-
 .empty-state {
   text-align: center;
   padding: 40px;
