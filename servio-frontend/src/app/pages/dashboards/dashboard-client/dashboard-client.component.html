@@ -11,7 +11,7 @@
         </div>
         <div class="card-content">
             <p class="card-label">Pedidos ativos</p>
-            <h2 class="card-value">0</h2>
+            <h2 class="card-value">{{ stats()?.activeOrders || 0 }}</h2>
         </div>
     </div>
 
@@ -21,7 +21,7 @@
         </div>
         <div class="card-content">
             <p class="card-label">Pedidos concluídos</p>
-            <h2 class="card-value">0</h2>
+            <h2 class="card-value">{{ stats()?.completedOrders || 0 }}</h2>
         </div>
     </div>
 
@@ -31,7 +31,8 @@
         </div>
         <div class="card-content">
             <p class="card-label">Total gasto</p>
-            <h2 class="card-value">R$ 0,00</h2>
+            <h2 class="card-value">{{ (stats()?.totalSpent || 0) |
+                currency:'BRL':'symbol':'1.2-2' }}</h2>
         </div>
     </div>
 </section>

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import { ProviderFinancialDashboardResponseDTO } from '../../models/Dashboard';
+import { ClientFinancialDashboardResponseDTO, ProviderFinancialDashboardResponseDTO } from '../../models/Dashboard';
 
 @Injectable({
   providedIn: 'root',
@@ -16,5 +16,7 @@ export class FinancialDashboardService {
 
   getProviderDashboard(): Observable<ProviderFinancialDashboardResponseDTO> {
     return this.http.get<ProviderFinancialDashboardResponseDTO>(`${this.API_URL}/provider`);
+  } getClientDashboard(): Observable<ClientFinancialDashboardResponseDTO> {
+    return this.http.get<ClientFinancialDashboardResponseDTO>(`${this.API_URL}/client`);
   }
 }
