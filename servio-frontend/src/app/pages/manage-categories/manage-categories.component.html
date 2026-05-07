@@ -1,0 +1,91 @@
+<header class="page-header">
+    <h1 class="page-title">Categorias e Tags</h1>
+    <p class="page-subtitle">Gerencie a taxonomia da plataforma</p>
+</header>
+
+<div class="page-content">
+    <nav class="toggle-container">
+        <button
+            class="toggle-btn"
+            [class.active]="viewMode === 'categories'"
+            (click)="viewMode = 'categories'">
+            Categorias
+        </button>
+        <button
+            class="toggle-btn"
+            [class.active]="viewMode === 'tags'"
+            (click)="viewMode = 'tags'">
+            Tags
+        </button>
+    </nav>
+
+    <div class="card table-card">
+        <div class="table-header">
+            <span class="record-count">
+                {{ viewMode === 'categories' ? categories.length : tags.length
+                }} registros
+            </span>
+            <button class="btn-primary" (click)="openAdd()">
+                <span class="mat-icon">add</span>
+                Novo
+            </button>
+        </div>
+
+        <!-- Tabela -->
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th class="actions-column">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (viewMode === 'categories') {
+                @for (cat of categories; track cat.id) {
+                <tr>
+                    <td>{{ cat.name }}</td>
+                    <td class="actions-cell">
+                        <button class="icon-btn edit" (click)="openEdit(cat)">
+                            <span class="mat-icon">edit</span>
+                        </button>
+                        <button class="icon-btn delete"
+                            (click)="deleteItem(cat.id)">
+                            <span class="mat-icon">delete</span>
+                        </button>
+                    </td>
+                </tr>
+                } @empty {
+                <tr><td colspan="2" class="empty-row">Nenhuma categoria
+                        cadastrada.</td></tr>
+                }
+                } @else {
+                @for (tag of tags; track tag.id) {
+                <tr>
+                    <td>{{ tag.name }}</td>
+                    <td class="actions-cell">
+                        <button class="icon-btn edit" (click)="openEdit(tag)">
+                            <span class="mat-icon">edit</span>
+                        </button>
+                        <button class="icon-btn delete"
+                            (click)="deleteItem(tag.id)">
+                            <span class="mat-icon">delete</span>
+                        </button>
+                    </td>
+                </tr>
+                } @empty {
+                <tr><td colspan="2" class="empty-row">Nenhuma tag
+                        cadastrada.</td></tr>
+                }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@if (isModalOpen) {
+<app-modal-taxonomy
+    [title]="modalTitle"
+    [data]="selectedItem"
+    (close)="isModalOpen = false"
+    (save)="handleSave($event)">
+</app-modal-taxonomy>
+}

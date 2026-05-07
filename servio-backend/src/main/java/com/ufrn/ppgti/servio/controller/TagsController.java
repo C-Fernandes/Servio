@@ -6,12 +6,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.ufrn.ppgti.servio.annotations.Admin;
+import com.ufrn.ppgti.servio.annotations.Client;
+import com.ufrn.ppgti.servio.annotations.Provider;
 import com.ufrn.ppgti.servio.dto.TagDTO;
 import com.ufrn.ppgti.servio.dto.request.TagRequestDTO;
 import com.ufrn.ppgti.servio.service.TagService;
 
 import jakarta.validation.Valid;
 
+@Admin
 @RestController
 @RequestMapping("/tags")
 public class TagsController {
@@ -22,6 +26,7 @@ public class TagsController {
         this.tagService = tagService;
     }
 
+    @Provider
     @GetMapping
     public ResponseEntity<List<TagDTO>> findAll() {
         return ResponseEntity.ok(tagService.findAll());
@@ -40,8 +45,7 @@ public class TagsController {
     @PutMapping("/{id}")
     public ResponseEntity<TagDTO> update(
             @PathVariable Long id,
-            @RequestBody @Valid TagRequestDTO dto
-    ) {
+            @RequestBody @Valid TagRequestDTO dto) {
         return ResponseEntity.ok(tagService.update(id, dto));
     }
 

@@ -1,0 +1,28 @@
+<div class="modal-overlay" (click)="onClose()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+            <h2 class="modal-title">{{ title }}</h2>
+            <button class="close-btn" (click)="onClose()">
+                <span class="mat-icon">close</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Nome</label>
+                <input
+                    type="text"
+                    class="form-input"
+                    [(ngModel)]="formData.name"
+                    placeholder="Digite o nome..."
+                    autofocus />
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-save" (click)="onSave()">Salvar</button>
+        </div>
+
+    </div>
+</div>

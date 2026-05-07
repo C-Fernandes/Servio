@@ -23,6 +23,13 @@ export const routes: Routes = [
         component: LayoutComponent,
         children: [
             {
+                path: 'categories',
+                loadComponent: () => import('./pages/manage-categories/manage-categories.component').then(m => m.ManageCategoriesComponent),
+                canActivate: [authGuard],
+                data: { roles: ['ADMIN'] },
+                title: 'Gerenciar Categorias | Servio'
+            },
+            {
                 path: 'service/details/:id',
                 loadComponent: () => import('./pages/service-details/service-details.component').then(m => m.ServiceDetailsComponent),
                 canActivate: [authGuard],

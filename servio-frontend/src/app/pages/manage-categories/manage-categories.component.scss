@@ -1,0 +1,143 @@
+@use 'header.scss';
+
+.toggle-container {
+  display: inline-flex;
+  background-color: #f3f4f6;
+  padding: 4px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+
+  .toggle-btn {
+    background: transparent;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+
+    &.active {
+      background-color: white;
+      color: var(--color-text-primary);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+.table-card {
+  background: white;
+  border: 1px solid var(--color-indigo-50);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  width: 100%;
+
+  .record-count {
+    color: var(--color-text-muted);
+    font-size: 14px;
+  }
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 14px;
+  transition: opacity 0.2s;
+
+  .mat-icon {
+    font-size: 18px;
+  }
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    text-align: left;
+    padding: 12px 16px;
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    border-bottom: 1px solid var(--color-indigo-50);
+  }
+
+  td {
+    padding: 16px;
+    border-bottom: 1px solid var(--color-indigo-50);
+    color: var(--color-text-primary);
+    font-size: 14px;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .actions-column {
+    text-align: right;
+  }
+
+  .actions-cell {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+  }
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: all 0.2s;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .mat-icon {
+    font-size: 20px;
+  }
+
+  &:hover {
+    background: var(--color-indigo-50);
+    color: var(--color-text-primary);
+  }
+
+  &.delete {
+    color: var(--color-rose-500);
+    &:hover {
+      background: var(--color-rose-50);
+      color: var(--color-rose-600);
+    }
+  }
+}
+
+.empty-row {
+  text-align: center;
+  padding: 40px !important;
+  color: var(--color-text-muted);
+}

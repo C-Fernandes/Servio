@@ -4,7 +4,8 @@ import { RouterModule } from '@angular/router';
 import { ServiceCardComponent } from '../../components/service-card/service-card.component';
 import { ServiceService } from '../../services/service/service.service';
 import { CategoryService } from '../../services/category/category.service';
-import { Category, Service } from '../../models/Service';
+import { Service } from '../../models/Service';
+import { Category } from '../../models/Category';
 
 @Component({
   selector: 'app-marketplace',
