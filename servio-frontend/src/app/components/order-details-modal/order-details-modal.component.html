@@ -1,0 +1,67 @@
+<div class="modal-backdrop" (click)="onClose()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+
+        <div class="modal-header">
+            <h2>Detalhes do pedido</h2>
+            <button class="close-btn" (click)="onClose()">
+                <span class="mat-icon">close</span>
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <div class="detail-group full-width">
+                <label>Serviço</label>
+                <p class="service-name">{{ order().service }}</p>
+            </div>
+
+            <div class="detail-grid">
+                <div class="detail-group">
+                    <label>Cliente</label>
+                    <p>{{ order().client }}</p>
+                </div>
+                <div class="detail-group">
+                    <label>Telefone</label>
+                    <p>(11) 99999-0001</p>
+                </div>
+                <div class="detail-group">
+                    <label>Agendado para</label>
+                    <p>{{ order().date }}</p>
+                </div>
+                <div class="detail-group">
+                    <label>Valor líquido</label>
+                    <p class="highlight-purple">{{ order().amount |
+                        currency:'BRL':'symbol':'1.2-2' }}</p>
+                </div>
+                <div class="detail-group">
+                    <label>Total</label>
+                    <p>{{ (order().amount / 0.9) |
+                        currency:'BRL':'symbol':'1.2-2' }}</p>
+                </div>
+                <div class="detail-group">
+                    <label>Taxa (10%)</label>
+                    <p>{{ ((order().amount / 0.9) * 0.1) |
+                        currency:'BRL':'symbol':'1.2-2' }}</p>
+                </div>
+            </div>
+
+            <div class="detail-group full-width">
+                <label>Observações do cliente</label>
+                <div class="notes-box">Aguardando confirmação do prestador</div>
+            </div>
+
+            <div class="detail-group full-width">
+                <label>Status</label>
+                <select class="status-select outline w-full active-focus"
+                    [value]="order().statusUI"
+                    (change)="onStatusChange($event)">
+                    <option value="pending">Pendente</option> <option
+                        value="pending">Confirmado</option>
+                    <option value="inProgress">Em andamento</option>
+                    <option value="completed">Concluído</option>
+                    <option value="cancelled">Cancelado</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+</div>

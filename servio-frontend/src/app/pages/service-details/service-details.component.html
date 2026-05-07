@@ -116,14 +116,16 @@
                     @if (data.availableSlots && data.availableSlots.length > 0)
                     {
                     @for (slot of data.availableSlots; track $index) {
-                    <button class="slot-btn">
+                    <button
+                        class="slot-btn"
+                        [class.selected]="selectedSlot() === slot"
+                        (click)="selectSlot(slot)">
+
                         <span class="slot-date">
-                            <!-- Converte a string YYYY-MM-DD para 05/05 -->
                             {{ slot.date + 'T00:00:00' | date:'dd/MM' }}
                         </span>
                         <span class="slot-time"
                             style="font-weight: bold; font-size: 1.1em;">
-                            <!-- Corta os segundos do time (ex: de 08:00:00 para 08:00) -->
                             {{ slot.time | slice:0:5 }}
                         </span>
                     </button>
@@ -154,9 +156,18 @@
                         }}</span>
                 </div>
 
-                <button class="reserve-btn">
+                <button
+                    class="reserve-btn"
+                    [disabled]="!selectedSlot() || isReserving()"
+                    (click)="reserve()">
+
+                    @if (isReserving()) {
+                    <span class="mat-icon">hourglass_empty</span>
+                    Processando...
+                    } @else {
                     <span class="mat-icon">auto_awesome</span>
                     Reservar agora
+                    }
                 </button>
 
                 <div class="secure-checkout">

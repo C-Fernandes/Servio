@@ -1,0 +1,214 @@
+<header class="page-header header-flex">
+    <div class="header-titles">
+        <h1 class="page-title">Pedidos</h1>
+        <p class="page-subtitle">Acompanhe e atualize o status dos seus
+            pedidos</p>
+    </div>
+
+    <nav class="toggle-container">
+        <button
+            class="toggle-btn"
+            [class.active]="viewMode() === 'kanban'"
+            (click)="setViewMode('kanban')">
+            <span class="mat-icon">grid_view</span>
+            Kanban
+        </button>
+        <button
+            class="toggle-btn"
+            [class.active]="viewMode() === 'list'"
+            (click)="setViewMode('list')">
+            <span class="mat-icon">format_list_bulleted</span>
+            Lista
+        </button>
+    </nav>
+</header>
+
+<div class="page-content">
+    <div class="summary-grid">
+        <div class="card basic-card">
+            <div>
+                <p class="card-label">Pendente</p>
+                <p class="card-value">{{ totals().pending }}</p>
+            </div>
+        </div><div class="card basic-card">
+            <div>
+                <p class="card-label">Confirmado</p>
+                <p class="card-value">{{ totals().confirmed }}</p>
+            </div>
+        </div>
+        <div class="card basic-card">
+            <div>
+                <p class="card-label">Em andamento</p>
+                <p class="card-value">{{ totals().inProgress }}</p>
+            </div>
+        </div>
+        <div class="card basic-card">
+            <div>
+                <p class="card-label">Concluído</p>
+                <p class="card-value">{{ totals().completed }}</p>
+            </div>
+        </div>
+        <div class="card basic-card">
+            <div>
+                <p class="card-label">Cancelado</p>
+                <p class="card-value">{{ totals().cancelled }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-box">
+        <span class="mat-icon search-icon">search</span>
+        <input type="text" placeholder="Buscar por serviço ou cliente">
+    </div>
+
+    @if (viewMode() === 'list') {
+    <div class="list-container">
+        @for (order of orders(); track order.id) {
+        <div class="list-item card">
+            <div class="info-section">
+                <h3 class="order-title">{{ order.service }}</h3>
+                <div class="order-meta">
+                    <span><span class="mat-icon small">person</span> {{
+                        order.client }}</span>
+                    <span>•</span>
+                    <span><span class="mat-icon small">calendar_today</span> {{
+                        order.date }}</span>
+                </div>
+            </div>
+
+            <div class="status-section">
+                <span class="badge status-{{ order.statusUI }}">
+                    {{ getStatusLabel(order.statusUI) }}
+                </span>
+            </div>
+
+            <div class="price-section">
+                <span class="price-text">{{ order.amount |
+                    currency:'BRL':'symbol':'1.2-2' }}</span>
+            </div>
+
+            <div class="actions-section">
+                <select class="status-select outline" [value]="order.statusUI"
+                    (change)="updateStatus(order.id, $any($event.target).value)">
+                    <option value="pending">Pendente</option> <option
+                        value="confirmed">Confirmado</option>
+                    <option value="inProgress">Em andamento</option>
+                    <option value="completed">Concluído</option>
+                    <option value="cancelled">Cancelado</option>
+                </select>
+                <button class="btn-outline-action"
+                    (click)="openDetails(order.id)">
+                    <span class="mat-icon">visibility</span> Detalhes
+                </button>
+            </div>
+        </div>
+        } @empty {
+        <div class="empty-state">Nenhum pedido encontrado.</div>
+        }
+    </div>
+    } @else {
+    <div class="kanban-container">
+
+        <div class="kanban-col">
+            <div class="col-header">
+                <h4>Pendente</h4>
+                <span class="count-badge">{{ totals().pending }}</span>
+            </div>
+            <div class="col-cards">
+                @for (order of pendingOrders(); track order.id) {
+                <ng-container
+                    *ngTemplateOutlet="kanbanCard; context: { $implicit: order }"></ng-container>
+                }
+            </div>
+        </div>
+        <div class="kanban-col">
+            <div class="col-header">
+                <h4>Confirmado</h4>
+                <span class="count-badge">{{ totals().confirmed }}</span>
+            </div>
+            <div class="col-cards">
+                @for (order of confirmedOrders(); track order.id) {
+                <ng-container
+                    *ngTemplateOutlet="kanbanCard; context: { $implicit: order }"></ng-container>
+                }
+            </div>
+        </div>
+
+        <div class="kanban-col">
+            <div class="col-header">
+                <h4>Em andamento</h4>
+                <span class="count-badge">{{ totals().inProgress }}</span>
+            </div>
+            <div class="col-cards">
+                @for (order of inProgressOrders(); track order.id) {
+                <ng-container
+                    *ngTemplateOutlet="kanbanCard; context: { $implicit: order }"></ng-container>
+                }
+            </div>
+        </div>
+
+        <div class="kanban-col">
+            <div class="col-header">
+                <h4>Concluído</h4>
+                <span class="count-badge">{{ totals().completed }}</span>
+            </div>
+            <div class="col-cards">
+                @for (order of completedOrders(); track order.id) {
+                <ng-container
+                    *ngTemplateOutlet="kanbanCard; context: { $implicit: order }"></ng-container>
+                }
+            </div>
+        </div>
+
+        <div class="kanban-col">
+            <div class="col-header">
+                <h4>Cancelado</h4>
+                <span class="count-badge">{{ totals().cancelled }}</span>
+            </div>
+            <div class="col-cards">
+                @for (order of cancelledOrders(); track order.id) {
+                <ng-container
+                    *ngTemplateOutlet="kanbanCard; context: { $implicit: order }"></ng-container>
+                }
+            </div>
+        </div>
+
+    </div>
+    }
+</div>
+
+<ng-template #kanbanCard let-order>
+    <div class="card kanban-card">
+        <div class="kanban-card-body">
+            <h3 class="order-title">{{ order.service }}</h3>
+            <div class="order-meta col-meta">
+                <span><span class="mat-icon small">person</span> {{ order.client
+                    }}</span>
+                <span><span class="mat-icon small">calendar_today</span> {{
+                    order.date }}</span>
+            </div>
+            <div class="price-text">{{ order.amount |
+                currency:'BRL':'symbol':'1.2-2' }}</div>
+        </div>
+        <div class="kanban-card-footer">
+            <select class="status-select outline flex-grow"
+                [value]="order.statusUI"
+                (change)="updateStatus(order.id, $any($event.target).value)">
+                <option value="pending">Pendente</option> <option
+                    value="confirmed">Confirmado</option>
+                <option value="inProgress">Em andamento</option>
+                <option value="completed">Concluído</option>
+                <option value="cancelled">Cancelado</option>
+            </select>
+            <button class="btn-icon-only" (click)="openDetails(order.id)">
+                <span class="mat-icon">visibility</span>
+            </button>
+        </div>
+    </div>
+</ng-template>@if (selectedOrderDetails(); as orderDetails) {
+<app-order-details-modal
+    [order]="orderDetails"
+    (closeModal)="closeDetails()"
+    (statusChange)="handleModalStatusChange($event)">
+</app-order-details-modal>
+}

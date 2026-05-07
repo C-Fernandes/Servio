@@ -354,7 +354,11 @@
         color: var(--color-text-muted);
         cursor: pointer;
         transition: all 0.2s;
-
+        &.selected {
+          border-color: var(--color-primary);
+          background-color: var(--color-indigo-50);
+          color: var(--color-primary);
+        }
         &:hover {
           border-color: var(--color-primary);
           color: var(--color-primary);
@@ -400,7 +404,7 @@
     .reserve-btn {
       width: 100%;
       padding: 8px 16px;
-      background: #e8b4ff; /* Lilás suave semelhante ao do print */
+      background: var(--gradient-primary);
       color: white;
       font-weight: 600;
       font-size: 15px;

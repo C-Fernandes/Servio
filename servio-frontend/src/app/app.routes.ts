@@ -50,6 +50,13 @@ export const routes: Routes = [
                 title: 'Painel do Prestador | Servio'
             },
             {
+                path: 'provider/orders',
+                loadComponent: () => import('./pages/orders/orders.component').then(m => m.OrdersComponent),
+                canActivate: [authGuard],
+                data: { roles: ['PROVIDER', 'ADMIN'] },
+                title: 'Pedidos | Servio'
+            },
+            {
                 path: 'client',
                 loadComponent: () => import('./pages/dashboards/dashboard-client/dashboard-client.component').then(m => m.DashboardClientComponent),
                 canActivate: [authGuard],

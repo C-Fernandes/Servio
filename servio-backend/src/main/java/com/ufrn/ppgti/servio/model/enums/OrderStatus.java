@@ -1,7 +1,7 @@
 package com.ufrn.ppgti.servio.model.enums;
 
 public enum OrderStatus {
-    PENDING,
+    PENDING, CONFIRMED,
     IN_PROGRESS,
     COMPLETED,
     CANCELLED

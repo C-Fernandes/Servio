@@ -30,9 +30,9 @@ public class OrderService {
     private final OrderMapper orderMapper;
 
     public OrderService(OrderRepository orderRepository,
-                        ServiceRepository serviceRepository,
-                        AuthService authService,
-                        OrderMapper orderMapper) {
+            ServiceRepository serviceRepository,
+            AuthService authService,
+            OrderMapper orderMapper) {
         this.orderRepository = orderRepository;
         this.serviceRepository = serviceRepository;
         this.authService = authService;
@@ -42,7 +42,7 @@ public class OrderService {
     @Transactional
     public OrderResponseDTO create(OrderCreateRequestDTO dto) {
         User currentUser = authService.getAuthenticadUser();
-        validateClient(currentUser);
+        // validateClient(currentUser);
 
         com.ufrn.ppgti.servio.model.Service service = serviceRepository.findById(dto.getServiceId())
                 .orElseThrow(() -> new BusinessException("Serviço não encontrado."));
@@ -54,6 +54,9 @@ public class OrderService {
         ProviderProfile provider = service.getProvider();
         if (provider == null) {
             throw new BusinessException("O serviço selecionado não possui prestador associado.");
+        }
+        if (provider.getUser() != null && provider.getUser().getId().equals(currentUser.getId())) {
+            throw new BusinessException("Você não pode reservar o seu próprio serviço.");
         }
 
         int durationInMinutes = service.getDurationInMinutes();
@@ -138,10 +141,10 @@ public class OrderService {
     }
 
     private void validateAvailability(ProviderProfile provider,
-                                      DayOfWeek targetDayOfWeek,
-                                      java.time.LocalDate targetDate,
-                                      LocalTime startTime,
-                                      LocalTime endTime) {
+            DayOfWeek targetDayOfWeek,
+            java.time.LocalDate targetDate,
+            LocalTime startTime,
+            LocalTime endTime) {
 
         List<Availability> availabilitySlots = provider.getAvailabilitySlots();
         if (availabilitySlots == null || availabilitySlots.isEmpty()) {
@@ -167,9 +170,9 @@ public class OrderService {
     }
 
     private void validateProviderConflict(Long providerId,
-                                          java.time.LocalDate date,
-                                          LocalTime startTime,
-                                          LocalTime endTime) {
+            java.time.LocalDate date,
+            LocalTime startTime,
+            LocalTime endTime) {
         boolean hasConflict = orderRepository
                 .existsByProvider_IdAndDateAndStatusNotAndStartTimeLessThanAndEndTimeGreaterThan(
                         providerId,

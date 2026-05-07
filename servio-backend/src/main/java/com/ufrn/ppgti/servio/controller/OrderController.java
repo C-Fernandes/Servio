@@ -2,6 +2,8 @@ package com.ufrn.ppgti.servio.controller;
 
 import java.util.List;
 
+import com.ufrn.ppgti.servio.annotations.Client;
+import com.ufrn.ppgti.servio.annotations.Provider;
 import com.ufrn.ppgti.servio.dto.request.OrderCreateRequestDTO;
 import com.ufrn.ppgti.servio.dto.request.OrderStatusUpdateRequestDTO;
 import com.ufrn.ppgti.servio.dto.response.OrderResponseDTO;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Client
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -37,11 +40,13 @@ public class OrderController {
         return ResponseEntity.ok(orderService.findMyOrdersAsClient());
     }
 
+    @Provider
     @GetMapping("/provider")
     public ResponseEntity<List<OrderResponseDTO>> findProviderOrders() {
         return ResponseEntity.ok(orderService.findMyOrdersAsProvider());
     }
 
+    @Provider
     @PatchMapping("/{id}/status")
     public ResponseEntity<OrderResponseDTO> updateStatus(
             @PathVariable Long id,
