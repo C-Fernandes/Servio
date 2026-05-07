@@ -44,10 +44,11 @@
                 <span class="mat-icon">calendar_month</span>
                 <span>Agenda</span>
             </a>
+            @if(isAdmin){
             <a routerLink="/categories" routerLinkActive="active"
                 class="nav-item"><span class="mat-icon">sell</span>
                 <span>Categorias e Tags</span>
-            </a>
+            </a>}
             <a routerLink="provider/orders" routerLinkActive="active"
                 class="nav-item"><span class="mat-icon">list_alt_check</span>
                 <span>Pedidos</span>

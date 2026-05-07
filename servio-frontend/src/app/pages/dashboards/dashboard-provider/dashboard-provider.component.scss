@@ -22,3 +22,199 @@
     }
   }
 }
+/* ==================================
+   ABA: PEDIDOS (Kanban Mini)
+   ================================== */
+.kanban-mini {
+  display: flex;
+  flex-direction: column;
+
+  .status-filters {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    border-bottom: 1px solid var(--color-indigo-50);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+
+    .status-col {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text-main);
+
+      .badge {
+        background: white;
+        padding: 2px 6px;
+        border-radius: 6px;
+        font-size: 12px;
+        border: 1px solid var(--color-indigo-50);
+      }
+    }
+  }
+
+  .kanban-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+
+    .k-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .k-card {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      h4 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--color-text-primary);
+      }
+      .k-client,
+      .k-date {
+        margin: 0;
+        font-size: 12px;
+        color: var(--color-text-muted);
+      }
+      .k-price {
+        margin: 4px 0 0;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--color-primary);
+      }
+
+      .k-select-mock {
+        margin-top: 8px;
+        padding: 8px 12px;
+        border: 1px solid var(--color-indigo-50);
+        border-radius: 8px;
+        font-size: 13px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--color-text-main);
+
+        .mat-icon {
+          font-size: 18px;
+          color: var(--color-text-muted);
+        }
+      }
+    }
+  }
+}
+
+/* ==================================
+   ABA: SERVIÇOS E FINANÇAS
+   ================================== */
+.action-bar-right {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+
+  .btn-primary {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+}
+
+.list-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .list-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    gap: 24px;
+
+    .row-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      flex: 1;
+
+      h3 {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--color-text-primary);
+      }
+      p {
+        margin: 0;
+        font-size: 13px;
+        color: var(--color-text-muted);
+        line-height: 1.4;
+      }
+
+      .date-text {
+        font-size: 12px;
+        color: var(--color-text-muted);
+      }
+
+      .tag-badge {
+        background: var(--color-bg-soft);
+        color: var(--color-text-muted);
+        padding: 4px 10px;
+        border-radius: 16px;
+        font-size: 11px;
+        font-weight: 600;
+        margin-top: 4px;
+      }
+    }
+
+    .row-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .row-price {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--color-primary);
+      }
+
+      .finance-amount {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--color-text-primary);
+        &.negative {
+          color: var(--color-text-primary);
+        } /* Pode mudar para vermelho se desejar */
+      }
+
+      .icon-action {
+        background: transparent;
+        border: none;
+        color: var(--color-text-muted);
+        cursor: pointer;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        transition: color 0.2s;
+
+        .mat-icon {
+          font-size: 20px;
+        }
+        &:hover {
+          color: var(--color-text-primary);
+        }
+      }
+    }
+  }
+}

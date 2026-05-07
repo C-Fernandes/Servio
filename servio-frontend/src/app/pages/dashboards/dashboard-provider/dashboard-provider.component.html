@@ -1,63 +1,188 @@
 <header class="page-header">
-
     <h1 class="page-title">Painel do prestador</h1>
-    <p class="page-subtitle">Gerencie serviços, agenda e finanças</p>
+    <p class="page-subtitle">Gerencie serviços e finanças</p>
 </header>
 
 <section class="stats-grid">
     <div class="card stats-card primary-gradient">
-        <div class="card-icon">
-            <span class="mat-icon">account_balance_wallet</span>
-        </div>
+        <div class="card-icon"><span
+                class="mat-icon">account_balance_wallet</span></div>
         <div class="card-content">
             <p class="card-label">Ganhos líquidos</p>
-            <h2 class="card-value">R$ 0,00</h2>
+            <h2 class="card-value">
+                {{ ((financialDashboard()?.totalEarnings || 0) * 0.9) |
+                currency:'BRL':'symbol':'1.2-2' }}
+            </h2>
         </div>
     </div>
 
     <div class="card stats-card">
-        <div class="card-icon gray">
-            <span class="mat-icon">trending_up</span>
-        </div>
+        <div class="card-icon gray"><span
+                class="mat-icon">trending_up</span></div>
         <div class="card-content">
             <p class="card-label">Taxas pagas (10%)</p>
-            <h2 class="card-value">R$ 0,00</h2>
+            <h2 class="card-value">
+                {{ ((financialDashboard()?.totalEarnings || 0) * 0.1) |
+                currency:'BRL':'symbol':'1.2-2' }}
+            </h2>
         </div>
     </div>
 
     <div class="card stats-card">
-        <div class="card-icon blue">
-            <span class="mat-icon">work_history</span>
-        </div>
+        <div class="card-icon blue"><span
+                class="mat-icon">work_history</span></div>
         <div class="card-content">
             <p class="card-label">Pedidos pendentes</p>
-            <h2 class="card-value">0</h2>
+            <h2 class="card-value">{{ statusCounts().pending }}</h2>
         </div>
     </div>
 </section>
 
-<nav class="toggle-container">
-    <button class="toggle-btn active">Pedidos</button>
-    <button class="toggle-btn">Serviços</button>
-    <button class="toggle-btn">Agenda</button>
-    <button class="toggle-btn">Finanças</button>
+<nav class="toggle-container compact-toggle">
+    <button class="toggle-btn" [class.active]="activeTab() === 'pedidos'"
+        (click)="setTab('pedidos')">Pedidos</button>
+    <button class="toggle-btn" [class.active]="activeTab() === 'servicos'"
+        (click)="setTab('servicos')">Serviços</button>
+
+    <button class="toggle-btn" [class.active]="activeTab() === 'financas'"
+        (click)="setTab('financas')">Finanças</button>
 </nav>
 
-<section class="status-filters">
-    <div class="status-item">
-        <span>Pendente</span>
-        <span class="badge">0</span>
+<div class="tab-content">
+
+    @if (activeTab() === 'pedidos') {
+    <section class="kanban-mini">
+        <div class="status-filters">
+            <div class="status-col">
+                <span>Pendente</span>
+                <span class="badge">{{ statusCounts().pending }}</span>
+            </div>
+            <div class="status-col">
+                <span>Em andamento</span>
+                <span class="badge">{{ statusCounts().inProgress }}</span>
+            </div>
+            <div class="status-col">
+                <span>Concluído</span>
+                <span class="badge">{{ statusCounts().completed }}</span>
+            </div>
+            <div class="status-col">
+                <span>Cancelado</span>
+                <span class="badge">{{ statusCounts().cancelled }}</span>
+            </div>
+        </div>
+
+        <div class="kanban-grid">
+            <div class="k-col">
+                @for (order of pendingOrders(); track order.id) {
+                <div class="card k-card">
+                    <h4>{{ order.serviceTitle }}</h4>
+                    <p class="k-client">{{ order.clientName }}</p>
+                    <p class="k-date">{{ order.date }}</p>
+                    <p class="k-price">{{ order.servicePrice |
+                        currency:'BRL':'symbol':'1.2-2' }}</p>
+                    <div class="k-select-mock">Pendente <span
+                            class="mat-icon">expand_more</span></div>
+                </div>
+                }
+            </div>
+            <div class="k-col">
+                @for (order of inProgressOrders(); track order.id) {
+                <div class="card k-card">
+                    <h4>{{ order.serviceTitle }}</h4>
+                    <p class="k-client">{{ order.clientName }}</p>
+                    <p class="k-date">{{ order.date }}</p>
+                    <p class="k-price">{{ order.servicePrice |
+                        currency:'BRL':'symbol':'1.2-2' }}</p>
+                    <div class="k-select-mock">Em andamento <span
+                            class="mat-icon">expand_more</span></div>
+                </div>
+                }
+            </div>
+            <div class="k-col">
+                @for (order of completedOrders(); track order.id) {
+                <div class="card k-card">
+                    <h4>{{ order.serviceTitle }}</h4>
+                    <p class="k-client">{{ order.clientName }}</p>
+                    <p class="k-date">{{ order.date }}</p>
+                    <p class="k-price">{{ order.servicePrice |
+                        currency:'BRL':'symbol':'1.2-2' }}</p>
+                    <div class="k-select-mock">Concluído <span
+                            class="mat-icon">expand_more</span></div>
+                </div>
+                }
+            </div>
+            <div class="k-col">
+                @for (order of cancelledOrders(); track order.id) {
+                <div class="card k-card">
+                    <h4>{{ order.serviceTitle }}</h4>
+                    <p class="k-client">{{ order.clientName }}</p>
+                    <p class="k-date">{{ order.date }}</p>
+                    <p class="k-price">{{ order.servicePrice |
+                        currency:'BRL':'symbol':'1.2-2' }}</p>
+                    <div class="k-select-mock">Cancelado <span
+                            class="mat-icon">expand_more</span></div>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+    }
+
+    @if (activeTab() === 'servicos') {
+    <div class="action-bar-right">
+        <button class="btn-primary" routerLink="/manage-categories">+ Novo
+            serviço</button>
     </div>
-    <div class="status-item">
-        <span>Em andamento</span>
-        <span class="badge">0</span>
+    <div class="list-layout">
+        @for (srv of providerServices(); track srv.id) {
+        <div class="card list-row">
+            <div class="row-info">
+                <h3>{{ srv.title }}</h3>
+                <p>{{ srv.description }}</p>
+                <span class="tag-badge">{{ srv.category }}</span>
+            </div>
+            <div class="row-actions">
+                <span class="row-price">{{ srv.price |
+                    currency:'BRL':'symbol':'1.2-2' }}</span>
+                <button class="icon-action"><span
+                        class="mat-icon">edit_square</span></button>
+                <button class="icon-action"
+                    (click)="deleteService(srv.id)"><span
+                        class="mat-icon">delete</span></button>
+            </div>
+        </div>
+        } @empty {
+        <div
+            style="text-align: center; padding: 40px; color: var(--color-text-muted);">
+            Nenhum serviço cadastrado ainda.
+        </div>
+        }
     </div>
-    <div class="status-item">
-        <span>Concluído</span>
-        <span class="badge">0</span>
+    }
+
+    @if (activeTab() === 'financas') {
+    <div class="list-layout finance-layout">
+        @for (tx of financialTransactions(); track tx.id) {
+        <div class="card list-row">
+            <div class="row-info">
+                <h3>{{ tx.title }}</h3>
+                <p class="date-text">{{ tx.date }}</p>
+            </div>
+            <div class="row-actions">
+                <span class="finance-amount"
+                    [class.negative]="tx.type === 'EXPENSE'">
+                    {{ tx.amount > 0 ? '+' : '' }} {{ tx.amount |
+                    currency:'BRL':'symbol':'1.2-2' }}
+                </span>
+            </div>
+        </div>
+        } @empty {
+        <div
+            style="text-align: center; padding: 40px; color: var(--color-text-muted);">
+            Nenhuma transação financeira registrada.
+        </div>
+        }
     </div>
-    <div class="status-item">
-        <span>Cancelado</span>
-        <span class="badge">0</span>
-    </div>
-</section>
+    }
+
+</div>
