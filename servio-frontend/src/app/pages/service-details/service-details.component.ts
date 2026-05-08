@@ -114,7 +114,7 @@ export class ServiceDetailsComponent {
       error: (err) => {
         console.error('Erro ao criar pedido:', err);
         this.isReserving.set(false);
-        this.toast.showToast('Ocorreu um erro ao tentar reservar o horário.', 'error');
+        this.toast.showToast(err.error.message, 'error');
       },
     });
   }

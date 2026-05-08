@@ -20,6 +20,7 @@ import com.ufrn.ppgti.servio.model.Availability;
 import com.ufrn.ppgti.servio.model.Order;
 import com.ufrn.ppgti.servio.model.ProviderProfile;
 import com.ufrn.ppgti.servio.model.User;
+import com.ufrn.ppgti.servio.model.enums.OrderStatus;
 import com.ufrn.ppgti.servio.repository.AvailabilityRepository;
 import com.ufrn.ppgti.servio.repository.OrderRepository;
 import com.ufrn.ppgti.servio.repository.ProviderProfileRepository;
@@ -145,6 +146,7 @@ public class AvailabilityService {
 
     private boolean hasTimeConflict(LocalDate date, LocalTime start, LocalTime end, List<Order> bookedOrders) {
         return bookedOrders.stream()
+                .filter(order -> order.getStatus() != OrderStatus.CANCELLED)
                 .anyMatch(order -> order.getDate().equals(date) &&
                         start.isBefore(order.getEndTime()) &&
                         end.isAfter(order.getStartTime()));
