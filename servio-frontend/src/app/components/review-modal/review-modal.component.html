@@ -1,0 +1,50 @@
+@if (order) {
+<div class="modal-backdrop" (click)="onClose()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <div>
+                <h2>Avaliar serviço</h2>
+                <p>{{ order.serviceTitle }}</p>
+            </div>
+
+            <button type="button" class="close-btn" (click)="onClose()">
+                <span class="mat-icon">close</span>
+            </button>
+        </div>
+
+        <div class="stars-container" (mouseleave)="clearHover()">
+            @for (star of [1, 2, 3, 4, 5]; track star) {
+            <button
+                type="button"
+                class="star-btn"
+                [class.active]="isStarActive(star)"
+                (click)="setRating(star)"
+                (mouseenter)="setHover(star)">
+                <span class="mat-icon">
+                    {{ isStarActive(star) ? 'star' : 'star_border' }}
+                </span>
+            </button>
+            }
+        </div>
+
+        <textarea
+            [(ngModel)]="comment"
+            rows="4"
+            maxlength="500"
+            placeholder="Deixe um comentário (opcional)">
+      </textarea>
+
+        <div class="comment-counter">
+            {{ comment.length }}/500
+        </div>
+
+        <button
+            type="button"
+            class="submit-btn"
+            [disabled]="rating() === 0"
+            (click)="onSubmit()">
+            Enviar avaliação
+        </button>
+    </div>
+</div>
+}

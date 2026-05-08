@@ -3,6 +3,8 @@ package com.ufrn.ppgti.servio.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.ufrn.ppgti.servio.model.enums.OrderStatus;
 
@@ -15,6 +17,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -47,6 +50,9 @@ public class Order {
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Payment payment;
+
+    @OneToOne(mappedBy = "order")
+    private Review review;
 
     public Long getId() {
         return this.id;
@@ -126,6 +132,14 @@ public class Order {
 
     public void setPayment(Payment payment) {
         this.payment = payment;
+    }
+
+    public Review getReview() {
+        return this.review;
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
     }
 
 }

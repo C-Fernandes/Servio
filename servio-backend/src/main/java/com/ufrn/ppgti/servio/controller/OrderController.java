@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Client
 @RestController
+@RequestMapping("/orders")
 public class OrderController {
 
     private final OrderService orderService;
@@ -29,11 +29,13 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @Client
     @PostMapping
     public ResponseEntity<OrderResponseDTO> create(@RequestBody @Valid OrderCreateRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.create(dto));
     }
 
+    @Client
     @GetMapping("/my-orders")
     public ResponseEntity<List<OrderResponseDTO>> findMyOrders() {
         return ResponseEntity.ok(orderService.findMyOrdersAsClient());

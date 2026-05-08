@@ -85,7 +85,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public List<OrderResponseDTO> findMyOrdersAsClient() {
         User currentUser = authService.getAuthenticadUser();
-        validateClient(currentUser);
+        // validateClient(currentUser);
 
         return orderRepository.findByClient_IdOrderByCreatedAtDesc(currentUser.getId())
                 .stream()

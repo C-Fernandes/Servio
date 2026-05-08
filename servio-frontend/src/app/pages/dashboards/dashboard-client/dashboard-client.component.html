@@ -1,5 +1,4 @@
 <header class="page-header">
-
     <h1 class="page-title">Meu painel</h1>
     <p class="page-subtitle">Acompanhe suas reservas e gastos</p>
 </header>
@@ -9,6 +8,7 @@
         <div class="card-icon blue">
             <span class="mat-icon">shopping_bag</span>
         </div>
+
         <div class="card-content">
             <p class="card-label">Pedidos ativos</p>
             <h2 class="card-value">{{ stats()?.activeOrders || 0 }}</h2>
@@ -19,6 +19,7 @@
         <div class="card-icon gray">
             <span class="mat-icon">payments</span>
         </div>
+
         <div class="card-content">
             <p class="card-label">Pedidos concluídos</p>
             <h2 class="card-value">{{ stats()?.completedOrders || 0 }}</h2>
@@ -29,22 +30,137 @@
         <div class="card-icon">
             <span class="mat-icon">account_balance_wallet</span>
         </div>
+
         <div class="card-content">
             <p class="card-label">Total gasto</p>
-            <h2 class="card-value">{{ (stats()?.totalSpent || 0) |
-                currency:'BRL':'symbol':'1.2-2' }}</h2>
+            <h2 class="card-value">
+                {{ (stats()?.totalSpent || 0) | currency:'BRL':'symbol':'1.2-2'
+                }}
+            </h2>
         </div>
     </div>
 </section>
 
 <nav class="toggle-container">
-    <button class="toggle-btn active">Reservas</button>
-    <button class="toggle-btn">Transações</button>
+    <button
+        class="toggle-btn"
+        [class.active]="activeTab() === 'reservas'"
+        (click)="setTab('reservas')">
+        Reservas
+    </button>
+
+    <button
+        class="toggle-btn"
+        [class.active]="activeTab() === 'avaliacoes'"
+        (click)="setTab('avaliacoes')">
+        Minhas avaliações
+    </button>
 </nav>
 
+@if (activeTab() === 'reservas') {
+@if (mappedOrders().length > 0) {
+<section class="orders-list">
+    @for (order of mappedOrders(); track order.id) {
+    <div class="order-card">
+        <div class="order-main">
+            <h3 class="order-title">{{ order.service }}</h3>
+
+            <p class="order-subtitle">
+                com {{ order.provider }} ·
+                {{ formatDateTime(order.date, order.startTime) }}
+            </p>
+        </div>
+
+        <div class="order-side">
+            <strong class="order-price">
+                {{ order.amount | currency:'BRL':'symbol':'1.2-2' }}
+            </strong>
+
+            <span
+                class="status-badge"
+                [ngClass]="getStatusClass(order.status)">
+                {{ getStatusLabel(order.status) }}
+            </span>
+
+            @if (canReview(order.status) && !hasReviewForOrder(order.id)) {
+            <button
+                type="button"
+                class="review-btn"
+                (click)="openReviewModal(order.id)">
+                <span class="mat-icon">star_border</span>
+                Avaliar
+            </button>
+            }
+
+            @if (hasReviewForOrder(order.id)) {
+            <span class="review-done">
+                <span class="mat-icon">check_circle</span>
+                Avaliado
+            </span>
+            }
+        </div>
+    </div>
+    }
+</section>
+} @else {
 <section class="empty-state-card card stats-card">
     <p class="empty-message">
         Você ainda não fez nenhuma reserva.
         <a routerLink="/explorar" class="link">Explorar serviços</a>
     </p>
 </section>
+}
+}
+
+@if (activeTab() === 'avaliacoes') {
+@if (reviews().length > 0) {
+<section class="reviews-list">
+    @for (review of reviews(); track review.id) {
+    <div class="my-review-card">
+        <div class="review-info">
+            <h3 class="review-service-title">
+                {{ review.serviceTitle }}
+            </h3>
+
+            <p class="review-provider">
+                com {{ review.providerName }} · Avaliado em {{
+                formatReviewDate(review.createdAt) }}
+            </p>
+
+            @if (review.comment) {
+            <p class="review-comment">
+                "{{ review.comment }}"
+            </p>
+            } @else {
+            <p class="review-comment muted">
+                Sem comentário.
+            </p>
+            }
+        </div>
+
+        <div class="review-stars-display">
+            @for (star of getStars(); track star) {
+            <span
+                class="mat-icon"
+                [class.filled]="star <= review.rating">
+                {{ star <= review.rating ? 'star' : 'star_border' }}
+            </span>
+            }
+        </div>
+    </div>
+    }
+</section>
+} @else {
+<section class="empty-state-card card stats-card">
+    <p class="empty-message">
+        Você ainda não fez nenhuma avaliação.
+    </p>
+</section>
+}
+}
+
+<app-review-modal
+    [order]="selectedOrderToReview()"
+    (close)="closeReviewModal()"
+    (submitReview)="submitReview($event)">
+</app-review-modal>

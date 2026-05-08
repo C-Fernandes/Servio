@@ -22,7 +22,11 @@ export class ServiceDetailsComponent {
 
   serviceData = signal<Service | undefined>(undefined);
   isLoading = signal(true); isReserving = signal(false); selectedSlot = signal<{ date: string, time: string } | null>(null);
+  activeTab = signal<'description' | 'professional' | 'reviews'>('description');
 
+  setActiveTab(tab: 'description' | 'professional' | 'reviews') {
+    this.activeTab.set(tab);
+  }
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {

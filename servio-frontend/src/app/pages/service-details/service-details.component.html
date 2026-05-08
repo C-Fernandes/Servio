@@ -72,12 +72,31 @@
             </div>
         </div>
         <div class="tabs-container">
-            <button class="tab-btn active">Descrição</button>
-            <button class="tab-btn">Profissional</button>
-            <button class="tab-btn">Avaliações (1)</button>
+            <button
+                class="tab-btn"
+                [class.active]="activeTab() === 'description'"
+                (click)="setActiveTab('description')">
+                Descrição
+            </button>
+
+            <button
+                class="tab-btn"
+                [class.active]="activeTab() === 'professional'"
+                (click)="setActiveTab('professional')">
+                Profissional
+            </button>
+
+            <button
+                class="tab-btn"
+                [class.active]="activeTab() === 'reviews'"
+                (click)="setActiveTab('reviews')">
+                Avaliações (1)
+            </button>
         </div>
 
         <div class="tab-content">
+
+            @if (activeTab() === 'description') {
             <h3>Sobre o serviço</h3>
             <p>{{ data.description }}</p>
 
@@ -89,6 +108,103 @@
                 }
             </div>
             }
+            }
+
+            @if (activeTab() === 'professional') {
+            <div class="professional-content">
+                <div class="professional-header">
+                    <div class="professional-avatar">PP</div>
+
+                    <div>
+                        <h3>Pedro Prestador</h3>
+                        <p>Designer UI/UX Sênior</p>
+                        <span class="verified-professional">
+                            <span class="mat-icon">verified</span>
+                            Profissional verificado
+                        </span>
+                    </div>
+                </div>
+
+                <p class="professional-description">
+                    Profissional especializado em criação de interfaces
+                    modernas, responsivas
+                    e focadas na experiência do usuário.
+                </p>
+            </div>
+            }
+
+            @if (activeTab() === 'reviews') {
+            <div class="reviews-content">
+
+                <div class="reviews-summary">
+                    <div class="rating-left">
+                        <strong class="rating-number">5.0</strong>
+
+                        <div class="rating-stars">
+                            <span class="mat-icon">star</span>
+                            <span class="mat-icon">star</span>
+                            <span class="mat-icon">star</span>
+                            <span class="mat-icon">star</span>
+                            <span class="mat-icon">star</span>
+                        </div>
+
+                        <span class="review-count">1 avaliações</span>
+                    </div>
+
+                    <div class="rating-bars">
+                        @for (item of [
+                        { stars: 5, count: 1 },
+                        { stars: 4, count: 0 },
+                        { stars: 3, count: 0 },
+                        { stars: 2, count: 0 },
+                        { stars: 1, count: 0 }
+                        ]; track item.stars) {
+                        <div class="rating-row">
+                            <span class="star-label">{{ item.stars }}</span>
+                            <span class="mat-icon small-star">star_border</span>
+
+                            <div class="bar">
+                                <div
+                                    class="bar-fill"
+                                    [style.width.%]="item.count === 1 ? 100 : 0">
+                                </div>
+                            </div>
+
+                            <span class="rating-count">{{ item.count }}</span>
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="review-divider"></div>
+
+                <div class="review-item">
+                    <div class="client-avatar">CA</div>
+
+                    <div class="review-body">
+                        <div class="review-header">
+                            <strong>Carla Cliente</strong>
+                        </div>
+
+                        <div class="review-meta">
+                            <span class="review-stars">
+                                <span class="mat-icon">star_border</span>
+                                <span class="mat-icon">star_border</span>
+                                <span class="mat-icon">star_border</span>
+                                <span class="mat-icon">star_border</span>
+                                <span class="mat-icon">star_border</span>
+                            </span>
+
+                            <span>29/04/2026</span>
+                        </div>
+
+                        <p>Trabalho impecável, super recomendo!</p>
+                    </div>
+                </div>
+
+            </div>
+            }
+
         </div>
     </main>
 
