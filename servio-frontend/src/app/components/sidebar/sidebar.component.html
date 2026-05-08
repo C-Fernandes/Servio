@@ -1,77 +1,93 @@
 <aside class="sidebar">
-    <div class="sidebar-container"> <div class="brand">
-            <div class="logo-icon">
-                <span class="mat-icon">auto_awesome</span>
-            </div>
-            <span class="brand-name">Servio</span>
-        </div>
+  <div class="sidebar-container">
+    <div class="brand">
+      <div class="logo-icon">
+        <span class="mat-icon">auto_awesome</span>
+      </div>
+      <span class="brand-name">Servio</span>
+    </div>
 
-        <nav class="nav-section">
-            @if (isProviderOrAdmin) {
-            <p class="section-title">Painéis</p>
-            }@else { <p class="section-title">Painel</p>}
-            @if (isProviderOrAdmin) {
-            <a routerLink="/provider" routerLinkActive="active"
-                class="nav-item">
-                <span class="mat-icon">work</span>
-                <span>Painel Prestador</span>
-            </a>
-            }
-            <a routerLink="/client" routerLinkActive="active" class="nav-item">
-                <span class="mat-icon">shopping_bag</span>
-                <span>Painel Cliente</span>
-            </a>
-        </nav>
-        <nav class="nav-section">
-            <p class="section-title">Marketplace</p>
-            <a routerLink="/explore" routerLinkActive="active" class="nav-item">
-                <span class="mat-icon">search</span>
-                <span>Explorar serviços</span>
-            </a>
-        </nav>
+    <nav class="nav-section">
+      @if (isProviderOrAdmin) {
+        <p class="section-title">Painéis</p>
+      } @else {
+        <p class="section-title">Painel</p>
+      }
 
-        @if (isProviderOrAdmin) {
-        <nav class="nav-section">
-            <p class="section-title">Gerenciamento</p>
+      @if (isProviderOrAdmin) {
+        <a routerLink="/provider" routerLinkActive="active" class="nav-item">
+          <span class="mat-icon">work</span>
+          <span>Painel Prestador</span>
+        </a>
+      }
 
-            <a routerLink="/my-services" routerLinkActive="active"
-                class="nav-item">
-                <span class="mat-icon">build</span>
-                <span>Meus serviços</span>
-            </a>
-            <a routerLink="/calendar" routerLinkActive="active"
-                class="nav-item">
-                <span class="mat-icon">calendar_month</span>
-                <span>Agenda</span>
-            </a>
-            @if(isAdmin){
-            <a routerLink="/categories" routerLinkActive="active"
-                class="nav-item"><span class="mat-icon">sell</span>
-                <span>Categorias e Tags</span>
-            </a>}
-            <a routerLink="provider/orders" routerLinkActive="active"
-                class="nav-item"><span class="mat-icon">list_alt_check</span>
-                <span>Pedidos</span>
-            </a>
-        </nav>
+      <a routerLink="/client" routerLinkActive="active" class="nav-item">
+        <span class="mat-icon">shopping_bag</span>
+        <span>Painel Cliente</span>
+      </a>
+    </nav>
+
+    <nav class="nav-section">
+      <p class="section-title">Marketplace</p>
+
+      <a routerLink="/explore" routerLinkActive="active" class="nav-item">
+        <span class="mat-icon">search</span>
+        <span>Explorar serviços</span>
+      </a>
+    </nav>
+
+    @if (isProviderOrAdmin) {
+      <nav class="nav-section">
+        <p class="section-title">Gerenciamento</p>
+
+        <a routerLink="/my-services" routerLinkActive="active" class="nav-item">
+          <span class="mat-icon">build</span>
+          <span>Meus serviços</span>
+        </a>
+
+        <a routerLink="/calendar" routerLinkActive="active" class="nav-item">
+          <span class="mat-icon">calendar_month</span>
+          <span>Agenda</span>
+        </a>
+
+        @if(isAdmin){
+          <a routerLink="/categories" routerLinkActive="active" class="nav-item">
+            <span class="mat-icon">sell</span>
+            <span>Categorias e Tags</span>
+          </a>
         }
-    </div>
-    <div class="user-footer">
-        <div class="user-profile">
-            <div class="avatar">{{ user.photo }}</div>
-            <div class="user-info">
-                <span class="user-name">{{ user.name }}</span>
-                <span class="user-role">
-                    {{ user.role === 'PROVIDER' ? 'Prestador' : (user.role
-                    ===
-                    'ADMIN' ? 'Admin' : 'Cliente') }}
-                </span>
-            </div>
-        </div>
 
-        <button class="logout-btn" (click)="logout()">
-            <span class="mat-icon">logout</span>
-            <span>Sair</span>
-        </button>
+        <a routerLink="/provider/orders" routerLinkActive="active" class="nav-item">
+          <span class="mat-icon">list_alt_check</span>
+          <span>Pedidos</span>
+        </a>
+      </nav>
+    }
+
+    <nav class="nav-section">
+      <p class="section-title">Conta</p>
+
+      <a routerLink="/account" routerLinkActive="active" class="nav-item">
+        <span class="mat-icon">manage_accounts</span>
+        <span>Minha conta</span>
+      </a>
+    </nav>
+  </div>
+
+  <div class="user-footer">
+    <div class="user-profile">
+      <div class="avatar">{{ user.photo }}</div>
+      <div class="user-info">
+        <span class="user-name">{{ user.name }}</span>
+        <span class="user-role">
+                    {{ user.role === 'PROVIDER' ? 'Prestador' : (user.role === 'ADMIN' ? 'Admin' : 'Cliente') }}
+                </span>
+      </div>
     </div>
+
+    <button class="logout-btn" (click)="logout()">
+      <span class="mat-icon">logout</span>
+      <span>Sair</span>
+    </button>
+  </div>
 </aside>

@@ -8,7 +8,9 @@ public class UserUpdateRequestDTO {
     private String number;
     private String complement;
     private String neighborhood;
-    private Long localityId;
+    private String zipCode;
+    private String city;
+    private String state;
 
     public String getName() {
         return name;
@@ -58,11 +60,27 @@ public class UserUpdateRequestDTO {
         this.neighborhood = neighborhood;
     }
 
-    public Long getLocalityId() {
-        return localityId;
+    public String getZipCode() {
+        return zipCode;
     }
 
-    public void setLocalityId(Long localityId) {
-        this.localityId = localityId;
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

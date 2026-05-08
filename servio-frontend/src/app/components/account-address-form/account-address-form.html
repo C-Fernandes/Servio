@@ -1,0 +1,96 @@
+<div class="form-card">
+  <div class="form-card__header">
+    <h3>Endereço</h3>
+    <p>Onde os serviços podem ser prestados.</p>
+  </div>
+
+  <div class="form-grid--address">
+    <div class="field field--zip">
+      <label for="zipCode">CEP</label>
+      <input
+        id="zipCode"
+        name="zipCode"
+        type="text"
+        inputmode="numeric"
+        maxlength="9"
+        placeholder="00000-000"
+        [(ngModel)]="address.zipCode"
+        (ngModelChange)="onZipCodeChange($event)"
+      />
+    </div>
+
+    <div class="field field--street">
+      <label for="street">Rua / Logradouro</label>
+      <input
+        id="street"
+        name="street"
+        type="text"
+        maxlength="120"
+        [(ngModel)]="address.street"
+        (ngModelChange)="address.street = limitText($event, 120)"
+      />
+    </div>
+
+    <div class="field field--number">
+      <label for="number">Número</label>
+      <input
+        id="number"
+        name="number"
+        type="text"
+        inputmode="numeric"
+        maxlength="10"
+        [(ngModel)]="address.number"
+        (ngModelChange)="onNumberChange($event)"
+      />
+    </div>
+
+    <div class="field field--complement">
+      <label for="complement">Complemento</label>
+      <input
+        id="complement"
+        name="complement"
+        type="text"
+        maxlength="80"
+        [(ngModel)]="address.complement"
+        (ngModelChange)="address.complement = limitText($event, 80)"
+      />
+    </div>
+
+    <div class="field field--district">
+      <label for="district">Bairro</label>
+      <input
+        id="district"
+        name="district"
+        type="text"
+        maxlength="80"
+        [(ngModel)]="address.district"
+        (ngModelChange)="address.district = limitText($event, 80)"
+      />
+    </div>
+
+    <div class="field field--city">
+      <label for="city">Cidade</label>
+      <input
+        id="city"
+        name="city"
+        type="text"
+        maxlength="80"
+        [(ngModel)]="address.city"
+        (ngModelChange)="address.city = limitText($event, 80)"
+      />
+    </div>
+
+    <div class="field field--state">
+      <label for="state">UF</label>
+      <input
+        id="state"
+        name="state"
+        type="text"
+        maxlength="2"
+        placeholder="UF"
+        [(ngModel)]="address.state"
+        (ngModelChange)="onStateChange($event)"
+      />
+    </div>
+  </div>
+</div>

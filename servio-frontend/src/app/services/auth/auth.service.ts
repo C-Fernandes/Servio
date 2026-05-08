@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { Observable, tap } from 'rxjs'; import { environment } from '../../../environments/environment';
+import { Observable, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import { AuthResponse } from '../../models/User';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -47,13 +49,13 @@ export class AuthService {
   private saveToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
   }
+
   private decodeToken(): any {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem(this.TOKEN_KEY);
     if (!token) return null;
 
     try {
       const payloadBase64 = token.split('.')[1];
-
       const base64 = payloadBase64.replace(/-/g, '+').replace(/_/g, '/');
 
       const jsonPayload = decodeURIComponent(
@@ -70,13 +72,18 @@ export class AuthService {
     }
   }
 
+  getUserId(): number | null {
+    const payload = this.decodeToken();
+    return payload?.sub ? Number(payload.sub) : null;
+  }
+
   getUserName(): string | null {
     const payload = this.decodeToken();
-    return payload ? payload.name : null;
+    return payload?.name ?? null;
   }
 
   getUserRole(): string | null {
     const payload = this.decodeToken();
-    return payload ? payload.role : null;
+    return payload?.role ?? null;
   }
 }

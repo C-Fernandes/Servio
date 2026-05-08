@@ -1,0 +1,43 @@
+@use 'header';
+
+.account-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.save-button {
+  border: none;
+  border-radius: 16px;
+  padding: 14px 24px;
+  min-width: 220px;
+  background: linear-gradient(90deg, #6c4cf6 0%, #e54fc8 100%);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.save-button:hover {
+  opacity: 0.95;
+}
+
+@media (max-width: 768px) {
+  .page-actions {
+    justify-content: stretch;
+  }
+
+  .save-button {
+    width: 100%;
+  }
+}

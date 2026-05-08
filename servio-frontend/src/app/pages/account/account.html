@@ -1,0 +1,43 @@
+<header class="page-header">
+  <h1 class="page-title">Minha conta</h1>
+  <p class="page-subtitle">
+    Gerencie suas informações pessoais, contato e endereço.
+  </p>
+</header>
+
+<div class="account-page">
+  <app-account-header-card
+    [fullName]="personal.fullName"
+    [email]="contact.email"
+  ></app-account-header-card>
+
+  <app-account-tabs
+    [activeTab]="activeTab"
+    (tabChange)="setTab($event)"
+  ></app-account-tabs>
+
+  @if (activeTab === 'personal') {
+    <app-account-personal-form
+      [personal]="personal"
+    ></app-account-personal-form>
+  }
+
+  @if (activeTab === 'contact') {
+    <app-account-contact-form
+      [contact]="contact"
+    ></app-account-contact-form>
+  }
+
+  @if (activeTab === 'address') {
+    <app-account-address-form
+      [address]="address"
+    ></app-account-address-form>
+  }
+
+  <div class="page-actions">
+    <button class="save-button" type="button" (click)="save()">
+      <span class="mat-icon">save</span>
+      <span>Salvar alterações</span>
+    </button>
+  </div>
+</div>

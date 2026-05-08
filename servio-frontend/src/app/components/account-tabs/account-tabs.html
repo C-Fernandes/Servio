@@ -1,0 +1,31 @@
+<div class="tabs">
+  <button
+    type="button"
+    class="tabs__button"
+    [class.tabs__button--active]="activeTab === 'personal'"
+    (click)="selectTab('personal')"
+  >
+    <span class="mat-icon tabs__icon">person_outline</span>
+    <span>Pessoais</span>
+  </button>
+
+  <button
+    type="button"
+    class="tabs__button"
+    [class.tabs__button--active]="activeTab === 'contact'"
+    (click)="selectTab('contact')"
+  >
+    <span class="mat-icon tabs__icon">call</span>
+    <span>Contato</span>
+  </button>
+
+  <button
+    type="button"
+    class="tabs__button"
+    [class.tabs__button--active]="activeTab === 'address'"
+    (click)="selectTab('address')"
+  >
+    <span class="mat-icon tabs__icon">location_on</span>
+    <span>Endereço</span>
+  </button>
+</div>
