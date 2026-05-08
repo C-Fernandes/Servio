@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
+
 export interface OrderUI {
   id: number;
   service: string;
@@ -8,6 +9,7 @@ export interface OrderUI {
   amount: number;
   statusUI: string;
 }
+
 @Component({
   selector: 'app-order-details-modal',
   imports: [CommonModule],
@@ -18,18 +20,26 @@ export class OrderDetailsModalComponent {
   order = input.required<OrderUI>();
 
   closeModal = output<void>();
-  statusChange = output<{ id: number, newStatus: string }>();
+  statusChange = output<{ id: number; newStatus: string }>();
 
   onClose() {
     this.closeModal.emit();
   }
 
-  onStatusChange(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    this.statusChange.emit({
-      id: this.order().id,
-      newStatus: selectElement.value
-    });
+  isStatusLocked(): boolean {
+    return this.order().statusUI === 'completed' || this.order().statusUI === 'cancelled';
   }
 
+  onStatusChange(event: Event) {
+    if (this.isStatusLocked()) {
+      return;
+    }
+
+    const selectElement = event.target as HTMLSelectElement;
+
+    this.statusChange.emit({
+      id: this.order().id,
+      newStatus: selectElement.value,
+    });
+  }
 }

@@ -29,38 +29,52 @@
                 </div>
                 <div class="detail-group">
                     <label>Valor líquido</label>
-                    <p class="highlight-purple">{{ order().amount |
-                        currency:'BRL':'symbol':'1.2-2' }}</p>
+                    <p class="highlight-purple">
+                        {{ (order().amount - (order().amount * 0.1)) |
+                        currency:'BRL':'symbol':'1.2-2' }}
+                    </p>
                 </div>
+
                 <div class="detail-group">
                     <label>Total</label>
-                    <p>{{ (order().amount / 0.9) |
-                        currency:'BRL':'symbol':'1.2-2' }}</p>
+                    <p>
+                        {{ order().amount | currency:'BRL':'symbol':'1.2-2' }}
+                    </p>
                 </div>
+
                 <div class="detail-group">
                     <label>Taxa (10%)</label>
-                    <p>{{ ((order().amount / 0.9) * 0.1) |
-                        currency:'BRL':'symbol':'1.2-2' }}</p>
+                    <p>
+                        {{ (order().amount * 0.1) |
+                        currency:'BRL':'symbol':'1.2-2' }}
+                    </p>
                 </div>
-            </div>
-
-            <div class="detail-group full-width">
-                <label>Observações do cliente</label>
-                <div class="notes-box">Aguardando confirmação do prestador</div>
             </div>
 
             <div class="detail-group full-width">
                 <label>Status</label>
-                <select class="status-select outline w-full active-focus"
+
+                <select
+                    class="status-select outline w-full active-focus"
                     [value]="order().statusUI"
+                    [disabled]="isStatusLocked()"
+                    [class.locked]="isStatusLocked()"
                     (change)="onStatusChange($event)">
-                    <option value="pending">Pendente</option> <option
-                        value="pending">Confirmado</option>
+
+                    <option value="pending">Pendente</option>
+                    <option value="confirmed">Confirmado</option>
                     <option value="inProgress">Em andamento</option>
                     <option value="completed">Concluído</option>
                     <option value="cancelled">Cancelado</option>
                 </select>
+
+                @if (isStatusLocked()) {
+                <p class="status-locked-message">
+                    Este pedido não pode mais ter o status alterado.
+                </p>
+                }
             </div>
+
         </div>
 
     </div>

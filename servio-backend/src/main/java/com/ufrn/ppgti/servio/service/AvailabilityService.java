@@ -1,6 +1,7 @@
 package com.ufrn.ppgti.servio.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -107,10 +108,15 @@ public class AvailabilityService {
         return dayRules;
     }
 
-    private List<AvailableSlotDTO> generateSlotsForDay(LocalDate date, List<Availability> dayRules,
-            int duration, List<Order> bookedOrders) {
+    private List<AvailableSlotDTO> generateSlotsForDay(
+            LocalDate date,
+            List<Availability> dayRules,
+            int duration,
+            List<Order> bookedOrders) {
         List<AvailableSlotDTO> dailySlots = new ArrayList<>();
         Set<LocalTime> generatedTimesForDay = new HashSet<>();
+
+        LocalDateTime now = LocalDateTime.now();
 
         for (Availability rule : dayRules) {
             LocalTime slotTime = rule.getStartTime();
@@ -120,9 +126,12 @@ public class AvailabilityService {
                 LocalTime currentSlotStart = slotTime;
                 LocalTime currentSlotEnd = slotTime.plusMinutes(duration);
 
+                LocalDateTime slotDateTime = LocalDateTime.of(date, currentSlotStart);
+
+                boolean isPastOrNow = !slotDateTime.isAfter(now);
                 boolean conflict = hasTimeConflict(date, currentSlotStart, currentSlotEnd, bookedOrders);
 
-                if (!conflict && !generatedTimesForDay.contains(currentSlotStart)) {
+                if (!isPastOrNow && !conflict && !generatedTimesForDay.contains(currentSlotStart)) {
                     dailySlots.add(new AvailableSlotDTO(date, currentSlotStart));
                     generatedTimesForDay.add(currentSlotStart);
                 }
@@ -130,6 +139,7 @@ public class AvailabilityService {
                 slotTime = slotTime.plusMinutes(duration);
             }
         }
+
         return dailySlots;
     }
 
