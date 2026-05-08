@@ -61,6 +61,8 @@ public class FinancialDashboardService {
 
         long activeOrders = 0;
         long completedOrders = 0;
+        long cancelledOrders = 0;
+
         BigDecimal totalSpent = BigDecimal.ZERO;
 
         for (Order order : clientOrders) {
@@ -68,12 +70,16 @@ public class FinancialDashboardService {
                     order.getStatus() == OrderStatus.CONFIRMED ||
                     order.getStatus() == OrderStatus.IN_PROGRESS) {
                 activeOrders++;
+
             } else if (order.getStatus() == OrderStatus.COMPLETED) {
                 completedOrders++;
                 totalSpent = totalSpent.add(BigDecimal.valueOf(order.getService().getPrice()));
+
+            } else if (order.getStatus() == OrderStatus.CANCELLED) {
+                cancelledOrders++;
             }
         }
 
-        return new ClientFinancialDashboardResponseDTO(totalSpent, completedOrders, activeOrders);
+        return new ClientFinancialDashboardResponseDTO(totalSpent, completedOrders, activeOrders, cancelledOrders);
     }
 }

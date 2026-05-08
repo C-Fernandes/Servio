@@ -5,5 +5,5 @@ export interface ProviderFinancialDashboardResponseDTO {
 }export interface ClientFinancialDashboardResponseDTO {
     totalSpent: number;
     completedOrders: number;
-    activeOrders: number;
+    activeOrders: number; cancelledOrders: number;
 }

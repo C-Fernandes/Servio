@@ -28,7 +28,7 @@ export class DashboardClientComponent {
   stats = signal<ClientFinancialDashboardResponseDTO | null>(null);
   orders = signal<OrderResponseDTO[]>([]);
   reviews = signal<ReviewResponseDTO[]>([]);
-
+  cancellingOrderId = signal<number | null>(null);
   selectedOrderToReview = signal<OrderResponseDTO | null>(null);
 
   mappedOrders = computed(() =>
@@ -157,5 +157,31 @@ export class DashboardClientComponent {
 
   getStars(): number[] {
     return [1, 2, 3, 4, 5];
+  } canCancel(status: OrderStatusEnum): boolean {
+    return status === 'PENDING';
+  }
+
+  cancelOrder(orderId: number) {
+    const confirmed = confirm('Tem certeza que deseja cancelar esta reserva?');
+
+    if (!confirmed) return;
+
+    this.cancellingOrderId.set(orderId);
+
+    this.orderService.updateStatus(orderId, 'CANCELLED').subscribe({
+      next: (updatedOrder) => {
+        this.orders.update((list) =>
+          list.map((order) => order.id === updatedOrder.id ? updatedOrder : order)
+        );
+
+        this.loadDashboard();
+        this.cancellingOrderId.set(null);
+      },
+      error: (err) => {
+        console.error('Erro ao cancelar pedido:', err);
+        alert('Erro ao cancelar reserva.');
+        this.cancellingOrderId.set(null);
+      },
+    });
   }
 }

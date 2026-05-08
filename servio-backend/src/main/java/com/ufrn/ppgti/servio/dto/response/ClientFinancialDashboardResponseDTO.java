@@ -6,11 +6,14 @@ public class ClientFinancialDashboardResponseDTO {
     private BigDecimal totalSpent;
     private Long completedOrders;
     private Long activeOrders;
+    private Long cancelledOrders;
 
-    public ClientFinancialDashboardResponseDTO(BigDecimal totalSpent, Long completedOrders, Long activeOrders) {
+    public ClientFinancialDashboardResponseDTO(BigDecimal totalSpent, Long completedOrders, Long activeOrders,
+            Long cancelledOrders) {
         this.totalSpent = totalSpent;
         this.completedOrders = completedOrders;
         this.activeOrders = activeOrders;
+        this.cancelledOrders = cancelledOrders;
     }
 
     // Getters e Setters
