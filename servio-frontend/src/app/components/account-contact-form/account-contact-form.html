@@ -1,0 +1,45 @@
+<div class="form-card">
+  <div class="form-card__header">
+    <h3>Contato</h3>
+    <p>Usado para comunicação sobre pedidos.</p>
+  </div>
+
+  <div class="form-grid form-grid--two">
+    <div class="field">
+      <label for="phone">Telefone / WhatsApp</label>
+      <input
+        id="phone"
+        name="phone"
+        type="text"
+        inputmode="numeric"
+        maxlength="15"
+        placeholder="(99) 99999-9999"
+        [(ngModel)]="contact.phone"
+        (ngModelChange)="onPhoneChange($event)"
+        (blur)="onPhoneBlur()"
+        [class.input--invalid]="phoneInvalid"
+      />
+
+      @if (phoneInvalid) {
+        <small class="field-error">Telefone inválido.</small>
+      }
+    </div>
+
+    <div class="field field--disabled">
+      <label for="email">E-mail de contato</label>
+
+      <div class="disabled-input-wrapper">
+        <input
+          id="email"
+          type="email"
+          [value]="contact.email"
+          disabled
+        />
+      </div>
+
+      <small class="field-hint">
+        O e-mail é utilizado como identificador de acesso e não pode ser alterado.
+      </small>
+    </div>
+  </div>
+</div>

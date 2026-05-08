@@ -48,15 +48,56 @@ public class UserService {
         user.setComplement(dto.getComplement());
         user.setNeighborhood(dto.getNeighborhood());
 
-        if (dto.getLocalityId() != null) {
-            Locality locality = localityRepository.findById(dto.getLocalityId())
-                    .orElseThrow(() -> new RuntimeException("Localidade não encontrada"));
+        if (dto.getZipCode() != null && !dto.getZipCode().isBlank()) {
+            String normalizedZipCode = dto.getZipCode().replaceAll("\\D", "");
+            String normalizedState = dto.getState() != null ? dto.getState().trim().toUpperCase() : null;
+            String normalizedCity = dto.getCity() != null ? dto.getCity().trim() : null;
+
+            if (normalizedCity == null || normalizedCity.isBlank()) {
+                throw new RuntimeException("Cidade é obrigatória quando o CEP for informado");
+            }
+
+            if (normalizedState == null || normalizedState.isBlank()) {
+                throw new RuntimeException("UF é obrigatória quando o CEP for informado");
+            }
+
+            Locality locality = localityRepository.findById(normalizedZipCode)
+                    .map(existingLocality -> {
+                        existingLocality.setCity(normalizedCity);
+                        existingLocality.setState(normalizedState);
+                        return localityRepository.save(existingLocality);
+                    })
+                    .orElseGet(() -> {
+                        Locality newLocality = new Locality();
+                        newLocality.setCep(normalizedZipCode);
+                        newLocality.setCity(normalizedCity);
+                        newLocality.setState(normalizedState);
+                        return localityRepository.save(newLocality);
+                    });
+
             user.setLocality(locality);
         } else {
             user.setLocality(null);
         }
 
         return toResponseDTO(userRepository.save(user));
+    }
+
+    private UserResponseDTO toResponseDTO(User user) {
+        return new UserResponseDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getRole().name(),
+                user.getPhone(),
+                user.getStreet(),
+                user.getNumber(),
+                user.getComplement(),
+                user.getNeighborhood(),
+                user.getLocality() != null ? user.getLocality().getCep() : null,
+                user.getLocality() != null ? user.getLocality().getCity() : null,
+                user.getLocality() != null ? user.getLocality().getState() : null
+        );
     }
 
     @Transactional
@@ -66,14 +107,5 @@ public class UserService {
 
         user.setDeleted(true);
         userRepository.save(user);
-    }
-
-    private UserResponseDTO toResponseDTO(User user) {
-        return new UserResponseDTO(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                user.getRole()
-        );
     }
 }
