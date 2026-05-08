@@ -25,6 +25,7 @@ import com.ufrn.ppgti.servio.mappers.AvailabilityMapper;
 import com.ufrn.ppgti.servio.mappers.ServiceMapper;
 import com.ufrn.ppgti.servio.model.Category;
 import com.ufrn.ppgti.servio.model.ProviderProfile;
+import com.ufrn.ppgti.servio.model.Review;
 import com.ufrn.ppgti.servio.model.Tag;
 import com.ufrn.ppgti.servio.model.User;
 
@@ -41,11 +42,12 @@ public class ServiceService {
     private final AvailabilityMapper availabilityMapper;
     private final OrderRepository orderRepository;
     private final AvailabilityService availabilityService;
+    private final ReviewService reviewService;
 
     public ServiceService(ServiceRepository repository, ServiceMapper mapper,
             AuthService authService, CategoryRepository categoryRepository, TagRepository tagRepository,
             AvailabilityMapper availabilityMapper, OrderRepository orderRepository,
-            AvailabilityService availabilityService) {
+            AvailabilityService availabilityService, ReviewService reviewService) {
         this.repository = repository;
         this.mapper = mapper;
         this.authService = authService;
@@ -54,15 +56,12 @@ public class ServiceService {
         this.availabilityMapper = availabilityMapper;
         this.orderRepository = orderRepository;
         this.availabilityService = availabilityService;
+        this.reviewService = reviewService;
     }
 
     public List<ServiceResponseDTO> findAllActive() {
         return repository.findByActiveTrueAndDeletedFalse().stream()
-                .map(entity -> {
-                    ServiceResponseDTO dto = mapper.toResponseDTO(entity);
-                    dto.setImage(extractBase64(entity.getImageUrl()));
-                    return dto;
-                })
+                .map(this::toResponseDTOWithDetails)
                 .collect(Collectors.toList());
     }
 
@@ -236,4 +235,19 @@ public class ServiceService {
         return null;
     }
 
+    private ServiceResponseDTO toResponseDTOWithDetails(com.ufrn.ppgti.servio.model.Service entity) {
+        ServiceResponseDTO dto = mapper.toResponseDTO(entity);
+
+        dto.setImage(extractBase64(entity.getImageUrl()));
+
+        if (entity.getId() != null) {
+            dto.setAverageRating(reviewService.getAverageRatingByServiceId(entity.getId()));
+            dto.setReviewCount(reviewService.getReviewCountByServiceId(entity.getId()));
+        } else {
+            dto.setAverageRating(0.0);
+            dto.setReviewCount(0L);
+        }
+
+        return dto;
+    }
 }

@@ -159,4 +159,26 @@ public class ReviewService {
                 order.getService().getId(),
                 order.getService().getTitle());
     }
+
+    @Transactional(readOnly = true)
+    public Double getAverageRatingByServiceId(Long serviceId) {
+        Double average = reviewRepository.findAverageRatingByServiceId(serviceId);
+
+        if (average == null) {
+            return 0.0;
+        }
+
+        return Math.round(average * 10.0) / 10.0;
+    }
+
+    @Transactional(readOnly = true)
+    public Long getReviewCountByServiceId(Long serviceId) {
+        Long count = reviewRepository.countReviewsByServiceId(serviceId);
+
+        if (count == null) {
+            return 0L;
+        }
+
+        return count;
+    }
 }

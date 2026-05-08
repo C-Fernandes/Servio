@@ -7,8 +7,8 @@ export interface Service {
     provider: string;
     durationInMinutes: number;
     description: string;
-    image: string;
-    rating: number;
+    image: string; averageRating?: number;
+    reviewCount?: number;
     active: boolean;
     category: string;
     tags: string[];

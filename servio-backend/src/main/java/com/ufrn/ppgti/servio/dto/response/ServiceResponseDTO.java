@@ -15,6 +15,8 @@ public class ServiceResponseDTO {
 
     private String provider;
 
+    private Double averageRating;
+    private Long reviewCount;
     private String image;
     private int durationInMinutes;
     private boolean active;
@@ -112,6 +114,22 @@ public class ServiceResponseDTO {
 
     public void setAvailableSlots(List<AvailableSlotDTO> availableSlots) {
         this.availableSlots = availableSlots;
+    }
+
+    public Double getAverageRating() {
+        return this.averageRating;
+    }
+
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public Long getReviewCount() {
+        return this.reviewCount;
+    }
+
+    public void setReviewCount(Long reviewCount) {
+        this.reviewCount = reviewCount;
     }
 
 }

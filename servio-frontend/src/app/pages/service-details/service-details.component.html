@@ -38,8 +38,14 @@
             <div class="service-meta">
                 <div class="meta-item">
                     <span class="stars">★★★★★</span>
-                    <span class="highlight">5.0</span>
-                    <span>(1 avaliações)</span>
+
+                    @if (reviewCount() > 0) {
+                    <span class="highlight">{{ averageRating() | number:'1.1-1'
+                        }}</span>
+                    <span>({{ getReviewCountText() }})</span>
+                    } @else {
+                    <span>Sem avaliações</span>
+                    }
                 </div>
                 <span class="dot-separator">•</span>
                 <div class="meta-item">
@@ -90,7 +96,7 @@
                 class="tab-btn"
                 [class.active]="activeTab() === 'reviews'"
                 (click)="setActiveTab('reviews')">
-                Avaliações (1)
+                Avaliações ({{ reviewCount() }})
             </button>
         </div>
 
@@ -136,41 +142,44 @@
             @if (activeTab() === 'reviews') {
             <div class="reviews-content">
 
+                @if (reviewCount() > 0) {
                 <div class="reviews-summary">
                     <div class="rating-left">
-                        <strong class="rating-number">5.0</strong>
+                        <strong class="rating-number">
+                            {{ averageRating() | number:'1.1-1' }}
+                        </strong>
 
                         <div class="rating-stars">
-                            <span class="mat-icon">star</span>
-                            <span class="mat-icon">star</span>
-                            <span class="mat-icon">star</span>
-                            <span class="mat-icon">star</span>
-                            <span class="mat-icon">star</span>
+                            @for (star of getStars(); track star) {
+                            <span
+                                class="mat-icon"
+                                [class.filled]="star <= averageRating()">
+                                {{ star <= averageRating() ? 'star' :
+                                'star_border' }}
+                            </span>
+                            }
                         </div>
 
-                        <span class="review-count">1 avaliações</span>
+                        <span class="review-count">{{ getReviewCountText()
+                            }}</span>
                     </div>
 
                     <div class="rating-bars">
-                        @for (item of [
-                        { stars: 5, count: 1 },
-                        { stars: 4, count: 0 },
-                        { stars: 3, count: 0 },
-                        { stars: 2, count: 0 },
-                        { stars: 1, count: 0 }
-                        ]; track item.stars) {
+                        @for (star of [5, 4, 3, 2, 1]; track star) {
                         <div class="rating-row">
-                            <span class="star-label">{{ item.stars }}</span>
-                            <span class="mat-icon small-star">star_border</span>
+                            <span class="star-label">{{ star }}</span>
+                            <span class="mat-icon small-star">star</span>
 
                             <div class="bar">
                                 <div
                                     class="bar-fill"
-                                    [style.width.%]="item.count === 1 ? 100 : 0">
+                                    [style.width.%]="getRatingPercentage(star)">
                                 </div>
                             </div>
 
-                            <span class="rating-count">{{ item.count }}</span>
+                            <span class="rating-count">
+                                {{ countReviewsByRating(star) }}
+                            </span>
                         </div>
                         }
                     </div>
@@ -178,29 +187,51 @@
 
                 <div class="review-divider"></div>
 
-                <div class="review-item">
-                    <div class="client-avatar">CA</div>
-
-                    <div class="review-body">
-                        <div class="review-header">
-                            <strong>Carla Cliente</strong>
+                <div class="reviews-list">
+                    @for (review of reviews(); track review.id) {
+                    <div class="review-item">
+                        <div class="client-avatar">
+                            {{ getInitials(review.clientName) }}
                         </div>
 
-                        <div class="review-meta">
-                            <span class="review-stars">
-                                <span class="mat-icon">star_border</span>
-                                <span class="mat-icon">star_border</span>
-                                <span class="mat-icon">star_border</span>
-                                <span class="mat-icon">star_border</span>
-                                <span class="mat-icon">star_border</span>
-                            </span>
+                        <div class="review-body">
+                            <div class="review-header">
+                                <strong>{{ review.clientName }}</strong>
+                            </div>
 
-                            <span>29/04/2026</span>
+                            <div class="review-meta">
+                                <span class="review-stars">
+                                    @for (star of getStars(); track star) {
+                                    <span
+                                        class="mat-icon"
+                                        [class.filled]="star <= review.rating">
+                                        {{ star <= review.rating ? 'star' :
+                                        'star_border' }}
+                                    </span>
+                                    }
+                                </span>
+
+                                <span>{{ formatReviewDate(review.createdAt)
+                                    }}</span>
+                            </div>
+
+                            @if (review.comment) {
+                            <p>{{ review.comment }}</p>
+                            } @else {
+                            <p class="muted">Sem comentário.</p>
+                            }
                         </div>
-
-                        <p>Trabalho impecável, super recomendo!</p>
                     </div>
+                    }
                 </div>
+                } @else {
+                <div class="no-reviews">
+                    <span class="mat-icon">star_border</span>
+                    <h3>Este serviço ainda não possui avaliações</h3>
+                    <p>As avaliações aparecerão aqui quando clientes concluírem
+                        reservas.</p>
+                </div>
+                }
 
             </div>
             }

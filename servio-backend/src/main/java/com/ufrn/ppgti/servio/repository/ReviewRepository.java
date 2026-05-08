@@ -74,4 +74,18 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
                 WHERE r.id = :reviewId
             """)
     Optional<Review> findByIdWithRelations(@Param("reviewId") Long reviewId);
+
+    @Query("""
+                SELECT COALESCE(AVG(r.rating), 0)
+                FROM Review r
+                WHERE r.order.service.id = :serviceId
+            """)
+    Double findAverageRatingByServiceId(@Param("serviceId") Long serviceId);
+
+    @Query("""
+                SELECT COUNT(r)
+                FROM Review r
+                WHERE r.order.service.id = :serviceId
+            """)
+    Long countReviewsByServiceId(@Param("serviceId") Long serviceId);
 }
