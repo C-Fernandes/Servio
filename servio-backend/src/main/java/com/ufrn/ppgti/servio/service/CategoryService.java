@@ -9,14 +9,17 @@ import com.ufrn.ppgti.servio.dto.request.CategoryRequestDTO;
 import com.ufrn.ppgti.servio.exceptions.BusinessException;
 import com.ufrn.ppgti.servio.model.Category;
 import com.ufrn.ppgti.servio.repository.CategoryRepository;
+import com.ufrn.ppgti.servio.repository.ServiceRepository;
 
 @Service
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final ServiceService serviceService;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, ServiceService serviceService) {
         this.categoryRepository = categoryRepository;
+        this.serviceService = serviceService;
     }
 
     public List<CategoryDTO> findAll() {
@@ -64,6 +67,11 @@ public class CategoryService {
     public void delete(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Categoria não encontrada."));
+
+        if (serviceService.existsByCategoryId(id)) {
+            throw new BusinessException(
+                    "Não é possível excluir esta categoria, pois existem serviços cadastrados usando ela.");
+        }
 
         categoryRepository.delete(category);
     }

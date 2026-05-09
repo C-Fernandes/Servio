@@ -18,4 +18,8 @@ public interface ServiceRepository extends JpaRepository<Service, Long> {
     Optional<Service> findByIdAndDeletedFalse(Long id);
 
     boolean existsByIdAndDeletedFalse(Long id);
+
+    boolean existsByCategoryId(Long categoryId);
+
+    boolean existsByTagsId(Long tagId);
 }

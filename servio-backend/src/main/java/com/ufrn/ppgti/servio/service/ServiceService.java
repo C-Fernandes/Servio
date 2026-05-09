@@ -253,4 +253,14 @@ public class ServiceService {
 
         return dto;
     }
+
+    @Transactional(readOnly = true)
+    public boolean existsByCategoryId(Long categoryId) {
+        return repository.existsByCategoryId(categoryId);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean existsByTagId(Long tagId) {
+        return repository.existsByTagsId(tagId);
+    }
 }

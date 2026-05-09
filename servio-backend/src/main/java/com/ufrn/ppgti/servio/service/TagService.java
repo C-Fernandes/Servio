@@ -14,9 +14,11 @@ import com.ufrn.ppgti.servio.repository.TagRepository;
 public class TagService {
 
     private final TagRepository tagRepository;
+    private final ServiceService serviceService;
 
-    public TagService(TagRepository tagRepository) {
+    public TagService(TagRepository tagRepository, ServiceService serviceService) {
         this.tagRepository = tagRepository;
+        this.serviceService = serviceService;
     }
 
     public List<TagDTO> findAll() {
@@ -65,8 +67,9 @@ public class TagService {
         Tag tag = tagRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Tag não encontrada."));
 
-        if (tag.getServices() != null && !tag.getServices().isEmpty()) {
-            throw new BusinessException("Não é possível remover tag vinculada a serviços.");
+        if (serviceService.existsByTagId(id)) {
+            throw new BusinessException(
+                    "Não é possível excluir esta tag, pois existem serviços cadastrados usando ela.");
         }
 
         tagRepository.delete(tag);

@@ -6,6 +6,7 @@ import { CategoryService } from '../../services/category/category.service';
 import { ModalTaxonomyComponent, TaxonomyItem } from '../../components/modal-taxonomy/modal-taxonomy.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ToastService } from '../../services/toast/toast.service';
 
 @Component({
   selector: 'app-manage-categories',
@@ -15,6 +16,7 @@ import { FormsModule } from '@angular/forms';
 }) export class ManageCategoriesComponent implements OnInit {
   viewMode: 'categories' | 'tags' = 'categories';
 
+  private toast = inject(ToastService);
   categories: Category[] = [];
   tags: Tag[] = [];
 
@@ -60,16 +62,22 @@ import { FormsModule } from '@angular/forms';
     if (this.viewMode === 'categories') {
       this.categoryService.delete(id).subscribe({
         next: () => {
-          this.loadData(); // Recarrega os dados após deletar
+          this.toast.showToast('Categoria removida com sucesso!', 'success');
+          this.loadData();
         },
-        error: (err) => console.error('Erro ao excluir categoria', err),
+        error: (err) => {
+          this.toast.showToast(this.getErrorMessage(err), 'error');
+        },
       });
     } else {
       this.tagService.delete(id).subscribe({
         next: () => {
-          this.loadData(); // Recarrega os dados após deletar
+          this.toast.showToast('Tag removida com sucesso!', 'success');
+          this.loadData();
         },
-        error: (err) => console.error('Erro ao excluir tag', err),
+        error: (err) => {
+          this.toast.showToast(this.getErrorMessage(err), 'error');
+        },
       });
     }
   }
@@ -88,5 +96,7 @@ import { FormsModule } from '@angular/forms';
         this.isModalOpen = false;
       });
     }
+  } private getErrorMessage(err: any): string {
+    return err?.error?.message || 'Ocorreu um erro inesperado.';
   }
 }
