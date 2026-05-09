@@ -1,8 +1,8 @@
 <header class="page-header">
-
     <h1 class="page-title">Explorar serviços</h1>
-    <p class="page-subtitle">Encontre profissionais qualificados para o seu
-        projeto</p>
+    <p class="page-subtitle">
+        Encontre profissionais qualificados para o seu projeto
+    </p>
 </header>
 
 <div class="explorer-layout">
@@ -14,10 +14,18 @@
 
         <div class="filter-group">
             <label>Categoria</label>
-            <select class="filter-input" (change)="onCategoryChange($event)">
+
+            <select
+                class="filter-input"
+                [(ngModel)]="selectedCategory"
+                (change)="applyFilters()">
+
                 <option value>Todas</option>
+
                 @for (cat of categories; track cat.id) {
-                <option [value]="cat.id">{{ cat.name }}</option>
+                <option [value]="cat.name">
+                    {{ cat.name }}
+                </option>
                 }
             </select>
         </div>
@@ -25,18 +33,32 @@
         <div class="filter-group">
             <div class="label-with-value">
                 <label>Preço máximo</label>
-                <span class="current-value">R$ 2.000,00</span>
+                <span class="current-value">
+                    R$ {{ maxPrice.toFixed(2).replace('.', ',') }}
+                </span>
             </div>
-            <input type="range" class="range-slider" min="0" max="5000"
-                step="50">
+
+            <input
+                type="range"
+                class="range-slider"
+                min="0"
+                max="5000"
+                step="50"
+                [(ngModel)]="maxPrice"
+                (input)="applyFilters()">
         </div>
 
         <div class="filter-group">
             <label>Avaliação mínima</label>
-            <select class="filter-input">
-                <option value>Qualquer</option>
-                <option value="4">4+ Estrelas</option>
-                <option value="5">5 Estrelas</option>
+
+            <select
+                class="filter-input"
+                [(ngModel)]="minRating"
+                (change)="applyFilters()">
+
+                <option [value]="0">Qualquer</option>
+                <option [value]="4">4+ Estrelas</option>
+                <option [value]="5">5 Estrelas</option>
             </select>
         </div>
     </aside>
@@ -44,12 +66,17 @@
     <section class="results-area">
         <div class="search-container">
             <span class="mat-icon">search</span>
-            <input type="text" placeholder="Buscar serviços..."
-                class="search-input">
+
+            <input
+                type="text"
+                placeholder="Buscar serviços..."
+                class="search-input"
+                [(ngModel)]="searchTerm"
+                (input)="applyFilters()">
         </div>
 
         <div class="services-grid">
-            @for (item of services; track item.title) {
+            @for (item of services; track item.id) {
             <app-service-card [service]="item"></app-service-card>
             } @empty {
             <p>Nenhum serviço encontrado.</p>

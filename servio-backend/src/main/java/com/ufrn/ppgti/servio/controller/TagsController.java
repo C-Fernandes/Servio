@@ -15,7 +15,6 @@ import com.ufrn.ppgti.servio.service.TagService;
 
 import jakarta.validation.Valid;
 
-@Admin
 @RestController
 @RequestMapping("/tags")
 public class TagsController {
@@ -26,22 +25,26 @@ public class TagsController {
         this.tagService = tagService;
     }
 
+    @Client
     @Provider
     @GetMapping
     public ResponseEntity<List<TagDTO>> findAll() {
         return ResponseEntity.ok(tagService.findAll());
     }
 
+    @Client
     @GetMapping("/{id}")
     public ResponseEntity<TagDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(tagService.findById(id));
     }
 
+    @Admin
     @PostMapping
     public ResponseEntity<TagDTO> create(@RequestBody @Valid TagRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(tagService.create(dto));
     }
 
+    @Admin
     @PutMapping("/{id}")
     public ResponseEntity<TagDTO> update(
             @PathVariable Long id,
@@ -49,6 +52,7 @@ public class TagsController {
         return ResponseEntity.ok(tagService.update(id, dto));
     }
 
+    @Admin
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         tagService.delete(id);
