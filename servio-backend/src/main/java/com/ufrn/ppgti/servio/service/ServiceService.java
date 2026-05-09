@@ -114,19 +114,22 @@ public class ServiceService {
 
         com.ufrn.ppgti.servio.model.Service entity = mapper.toEntity(dto);
         entity.setProvider(provider);
+
         Category category = categoryRepository.findById(dto.getCategory())
                 .orElseThrow(() -> new BusinessException("Categoria não encontrada."));
         entity.setCategory(category);
-        System.out.println("Tags IDs recebidos: " + dto.getTags());
+
         if (dto.getTags() != null && !dto.getTags().isEmpty()) {
             List<Tag> tags = tagRepository.findAllById(dto.getTags());
             entity.setTags(tags);
         }
-        entity = repository.save(entity);
-        ServiceResponseDTO responseDTO = mapper.toResponseDTO(entity);
 
+        entity = repository.save(entity);
+
+        ServiceResponseDTO responseDTO = mapper.toResponseDTO(entity);
         responseDTO.setImage(extractBase64(entity.getImageUrl()));
-        return mapper.toResponseDTO(entity);
+
+        return responseDTO;
     }
 
     @Transactional

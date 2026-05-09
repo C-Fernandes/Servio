@@ -142,5 +142,18 @@ export class ProviderServicesComponent {
     });
   }
 
+  get averageTicket(): string {
+    if (!this.services || this.services.length === 0) {
+      return 'R$ 0,00';
+    }
+
+    const total = this.services.reduce((sum, service) => {
+      return sum + Number(service.price || 0);
+    }, 0);
+
+    const average = total / this.services.length;
+
+    return `R$ ${average.toFixed(2).replace('.', ',')}`;
+  }
 
 }
