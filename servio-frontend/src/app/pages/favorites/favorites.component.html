@@ -1,0 +1,27 @@
+<header class="page-header">
+    <h1 class="page-title">Meus favoritos</h1>
+    <p class="page-subtitle">
+        Serviços que você salvou para contratar depois
+    </p>
+</header>
+
+@if (loading) {
+<p class="favorites-status">Carregando seus favoritos...</p>
+} @else {
+<div class="services-grid">
+    @for (item of services; track item.id) {
+    <app-service-card
+        [service]="item"
+        [showFavorite]="true"
+        [isFavorite]="true"
+        (favoriteEvent)="onRemoveFavorite($event)"></app-service-card>
+    } @empty {
+    <div class="favorites-empty">
+        <span class="mat-icon">favorite_border</span>
+        <h2>Nenhum favorito salvo</h2>
+        <p>Explore o marketplace e toque no coração para salvar serviços aqui.</p>
+        <a routerLink="/explore" class="favorites-cta">Explorar serviços</a>
+    </div>
+    }
+</div>
+}

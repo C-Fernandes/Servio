@@ -13,10 +13,13 @@ export class ServiceCardComponent {
   private router = inject(Router);
   @Input({ required: true }) service!: Service;
   @Input() variant: 'marketplace' | 'provider' = 'marketplace';
+  @Input() showFavorite = false;
+  @Input() isFavorite = false;
 
   @Output() editEvent = new EventEmitter<Service>();
   @Output() deleteEvent = new EventEmitter<Service>();
   @Output() toggleEvent = new EventEmitter<Service>();
+  @Output() favoriteEvent = new EventEmitter<Service>();
   goToDetails() {
     if (this.variant === 'marketplace') {
       this.router.navigate(['/service/details', this.service.id]);
@@ -33,5 +36,10 @@ export class ServiceCardComponent {
   onToggleStatus(event: any) {
     this.service.active = event.target.checked;
     this.toggleEvent.emit(this.service);
+  }
+
+  onFavorite(event: MouseEvent) {
+    event.stopPropagation();
+    this.favoriteEvent.emit(this.service);
   }
 }

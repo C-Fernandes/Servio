@@ -77,7 +77,11 @@
 
         <div class="services-grid">
             @for (item of services; track item.id) {
-            <app-service-card [service]="item"></app-service-card>
+            <app-service-card
+                [service]="item"
+                [showFavorite]="isClient"
+                [isFavorite]="favoriteIds.has(item.id)"
+                (favoriteEvent)="onFavoriteToggle($event)"></app-service-card>
             } @empty {
             <p>Nenhum serviço encontrado.</p>
             }

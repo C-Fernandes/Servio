@@ -76,6 +76,13 @@ export const routes: Routes = [
         title: 'Explorar Serviços | Servio'
       },
       {
+        path: 'favorites',
+        loadComponent: () => import('./pages/favorites/favorites.component').then(m => m.FavoritesComponent),
+        canActivate: [authGuard],
+        data: {roles: ['CLIENT']},
+        title: 'Meus Favoritos | Servio'
+      },
+      {
         path: '',
         redirectTo: 'explore',
         pathMatch: 'full'

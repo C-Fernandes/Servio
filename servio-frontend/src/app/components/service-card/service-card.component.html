@@ -8,6 +8,14 @@
         </span>
         }
 
+        @if (showFavorite) {
+        <button type="button" class="favorite-btn" [class.is-favorite]="isFavorite"
+            [attr.aria-label]="isFavorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'"
+            (click)="onFavorite($event)">
+            <span class="mat-icon">{{ isFavorite ? 'favorite' : 'favorite_border' }}</span>
+        </button>
+        }
+
         @if (service.image) {
         <img [src]="'data:image/jpeg;base64,' + service.image"
             [alt]="service.title" class="card-image">

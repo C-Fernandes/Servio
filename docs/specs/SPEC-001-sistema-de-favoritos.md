@@ -106,8 +106,8 @@ Então o sistema deve barrar a requisição com status HTTP 403 (Forbidden)
 - [x] **T3 (Camada de Serviço)**: Implementar `FavoriteService` cobrindo cenários e casos de borda.
 - [x] **T4 (Camada de Controller)**: Criar `FavoriteController` anotado com `@Client`.
 - [x] **T5 (Testes Automatizados)**: Implementar `FavoriteServiceTest` validando regras e casos de borda.
-- [ ] **T6 (Serviço Frontend)**: Criar `FavoriteService` no Angular consumindo a API.
-- [ ] **T7 (Componente Service Card)**: Adicionar botão de favoritar com estado dinâmico nos cards.
-- [ ] **T8 (Página Meus Favoritos)**: Desenvolver página `/favorites` com grid responsivo e estado vazio.
-- [ ] **T9 (Navegação)**: Incluir atalho na Sidebar condicional ao perfil `CLIENT`.
+- [x] **T6 (Serviço Frontend)**: Criar `FavoriteService` no Angular consumindo a API.
+- [x] **T7 (Componente Service Card)**: Adicionar botão de favoritar com estado dinâmico nos cards.
+- [x] **T8 (Página Meus Favoritos)**: Desenvolver página `/favorites` com grid responsivo e estado vazio.
+- [x] **T9 (Navegação)**: Incluir atalho na Sidebar condicional ao perfil `CLIENT`.
 - [ ] **T10 (Homologação)**: Teste funcional e validação de todos os critérios de aceite.

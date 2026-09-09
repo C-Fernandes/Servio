@@ -34,6 +34,13 @@
         <span class="mat-icon">search</span>
         <span>Explorar serviços</span>
       </a>
+
+      @if (isClient) {
+        <a routerLink="/favorites" routerLinkActive="active" class="nav-item">
+          <span class="mat-icon">favorite</span>
+          <span>Meus favoritos</span>
+        </a>
+      }
     </nav>
 
     @if (isProviderOrAdmin) {
