@@ -1,0 +1,62 @@
+#!/bin/bash
+# ==============================================================================
+# Servio Guardrail - Git Pre-commit Hook
+# Disciplina: Desenvolvimento de Software com IA (PPGTI / UFRN)
+# ==============================================================================
+
+echo "=================================================================="
+echo "🛡️  [GUARDRAIL DE IA] Executando verificações de integridade..."
+echo "=================================================================="
+
+# Localiza diretório raiz do repositório
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+BACKEND_DIR="$REPO_ROOT/servio-backend"
+
+# Configuração automática do Java caso não esteja no ambiente do hook
+if [ -z "$JAVA_HOME" ]; then
+    if [ -d "/Users/mariaclara_fo/Library/Java/JavaVirtualMachines/ms-21.0.8/Contents/Home" ]; then
+        export JAVA_HOME="/Users/mariaclara_fo/Library/Java/JavaVirtualMachines/ms-21.0.8/Contents/Home"
+    elif [ -x "/usr/libexec/java_home" ]; then
+        export JAVA_HOME="$(/usr/libexec/java_home 2>/dev/null)"
+    fi
+fi
+
+if [ -n "$JAVA_HOME" ]; then
+    export PATH="$JAVA_HOME/bin:/opt/homebrew/bin:$PATH"
+fi
+
+# 1. Executa testes unitários do Backend Spring Boot
+if [ -d "$BACKEND_DIR" ]; then
+    echo "🔍 [GUARDRAIL] Executando testes automatizados do Backend..."
+    cd "$BACKEND_DIR" || exit 1
+    
+    # Determina o executável do Maven
+    MVN_CMD="./mvnw"
+    if command -v mvn >/dev/null 2>&1; then
+        MVN_CMD="mvn"
+    fi
+
+    # Executa os testes (padrao surefire: *Test.java, *Tests.java, Test*.java)
+    $MVN_CMD test -DfailIfNoTests=false -Dsurefire.failIfNoSpecifiedTests=false -q
+    TEST_RESULT=$?
+    
+    if [ $TEST_RESULT -ne 0 ]; then
+        echo ""
+        echo "❌ =============================================================="
+        echo "🚨 [GUARDRAIL BLOQUEIO ATIVO] COMMIT REJEITADO!"
+        echo "   Os testes automatizados falharam ou o código contém erros."
+        echo "   O agente de IA ou desenvolvedor deve corrigir as falhas antes"
+        echo "   de integrar alterações na ramificação."
+        echo "============================================================== ❌"
+        echo ""
+        exit 1
+    fi
+fi
+
+echo ""
+echo "✅ =============================================================="
+echo "🎉 [GUARDRAIL APROVADO] Todos os testes passaram com sucesso!"
+echo "   Commit liberado."
+echo "============================================================== ✅"
+echo ""
+exit 0
