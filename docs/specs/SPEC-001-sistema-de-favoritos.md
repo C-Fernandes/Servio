@@ -101,11 +101,11 @@ Então o sistema deve barrar a requisição com status HTTP 403 (Forbidden)
 ---
 
 ## 6. Plano de Tarefas (Tasklist)
-- [ ] **T1 (Modelo de Dados)**: Criar entidade `Favorite` com constraints de unicidade e relacionamento JPA.
-- [ ] **T2 (Repository & DTOs)**: Criar `FavoriteRepository` e `FavoriteResponseDTO`.
-- [ ] **T3 (Camada de Serviço)**: Implementar `FavoriteService` cobrindo cenários e casos de borda.
-- [ ] **T4 (Camada de Controller)**: Criar `FavoriteController` anotado com `@Client`.
-- [ ] **T5 (Testes Automatizados)**: Implementar `FavoriteServiceTest` validando regras e casos de borda.
+- [x] **T1 (Modelo de Dados)**: Criar entidade `Favorite` com constraints de unicidade e relacionamento JPA.
+- [x] **T2 (Repository & DTOs)**: Criar `FavoriteRepository` e `FavoriteResponseDTO`.
+- [x] **T3 (Camada de Serviço)**: Implementar `FavoriteService` cobrindo cenários e casos de borda.
+- [x] **T4 (Camada de Controller)**: Criar `FavoriteController` anotado com `@Client`.
+- [x] **T5 (Testes Automatizados)**: Implementar `FavoriteServiceTest` validando regras e casos de borda.
 - [ ] **T6 (Serviço Frontend)**: Criar `FavoriteService` no Angular consumindo a API.
 - [ ] **T7 (Componente Service Card)**: Adicionar botão de favoritar com estado dinâmico nos cards.
 - [ ] **T8 (Página Meus Favoritos)**: Desenvolver página `/favorites` com grid responsivo e estado vazio.
