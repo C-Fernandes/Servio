@@ -18,6 +18,7 @@ import com.ufrn.ppgti.servio.dto.response.ServiceResponseDTO;
 import com.ufrn.ppgti.servio.dto.request.ServiceRequestDTO;
 import com.ufrn.ppgti.servio.exceptions.BusinessException;
 import com.ufrn.ppgti.servio.repository.CategoryRepository;
+import com.ufrn.ppgti.servio.repository.FavoriteServiceRepository;
 import com.ufrn.ppgti.servio.repository.OrderRepository;
 import com.ufrn.ppgti.servio.repository.ServiceRepository;
 import com.ufrn.ppgti.servio.repository.TagRepository;
@@ -43,11 +44,13 @@ public class ServiceService {
     private final OrderRepository orderRepository;
     private final AvailabilityService availabilityService;
     private final ReviewService reviewService;
+    private final FavoriteServiceRepository favoriteServiceRepository;
 
     public ServiceService(ServiceRepository repository, ServiceMapper mapper,
             AuthService authService, CategoryRepository categoryRepository, TagRepository tagRepository,
             AvailabilityMapper availabilityMapper, OrderRepository orderRepository,
-            AvailabilityService availabilityService, ReviewService reviewService) {
+            AvailabilityService availabilityService, ReviewService reviewService,
+            FavoriteServiceRepository favoriteServiceRepository) {
         this.repository = repository;
         this.mapper = mapper;
         this.authService = authService;
@@ -57,11 +60,14 @@ public class ServiceService {
         this.orderRepository = orderRepository;
         this.availabilityService = availabilityService;
         this.reviewService = reviewService;
+        this.favoriteServiceRepository = favoriteServiceRepository;
     }
 
     public List<ServiceResponseDTO> findAllActive() {
+        User user = authService.getAuthenticadUser();
+
         return repository.findByActiveTrueAndDeletedFalse().stream()
-                .map(this::toResponseDTOWithDetails)
+                .map(entity -> toResponseDTOWithDetails(entity, user.getId()))
                 .collect(Collectors.toList());
     }
 
@@ -239,6 +245,10 @@ public class ServiceService {
     }
 
     private ServiceResponseDTO toResponseDTOWithDetails(com.ufrn.ppgti.servio.model.Service entity) {
+        return toResponseDTOWithDetails(entity, null);
+    }
+
+    private ServiceResponseDTO toResponseDTOWithDetails(com.ufrn.ppgti.servio.model.Service entity, Long userId) {
         ServiceResponseDTO dto = mapper.toResponseDTO(entity);
 
         dto.setImage(extractBase64(entity.getImageUrl()));
@@ -249,6 +259,10 @@ public class ServiceService {
         } else {
             dto.setAverageRating(0.0);
             dto.setReviewCount(0L);
+        }
+
+        if (userId != null && entity.getId() != null) {
+            dto.setFavorite(favoriteServiceRepository.existsByClientIdAndServiceId(userId, entity.getId()));
         }
 
         return dto;

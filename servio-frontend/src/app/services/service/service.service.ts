@@ -17,8 +17,8 @@ export class ServiceService {
   findMyServices(): Observable<any[]> {
     return this.http.get<any[]>(`${this.API_URL}/my-services`);
   }
-  findAllActive(): Observable<any[]> {
-    return this.http.get<any[]>(this.API_URL);
+  findAllActive(): Observable<Service[]> {
+    return this.http.get<Service[]>(this.API_URL);
   }
 
   findById(id: number): Observable<Service> {

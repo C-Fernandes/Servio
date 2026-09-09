@@ -2,6 +2,15 @@
     <div class="card-thumb">
         @if (variant === 'marketplace') {
         <span class="image-badge category-badge">{{ service.category }}</span>
+        <button
+            type="button"
+            class="favorite-button"
+            [class.active]="service.favorite"
+            [attr.aria-label]="service.favorite ? 'Remover dos favoritos' : 'Adicionar aos favoritos'"
+            (click)="onToggleFavorite($event)">
+            <span class="mat-icon">{{ service.favorite ? 'favorite' :
+                'favorite_border' }}</span>
+        </button>
         } @else {
         <span class="image-badge status-badge" [class.active]="service.active">
             {{ service.active ? 'Ativo' : 'Inativo' }}

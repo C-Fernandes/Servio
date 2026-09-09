@@ -20,6 +20,7 @@ public class ServiceResponseDTO {
     private String image;
     private int durationInMinutes;
     private boolean active;
+    private boolean favorite;
     private String category;
     private List<String> tags;
     private List<AvailableSlotDTO> availableSlots;
@@ -90,6 +91,18 @@ public class ServiceResponseDTO {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public boolean isFavorite() {
+        return this.favorite;
+    }
+
+    public boolean getFavorite() {
+        return this.favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
     }
 
     public String getCategory() {

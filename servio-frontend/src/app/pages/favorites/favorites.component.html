@@ -1,0 +1,30 @@
+<header class="page-header">
+    <h1 class="page-title">Serviços favoritos</h1>
+    <p class="page-subtitle">
+        Acesse rapidamente os profissionais que você salvou para contratar depois
+    </p>
+</header>
+
+@if (isLoading) {
+<section class="empty-state">
+    <span class="mat-icon">hourglass_top</span>
+    <p>Carregando favoritos...</p>
+</section>
+} @else if (favorites.length > 0) {
+<section class="services-grid">
+    @for (item of favorites; track item.id) {
+    <app-service-card
+        [service]="item"
+        (favoriteEvent)="removeFavorite($event)">
+    </app-service-card>
+    }
+</section>
+} @else {
+<section class="empty-state">
+    <span class="mat-icon">favorite_border</span>
+    <h2>Nenhum favorito ainda</h2>
+    <p>Explore serviços e toque no coração para salvar os mais interessantes.</p>
+    <a routerLink="/explore" class="primary-link">Explorar serviços</a>
+</section>
+}
+

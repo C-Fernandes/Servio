@@ -9,6 +9,7 @@ export interface Service {
     description: string;
     image: string; averageRating?: number;
     reviewCount?: number;
+    favorite?: boolean;
     active: boolean;
     category: string;
     tags: string[];

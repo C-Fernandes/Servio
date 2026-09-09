@@ -6,6 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { ServiceCardComponent } from '../../components/service-card/service-card.component';
 import { ServiceService } from '../../services/service/service.service';
 import { CategoryService } from '../../services/category/category.service';
+import { FavoriteService } from '../../services/favorite/favorite.service';
+import { ToastService } from '../../services/toast/toast.service';
 import { Service } from '../../models/Service';
 import { Category } from '../../models/Category';
 
@@ -18,6 +20,8 @@ import { Category } from '../../models/Category';
 export class MarketplaceComponent {
   private serviceService = inject(ServiceService);
   private categoryService = inject(CategoryService);
+  private favoriteService = inject(FavoriteService);
+  private toast = inject(ToastService);
 
   categories: Category[] = [];
 
@@ -88,5 +92,39 @@ export class MarketplaceComponent {
     }
 
     this.services = filtered;
+  }
+
+  toggleFavorite(service: Service) {
+    if (service.favorite) {
+      this.favoriteService.remove(service.id).subscribe({
+        next: () => this.updateFavoriteState(service, false),
+        error: (err: unknown) => {
+          console.error('Erro ao remover favorito:', err);
+          this.toast.showToast('Não foi possível remover o favorito.', 'error');
+        },
+      });
+      return;
+    }
+
+    this.favoriteService.add(service.id).subscribe({
+      next: () => this.updateFavoriteState(service, true),
+      error: (err: unknown) => {
+        console.error('Erro ao adicionar favorito:', err);
+        this.toast.showToast('Não foi possível adicionar o favorito.', 'error');
+      },
+    });
+  }
+
+  private updateFavoriteState(service: Service, favorite: boolean) {
+    service.favorite = favorite;
+    this.allServices = this.allServices.map((item) =>
+      item.id === service.id ? { ...item, favorite } : item
+    );
+    this.applyFilters();
+
+    const message = favorite
+      ? 'Serviço adicionado aos favoritos.'
+      : 'Serviço removido dos favoritos.';
+    this.toast.showToast(message, 'success');
   }
 }
