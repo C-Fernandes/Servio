@@ -8,18 +8,24 @@ Este diretório centraliza a documentação de engenharia de software, processos
 
 ```
 docs/
-├── README.md               # Este arquivo (índice geral)
-├── adr/                    # Architecture Decision Records (ADRs)
+├── README.md                     # Este arquivo (índice geral)
+├── requisitos-funcionais.md      # Lista dos 13 RF do sistema e evidências
+├── tools-and-prompts.md          # Ferramentas, modelos de IA e estratégias de prompt
+├── adr/                          # Architecture Decision Records (ADRs)
 │   ├── template-adr.md
 │   ├── ADR-001-adocao-sdd-e-harness-de-ia.md
-│   └── ADR-002-modelagem-sistema-favoritos.md
-├── specs/                  # Especificações funcionais (Spec-Driven Development)
-│   └── SPEC-001-sistema-de-favoritos.md
-├── harness/                # Configurações de Harness, Guardrails e Observabilidade
-│   └── guardrail-policy.md
-├── diagrams/               # Diagramas de arquitetura e modelo (Mermaid)
-│   └── diagrama-favoritos.md
-└── tools-and-prompts.md    # Registro de ferramentas, modelos de IA e estratégias de prompt
+│   ├── ADR-002-modelagem-sistema-favoritos.md
+│   └── ADR-003-historico-de-status-e-jornada-do-pedido.md
+├── specs/                        # Especificações funcionais (Spec-Driven Development)
+│   ├── SPEC-001-sistema-de-favoritos.md
+│   └── SPEC-002-jornada-do-pedido.md
+├── harness/                      # Harness, guardrails e observabilidade
+│   ├── guardrail-policy.md
+│   └── evidencia-guardrail-bloqueio.md
+└── diagrams/                     # Diagramas (Mermaid)
+    ├── diagrama-favoritos.md
+    ├── arquitetura-geral.md
+    └── jornada-do-pedido.md
 ```
 
 ---
@@ -42,10 +48,14 @@ O desenvolvimento das novas funcionalidades segue o fluxo:
 ---
 
 ## 3. Matriz de Requisitos da Disciplina
-O projeto atende a todos os requisitos solicitados:
-* [x] Mínimo de 10 requisitos funcionais claramente identificáveis e demonstráveis.
-* [x] Aplicação prática de Spec-Driven Development (SDD) com casos de borda.
-* [x] Harness de controle com guardrail ativo e evidência de bloqueio real.
-* [x] Architecture Decision Records (ADRs) e diagramas Mermaid.
-* [x] Testes automatizados cobrindo regras de negócio.
-* [x] Apresentação técnica e divulgação pelo método STAR no LinkedIn.
+
+| Requisito da disciplina | Situação |
+| :--- | :--- |
+| Mínimo de 10 requisitos funcionais demonstráveis | ✅ 13 RF (ver [requisitos-funcionais.md](requisitos-funcionais.md)) |
+| SDD com critérios de aceite e casos de borda | ✅ [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md), [SPEC-002](specs/SPEC-002-jornada-do-pedido.md) |
+| Harness com guardrail ativo e evidência de bloqueio real | ✅ [guardrail-policy.md](harness/guardrail-policy.md), [evidencia-guardrail-bloqueio.md](harness/evidencia-guardrail-bloqueio.md) |
+| Pelo menos um ADR de decisão relevante | ✅ ADR-001, ADR-002, ADR-003 |
+| Diagrama de arquitetura (C4/Mermaid) | ✅ [arquitetura-geral.md](diagrams/arquitetura-geral.md) e diagramas por RF |
+| Testes automatizados cobrindo parte dos RF | ✅ 20 testes (RF-12 e RF-13) |
+| Transcript de sessão do agente (observabilidade) | ⏳ pendente |
+| Apresentação (PPT) e post no LinkedIn (STAR) | ⏳ pendente |

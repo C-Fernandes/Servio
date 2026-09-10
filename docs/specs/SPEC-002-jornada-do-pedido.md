@@ -4,7 +4,8 @@
 * **Data**: 2026-09-09
 * **Status**: Aprovado
 * **Requisito do Projeto**: RF-13 (item 8 da proposta de checkpoint — "Área de acompanhamento da jornada do pedido")
-* **ADR Relacionada**: a criar — decisão sobre registro de histórico de status
+* **ADR Relacionada**: [ADR-003 — Histórico de Status e Jornada do Pedido](../adr/ADR-003-historico-de-status-e-jornada-do-pedido.md)
+* **Diagramas**: [jornada-do-pedido.md](../diagrams/jornada-do-pedido.md)
 
 ---
 
@@ -185,7 +186,7 @@ mapeamento) — ou consulta direta pelo repositório, a decidir na ADR.
 - [x] **T9 (Frontend — serviço)**: `OrderService.getJourney(orderId)` no Angular + tipos em `models/Order.ts`.
 - [x] **T10 (Frontend — componente)**: `OrderJourneyComponent` (linha do tempo com estados/datas e destaque para cancelado), embutido no `order-details-modal` (prestador) e no `dashboard-client` (cliente, via "Ver jornada").
 - [x] **T11 (Frontend — ações)**: botão "Aceitar pedido" no card do Kanban para pedidos pendentes (`PENDING → CONFIRMED`); opção "Confirmado" já presente nos selects de status.
-- [ ] **T12 (Doc)**: ADR do histórico de status; atualizar `docs/requisitos-funcionais.md` (RF-13, feito) e `docs/diagrams/` com um diagrama da jornada.
+- [x] **T12 (Doc)**: [ADR-003](../adr/ADR-003-historico-de-status-e-jornada-do-pedido.md); `docs/requisitos-funcionais.md` (RF-13) e [diagrama da jornada](../diagrams/jornada-do-pedido.md).
 - [ ] **T13 (Homologação)**: validar todos os critérios de aceite (demo).
 
 ---
