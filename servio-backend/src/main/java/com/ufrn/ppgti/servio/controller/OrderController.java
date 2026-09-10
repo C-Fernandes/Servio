@@ -6,7 +6,9 @@ import com.ufrn.ppgti.servio.annotations.Client;
 import com.ufrn.ppgti.servio.annotations.Provider;
 import com.ufrn.ppgti.servio.dto.request.OrderCreateRequestDTO;
 import com.ufrn.ppgti.servio.dto.request.OrderStatusUpdateRequestDTO;
+import com.ufrn.ppgti.servio.dto.response.OrderJourneyResponseDTO;
 import com.ufrn.ppgti.servio.dto.response.OrderResponseDTO;
+import com.ufrn.ppgti.servio.service.OrderJourneyService;
 import com.ufrn.ppgti.servio.service.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -24,9 +26,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderJourneyService orderJourneyService;
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, OrderJourneyService orderJourneyService) {
         this.orderService = orderService;
+        this.orderJourneyService = orderJourneyService;
     }
 
     @Client
@@ -53,5 +57,11 @@ public class OrderController {
             @PathVariable Long id,
             @RequestBody @Valid OrderStatusUpdateRequestDTO dto) {
         return ResponseEntity.ok(orderService.updateStatus(id, dto.getStatus()));
+    }
+
+    @Client
+    @GetMapping("/{id}/journey")
+    public ResponseEntity<OrderJourneyResponseDTO> journey(@PathVariable Long id) {
+        return ResponseEntity.ok(orderJourneyService.getJourney(id));
     }
 }

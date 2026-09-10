@@ -4,9 +4,10 @@ Levantamento dos requisitos funcionais (RF) do sistema, para a apresentação da
 disciplina **Desenvolvimento de Software com IA** (PPGTI / UFRN). A especificação
 exige no mínimo **10 RF claramente identificáveis e demonstráveis** (seção III).
 
-O sistema atende **12 RF**. O RF-12 (Favoritos) é o requisito novo implementado
-neste projeto seguindo o ciclo de Spec-Driven Development (ver
-[SPEC-001](specs/SPEC-001-sistema-de-favoritos.md)).
+O sistema atende **13 RF**. Os requisitos **RF-12 (Favoritos)** e
+**RF-13 (Jornada do Pedido)** são novos, implementados neste projeto seguindo o
+ciclo de Spec-Driven Development (ver [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md)
+e [SPEC-002](specs/SPEC-002-jornada-do-pedido.md)).
 
 * **Autoras**: Bianca Antonelly, Maria Clara Fernandes
 * **Data**: 2026-09-09
@@ -83,14 +84,25 @@ serviços inativos/excluídos não podem ser favoritados; restrito ao perfil `CL
 - **Especificação:** [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md) · [ADR-002](adr/ADR-002-modelagem-sistema-favoritos.md) · [diagrama](diagrams/diagrama-favoritos.md)
 - **Evidência:** `POST/DELETE /favorites/{serviceId}`, `GET /favorites`, `GET /favorites/check/{serviceId}`; botão de favoritar no card, página "Meus favoritos", atalho na sidebar; `FavoriteServiceTest` (8 testes).
 
+### RF-13 — Acompanhamento da jornada do pedido (NOVO — via SDD)
+Cliente e prestador acompanham o pedido em quatro etapas canônicas
+(Solicitado → Aceito → Em andamento → Concluído), com data/hora de cada etapa,
+etapa atual destacada e tratamento do estado terminal "Cancelado". Cada transição
+de status grava um evento de histórico; pedidos anteriores à funcionalidade têm a
+jornada reconstruída a partir do status atual. Inclui a etapa real "Aceito"
+(`PENDING → CONFIRMED`) no fluxo do prestador.
+- **Especificação:** [SPEC-002](specs/SPEC-002-jornada-do-pedido.md)
+- **Evidência (backend):** entidade `OrderStatusHistory`; `GET /orders/{id}/journey` (`OrderJourneyResponseDTO`) com verificação de participante (403); transições `PENDING → CONFIRMED → IN_PROGRESS → COMPLETED`; `OrderJourneyServiceTest` (8) + `OrderServiceTest` (3).
+- **Pendente:** linha do tempo no front-end (`order-details-modal`) e ação "Aceitar" no painel do prestador (SPEC-002 T9–T11).
+
 ---
 
 ## Requisitos novos planejados (se houver tempo até 12/09)
 
 | ID | Requisito | Status |
 | :--- | :--- | :--- |
-| RF-13 | Notificações de mudança de status do pedido | não iniciado |
-| RF-14 | Página pública de perfil do prestador (serviços + avaliações) | não iniciado |
+| RF-14 | Notificações de mudança de status do pedido | não iniciado |
+| RF-15 | Página pública de perfil do prestador (serviços + avaliações) | não iniciado |
 
 ---
 
@@ -99,7 +111,8 @@ serviços inativos/excluídos não podem ser favoritados; restrito ao perfil `CL
 | RF | Teste |
 | :--- | :--- |
 | RF-12 | `FavoriteServiceTest` — 3 cenários Gherkin + 3 casos de borda da SPEC-001 |
+| RF-13 | `OrderJourneyServiceTest` — 3 cenários + casos de borda (cancelado, legado, acesso indevido, 404) da SPEC-002 |
+| RF-13 | `OrderServiceTest` — registro de histórico e validação das novas transições de status |
 | (infra) | `ServioApplicationTests` — carga do contexto Spring |
 
-Ampliar a cobertura para pelo menos mais um RF antes da apresentação (seção III:
-"testes automatizados cobrindo pelo menos parte dos requisitos funcionais").
+Total: **20 testes automatizados** cobrindo 2 requisitos funcionais novos.

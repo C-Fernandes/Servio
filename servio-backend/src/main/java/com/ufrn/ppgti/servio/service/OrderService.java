@@ -14,11 +14,13 @@ import com.ufrn.ppgti.servio.exceptions.BusinessException;
 import com.ufrn.ppgti.servio.mappers.OrderMapper;
 import com.ufrn.ppgti.servio.model.Availability;
 import com.ufrn.ppgti.servio.model.Order;
+import com.ufrn.ppgti.servio.model.OrderStatusHistory;
 import com.ufrn.ppgti.servio.model.ProviderProfile;
 import com.ufrn.ppgti.servio.model.User;
 import com.ufrn.ppgti.servio.model.enums.OrderStatus;
 import com.ufrn.ppgti.servio.model.enums.Role;
 import com.ufrn.ppgti.servio.repository.OrderRepository;
+import com.ufrn.ppgti.servio.repository.OrderStatusHistoryRepository;
 import com.ufrn.ppgti.servio.repository.ServiceRepository;
 
 @Service
@@ -28,15 +30,18 @@ public class OrderService {
     private final ServiceRepository serviceRepository;
     private final AuthService authService;
     private final OrderMapper orderMapper;
+    private final OrderStatusHistoryRepository orderStatusHistoryRepository;
 
     public OrderService(OrderRepository orderRepository,
             ServiceRepository serviceRepository,
             AuthService authService,
-            OrderMapper orderMapper) {
+            OrderMapper orderMapper,
+            OrderStatusHistoryRepository orderStatusHistoryRepository) {
         this.orderRepository = orderRepository;
         this.serviceRepository = serviceRepository;
         this.authService = authService;
         this.orderMapper = orderMapper;
+        this.orderStatusHistoryRepository = orderStatusHistoryRepository;
     }
 
     @Transactional
@@ -79,6 +84,8 @@ public class OrderService {
         order.setStatus(OrderStatus.PENDING);
 
         order = orderRepository.save(order);
+        recordStatusHistory(order, OrderStatus.PENDING, currentUser.getRole());
+
         return orderMapper.toResponseDTO(order);
     }
 
@@ -125,7 +132,13 @@ public class OrderService {
 
         order.setStatus(status);
         order = orderRepository.save(order);
+        recordStatusHistory(order, status, currentUser.getRole());
+
         return orderMapper.toResponseDTO(order);
+    }
+
+    private void recordStatusHistory(Order order, OrderStatus status, Role changedByRole) {
+        orderStatusHistoryRepository.save(new OrderStatusHistory(order, status, changedByRole));
     }
 
     private void validateClient(User user) {
@@ -192,7 +205,9 @@ public class OrderService {
         }
 
         boolean validTransition = (currentStatus == OrderStatus.PENDING &&
-                (newStatus == OrderStatus.IN_PROGRESS || newStatus == OrderStatus.CANCELLED))
+                (newStatus == OrderStatus.CONFIRMED || newStatus == OrderStatus.CANCELLED))
+                || (currentStatus == OrderStatus.CONFIRMED &&
+                        (newStatus == OrderStatus.IN_PROGRESS || newStatus == OrderStatus.CANCELLED))
                 || (currentStatus == OrderStatus.IN_PROGRESS && newStatus == OrderStatus.COMPLETED);
 
         if (!validTransition) {
