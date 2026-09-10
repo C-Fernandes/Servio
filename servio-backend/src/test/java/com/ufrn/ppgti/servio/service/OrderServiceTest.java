@@ -44,6 +44,8 @@ class OrderServiceTest {
     private OrderMapper orderMapper;
     @Mock
     private OrderStatusHistoryRepository orderStatusHistoryRepository;
+    @Mock
+    private NotificationService notificationService;
 
     @InjectMocks
     private OrderService orderService;

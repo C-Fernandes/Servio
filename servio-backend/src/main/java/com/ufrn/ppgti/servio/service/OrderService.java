@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,22 +28,27 @@ import com.ufrn.ppgti.servio.repository.ServiceRepository;
 @Service
 public class OrderService {
 
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
+
     private final OrderRepository orderRepository;
     private final ServiceRepository serviceRepository;
     private final AuthService authService;
     private final OrderMapper orderMapper;
     private final OrderStatusHistoryRepository orderStatusHistoryRepository;
+    private final NotificationService notificationService;
 
     public OrderService(OrderRepository orderRepository,
             ServiceRepository serviceRepository,
             AuthService authService,
             OrderMapper orderMapper,
-            OrderStatusHistoryRepository orderStatusHistoryRepository) {
+            OrderStatusHistoryRepository orderStatusHistoryRepository,
+            NotificationService notificationService) {
         this.orderRepository = orderRepository;
         this.serviceRepository = serviceRepository;
         this.authService = authService;
         this.orderMapper = orderMapper;
         this.orderStatusHistoryRepository = orderStatusHistoryRepository;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -133,6 +140,13 @@ public class OrderService {
         order.setStatus(status);
         order = orderRepository.save(order);
         recordStatusHistory(order, status, currentUser.getRole());
+
+        try {
+            notificationService.notifyOrderStatusChange(order, status, currentUser.getRole());
+        } catch (Exception e) {
+            log.warn("Falha ao gerar notificação para o pedido {} (status {}): {}",
+                    order.getId(), status, e.getMessage());
+        }
 
         return orderMapper.toResponseDTO(order);
     }

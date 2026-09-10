@@ -1,0 +1,146 @@
+.notification-bell {
+  position: relative;
+}
+
+.bell-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-text-muted, #64748b);
+
+  &:hover {
+    background: var(--color-bg-soft, #f1f5f9);
+  }
+
+  .mat-icon {
+    font-size: 22px;
+  }
+}
+
+.bell-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+}
+
+.bell-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+
+.bell-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 41;
+  width: 320px;
+  max-width: 80vw;
+  background: #fff;
+  border: 1px solid var(--color-indigo-50, #e2e8f0);
+  border-radius: 12px;
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+.bell-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--color-indigo-50, #e2e8f0);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-main, #222639);
+
+  .mark-all {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-primary, #6366f1);
+    cursor: pointer;
+  }
+}
+
+.bell-panel-body {
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.bell-status {
+  margin: 0;
+  padding: 20px 14px;
+  font-size: 13px;
+  color: var(--color-text-muted, #64748b);
+  text-align: center;
+}
+
+.bell-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-bottom: 1px solid #f1f5f9;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-bg-soft, #f8fafc);
+  }
+
+  &.unread {
+    background: #f5f3ff;
+  }
+
+  .bell-item-dot {
+    margin-top: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: transparent;
+    flex-shrink: 0;
+
+    &.on {
+      background: #6366f1;
+    }
+  }
+
+  .bell-item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .bell-item-msg {
+    font-size: 13px;
+    color: var(--color-text-main, #222639);
+    line-height: 1.35;
+  }
+
+  .bell-item-time {
+    font-size: 11px;
+    color: #94a3b8;
+  }
+}
