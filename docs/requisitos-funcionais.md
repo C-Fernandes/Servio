@@ -4,10 +4,12 @@ Levantamento dos requisitos funcionais (RF) do sistema, para a apresentação da
 disciplina **Desenvolvimento de Software com IA** (PPGTI / UFRN). A especificação
 exige no mínimo **10 RF claramente identificáveis e demonstráveis** (seção III).
 
-O sistema atende **13 RF**. Os requisitos **RF-12 (Favoritos)** e
-**RF-13 (Jornada do Pedido)** são novos, implementados neste projeto seguindo o
-ciclo de Spec-Driven Development (ver [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md)
-e [SPEC-002](specs/SPEC-002-jornada-do-pedido.md)).
+O sistema atende **14 RF**. Os requisitos **RF-12 (Favoritos)**,
+**RF-13 (Jornada do Pedido)** e **RF-14 (Notificações de Status)** são novos,
+implementados neste projeto seguindo o ciclo de Spec-Driven Development
+(ver [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md),
+[SPEC-002](specs/SPEC-002-jornada-do-pedido.md) e
+[SPEC-003](specs/SPEC-003-notificacoes-de-status.md)).
 
 * **Autoras**: Bianca Antonelly, Maria Clara Fernandes
 * **Data**: 2026-09-09
@@ -95,13 +97,21 @@ jornada reconstruída a partir do status atual. Inclui a etapa real "Aceito"
 - **Evidência (backend):** entidade `OrderStatusHistory`; `GET /orders/{id}/journey` (`OrderJourneyResponseDTO`) com verificação de participante (403); transições `PENDING → CONFIRMED → IN_PROGRESS → COMPLETED`; `OrderJourneyServiceTest` (8) + `OrderServiceTest` (3).
 - **Evidência (frontend):** `OrderJourneyComponent` (linha do tempo) no detalhe do pedido do prestador e no painel do cliente ("Ver jornada"); botão "Aceitar pedido" no Kanban do prestador.
 
+### RF-14 — Notificações de mudança de status do pedido (NOVO — via SDD)
+A cada mudança de status de um pedido, cada participante que não seja o autor da
+mudança recebe uma notificação in-app não lida (PROVIDER → cliente; CLIENT →
+prestador; ADMIN → ambos). A geração é em melhor esforço: uma falha ao notificar
+não reverte a mudança de status.
+- **Especificação:** [SPEC-003](specs/SPEC-003-notificacoes-de-status.md) · [ADR-004](adr/ADR-004-notificacoes-in-app-melhor-esforco.md) · [diagrama](diagrams/notificacoes-de-status.md)
+- **Evidência (backend):** entidade `Notification`; `GET /notifications`, `GET /notifications/unread-count`, `PATCH /notifications/{id}/read` (dono → 403), `PATCH /notifications/read-all`; gatilho em `OrderService.updateStatus` (try/catch, `REQUIRES_NEW`); `NotificationServiceTest` (10).
+- **Evidência (frontend):** `NotificationBellComponent` (sino com badge, dropdown, "marcar todas") no topo da sidebar; recarga do contador a cada navegação.
+
 ---
 
 ## Requisitos novos planejados (se houver tempo até 12/09)
 
 | ID | Requisito | Status |
 | :--- | :--- | :--- |
-| RF-14 | Notificações de mudança de status do pedido | não iniciado |
 | RF-15 | Página pública de perfil do prestador (serviços + avaliações) | não iniciado |
 
 ---
@@ -113,6 +123,7 @@ jornada reconstruída a partir do status atual. Inclui a etapa real "Aceito"
 | RF-12 | `FavoriteServiceTest` — 3 cenários Gherkin + 3 casos de borda da SPEC-001 |
 | RF-13 | `OrderJourneyServiceTest` — 3 cenários + casos de borda (cancelado, legado, acesso indevido, 404) da SPEC-002 |
 | RF-13 | `OrderServiceTest` — registro de histórico e validação das novas transições de status |
+| RF-14 | `NotificationServiceTest` — 4 cenários + casos de borda (ADMIN notifica ambos, 403, idempotência, marcar todas sem nenhuma, 404) da SPEC-003 |
 | (infra) | `ServioApplicationTests` — carga do contexto Spring |
 
-Total: **20 testes automatizados** cobrindo 2 requisitos funcionais novos.
+Total: **30 testes automatizados** cobrindo 3 requisitos funcionais novos.
