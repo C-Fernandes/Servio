@@ -142,6 +142,25 @@
       color: var(--color-text-muted);
       margin-top: auto;
       padding-bottom: 20px;
+
+      // Quando há localização, ela assume o espaçamento final do bloco.
+      &:has(+ .location) {
+        padding-bottom: 4px;
+      }
+    }
+
+    .location {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      color: var(--color-text-muted);
+      margin: 0;
+      padding-bottom: 20px;
+
+      .mat-icon {
+        font-size: 16px;
+      }
     }
     .tags-container {
       display: flex;

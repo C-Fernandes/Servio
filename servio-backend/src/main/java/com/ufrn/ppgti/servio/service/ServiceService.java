@@ -5,17 +5,22 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Base64;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.nio.file.Path;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ufrn.ppgti.servio.dto.LocalityDTO;
 import com.ufrn.ppgti.servio.dto.response.ServiceResponseDTO;
 import com.ufrn.ppgti.servio.dto.request.ServiceRequestDTO;
+import com.ufrn.ppgti.servio.dto.request.ServiceSearchRequestDTO;
+import com.ufrn.ppgti.servio.repository.specification.ServiceSpecifications;
 import com.ufrn.ppgti.servio.exceptions.BusinessException;
 import com.ufrn.ppgti.servio.repository.CategoryRepository;
 import com.ufrn.ppgti.servio.repository.FavoriteServiceRepository;
@@ -34,6 +39,11 @@ import com.ufrn.ppgti.servio.model.User;
 public class ServiceService {
 
     private final String UPLOAD_DIR = "uploads/";
+
+    private static final String SORT_PRICE_ASC = "price_asc";
+    private static final String SORT_PRICE_DESC = "price_desc";
+    private static final String SORT_TITLE_ASC = "title_asc";
+    private static final String SORT_RATING_DESC = "rating_desc";
 
     private final ServiceRepository repository;
     private final ServiceMapper mapper;
@@ -69,6 +79,32 @@ public class ServiceService {
         return repository.findByActiveTrueAndDeletedFalse().stream()
                 .map(entity -> toResponseDTOWithDetails(entity, user.getId()))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ServiceResponseDTO> search(ServiceSearchRequestDTO filters) {
+        User user = authService.getAuthenticadUser();
+
+        validatePriceRange(filters.getMinPrice(), filters.getMaxPrice());
+
+        List<ServiceResponseDTO> services = repository
+                .findAll(ServiceSpecifications.withFilters(filters), resolveSort(filters.getSortBy()))
+                .stream()
+                .map(entity -> toResponseDTOWithDetails(entity, user.getId()))
+                .collect(Collectors.toList());
+
+        // A média das avaliações é calculada por serviço depois da consulta, então
+        // essa ordenação não pode ser delegada ao banco como as demais.
+        if (SORT_RATING_DESC.equalsIgnoreCase(filters.getSortBy())) {
+            services.sort(Comparator.comparingDouble(this::ratingOf).reversed());
+        }
+
+        return services;
+    }
+
+    @Transactional(readOnly = true)
+    public List<LocalityDTO> findAvailableLocalities() {
+        return repository.findAvailableLocalities();
     }
 
     @Transactional(readOnly = true)
@@ -200,6 +236,29 @@ public class ServiceService {
         if (price == null || price <= 0) {
             throw new BusinessException("O preço deve ser um valor positivo.");
         }
+    }
+
+    private void validatePriceRange(Double minPrice, Double maxPrice) {
+        if (minPrice != null && maxPrice != null && minPrice > maxPrice) {
+            throw new BusinessException("O preço mínimo não pode ser maior que o preço máximo.");
+        }
+    }
+
+    private Sort resolveSort(String sortBy) {
+        if (sortBy == null) {
+            return Sort.by(Sort.Direction.DESC, "id");
+        }
+
+        return switch (sortBy.toLowerCase()) {
+            case SORT_PRICE_ASC -> Sort.by(Sort.Direction.ASC, "price");
+            case SORT_PRICE_DESC -> Sort.by(Sort.Direction.DESC, "price");
+            case SORT_TITLE_ASC -> Sort.by(Sort.Direction.ASC, "title");
+            default -> Sort.by(Sort.Direction.DESC, "id");
+        };
+    }
+
+    private double ratingOf(ServiceResponseDTO dto) {
+        return dto.getAverageRating() == null ? 0.0 : dto.getAverageRating();
     }
 
     private String saveImageToDisk(MultipartFile image) {

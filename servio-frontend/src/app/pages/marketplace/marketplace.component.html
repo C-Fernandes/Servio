@@ -10,20 +10,27 @@
         <div class="filter-header">
             <span class="mat-icon">tune</span>
             <span>Filtros</span>
+
+            @if (hasActiveFilters) {
+            <button type="button" class="clear-filters" (click)="clearFilters()">
+                Limpar
+            </button>
+            }
         </div>
 
         <div class="filter-group">
-            <label>Categoria</label>
+            <label for="filter-category">Categoria</label>
 
             <select
+                id="filter-category"
                 class="filter-input"
-                [(ngModel)]="selectedCategory"
-                (change)="applyFilters()">
+                [(ngModel)]="selectedCategoryId"
+                (change)="search()">
 
-                <option value>Todas</option>
+                <option [ngValue]="null">Todas</option>
 
                 @for (cat of categories; track cat.id) {
-                <option [value]="cat.name">
+                <option [ngValue]="cat.id">
                     {{ cat.name }}
                 </option>
                 }
@@ -31,34 +38,80 @@
         </div>
 
         <div class="filter-group">
-            <div class="label-with-value">
-                <label>Preço máximo</label>
-                <span class="current-value">
-                    R$ {{ maxPrice.toFixed(2).replace('.', ',') }}
-                </span>
-            </div>
+            <label>Faixa de preço</label>
 
-            <input
-                type="range"
-                class="range-slider"
-                min="0"
-                max="5000"
-                step="50"
-                [(ngModel)]="maxPrice"
-                (input)="applyFilters()">
+            <div class="price-range">
+                <input
+                    type="number"
+                    class="filter-input"
+                    placeholder="Mín."
+                    min="0"
+                    aria-label="Preço mínimo"
+                    [(ngModel)]="minPrice"
+                    (input)="search()">
+
+                <span class="range-separator">até</span>
+
+                <input
+                    type="number"
+                    class="filter-input"
+                    placeholder="Máx."
+                    min="0"
+                    aria-label="Preço máximo"
+                    [(ngModel)]="maxPrice"
+                    (input)="search()">
+            </div>
         </div>
 
         <div class="filter-group">
-            <label>Avaliação mínima</label>
+            <label for="filter-rating">Avaliação mínima</label>
 
             <select
+                id="filter-rating"
                 class="filter-input"
                 [(ngModel)]="minRating"
-                (change)="applyFilters()">
+                (change)="search()">
 
-                <option [value]="0">Qualquer</option>
-                <option [value]="4">4+ Estrelas</option>
-                <option [value]="5">5 Estrelas</option>
+                <option [ngValue]="0">Qualquer</option>
+                <option [ngValue]="3">3+ Estrelas</option>
+                <option [ngValue]="4">4+ Estrelas</option>
+                <option [ngValue]="5">5 Estrelas</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="filter-location">Localização</label>
+
+            <select
+                id="filter-location"
+                class="filter-input"
+                [(ngModel)]="selectedLocation"
+                (change)="search()">
+
+                <option value="">Todas</option>
+
+                @for (location of locations; track location.city + location.state) {
+                <option [value]="location.city + '|' + location.state">
+                    {{ location.city }} - {{ location.state }}
+                </option>
+                }
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="filter-sort">Ordenar por</label>
+
+            <select
+                id="filter-sort"
+                class="filter-input"
+                [(ngModel)]="sortBy"
+                (change)="search()">
+
+                <option value="recent">Mais recentes</option>
+                <option value="price_asc">Menor preço</option>
+                <option value="price_desc">Maior preço</option>
+                <option value="rating_desc">Melhor avaliados</option>
+                <option value="title_asc">Ordem alfabética</option>
             </select>
         </div>
     </aside>
@@ -72,17 +125,30 @@
                 placeholder="Buscar serviços..."
                 class="search-input"
                 [(ngModel)]="searchTerm"
-                (input)="applyFilters()">
+                (input)="search()">
         </div>
 
-        <div class="services-grid">
+        <p class="results-count">
+            @if (loading) {
+            Buscando serviços...
+            } @else {
+            {{ services.length }}
+            {{ services.length === 1 ? 'serviço encontrado' : 'serviços encontrados' }}
+            }
+        </p>
+
+        <div class="services-grid" [class.is-loading]="loading">
             @for (item of services; track item.id) {
             <app-service-card
                 [service]="item"
                 (favoriteEvent)="toggleFavorite($event)">
             </app-service-card>
             } @empty {
-            <p>Nenhum serviço encontrado.</p>
+            @if (!loading) {
+            <p class="empty-state">
+                Nenhum serviço encontrado com esses filtros.
+            </p>
+            }
             }
         </div>
     </section>

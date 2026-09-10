@@ -22,6 +22,9 @@ public class ServiceResponseDTO {
     private boolean active;
     private boolean favorite;
     private String category;
+    private Long categoryId;
+    private String city;
+    private String state;
     private List<String> tags;
     private List<AvailableSlotDTO> availableSlots;
 
@@ -111,6 +114,30 @@ public class ServiceResponseDTO {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public Long getCategoryId() {
+        return this.categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCity() {
+        return this.city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return this.state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public List<String> getTags() {
