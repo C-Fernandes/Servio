@@ -20,6 +20,7 @@ export class ServiceCardComponent {
   @Output() deleteEvent = new EventEmitter<Service>();
   @Output() toggleEvent = new EventEmitter<Service>();
   @Output() favoriteEvent = new EventEmitter<Service>();
+
   goToDetails() {
     if (this.variant === 'marketplace') {
       this.router.navigate(['/service/details', this.service.id]);

@@ -21,6 +21,21 @@
     font-weight: 600;
     color: var(--color-text-main);
     margin-bottom: 24px;
+
+    .clear-filters {
+      margin-left: auto;
+      border: none;
+      background: none;
+      padding: 0;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-primary);
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   .filter-group {
@@ -53,15 +68,49 @@
         font-weight: 600;
       }
     }
+
+    .price-range {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .filter-input {
+        min-width: 0;
+      }
+
+      .range-separator {
+        font-size: 13px;
+        color: var(--color-text-muted);
+        flex-shrink: 0;
+      }
+    }
   }
 }
 
 .results-area {
   flex: 1;
 
+  .results-count {
+    margin: 0 0 16px;
+    font-size: 14px;
+    color: var(--color-text-muted);
+  }
+
+  .services-grid {
+    transition: opacity 0.15s ease;
+
+    &.is-loading {
+      opacity: 0.5;
+    }
+  }
+
+  .empty-state {
+    color: var(--color-text-muted);
+  }
+
   .search-container {
     position: relative;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
 
     .mat-icon {
       position: absolute;

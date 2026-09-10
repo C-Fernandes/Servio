@@ -39,6 +39,12 @@
         </div>
         }
         <p class="author">por {{ service.provider }}</p>
+        @if (service.city) {
+        <p class="location">
+            <span class="mat-icon">place</span>
+            {{ service.city }}{{ service.state ? ' - ' + service.state : '' }}
+        </p>
+        }
         } @else {
         <div class="provider-meta">
             <span class="category-pill">{{ service.category }}</span>

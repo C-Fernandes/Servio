@@ -4,6 +4,7 @@ import com.ufrn.ppgti.servio.dto.request.ServiceRequestDTO;
 import com.ufrn.ppgti.servio.dto.response.ServiceResponseDTO;
 import com.ufrn.ppgti.servio.model.Service;
 import com.ufrn.ppgti.servio.model.Tag;
+import com.ufrn.ppgti.servio.model.User;
 
 import org.springframework.stereotype.Component;
 
@@ -43,10 +44,17 @@ public class ServiceMapper {
 
         if (entity.getCategory() != null) {
             dto.setCategory(entity.getCategory().getName());
+            dto.setCategoryId(entity.getCategory().getId());
         }
 
         if (entity.getProvider() != null && entity.getProvider().getUser() != null) {
-            dto.setProvider(entity.getProvider().getUser().getName());
+            User provider = entity.getProvider().getUser();
+            dto.setProvider(provider.getName());
+
+            if (provider.getLocality() != null) {
+                dto.setCity(provider.getLocality().getCity());
+                dto.setState(provider.getLocality().getState());
+            }
         }
 
         if (entity.getTags() != null) {
