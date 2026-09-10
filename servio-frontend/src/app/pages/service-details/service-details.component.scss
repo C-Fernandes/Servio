@@ -493,6 +493,34 @@
     }
   }
 }
+
+.message-provider-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px 16px;
+  background: white;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--color-primary);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover:not(:disabled) {
+    background: var(--color-indigo-50);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
 .tabs-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

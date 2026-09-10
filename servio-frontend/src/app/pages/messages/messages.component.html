@@ -1,0 +1,91 @@
+<header class="page-header">
+    <h1 class="page-title">Mensagens</h1>
+    <p class="page-subtitle">
+        Converse com clientes e prestadores antes de fechar negócio
+    </p>
+</header>
+
+<div class="chat-layout">
+    <aside class="conversations-panel">
+        @if (loadingConversations) {
+        <p class="panel-status">Carregando conversas...</p>
+        } @else if (conversations.length === 0) {
+        <div class="conversations-empty">
+            <span class="mat-icon">chat_bubble_outline</span>
+            <p>Você ainda não tem conversas.</p>
+            <p class="hint">Abra um serviço no marketplace e clique em "Enviar mensagem" para começar.</p>
+        </div>
+        } @else {
+        <ul class="conversations-list">
+            @for (conversation of conversations; track conversation.id) {
+            <li>
+                <button
+                    type="button"
+                    class="conversation-item"
+                    [class.active]="selectedConversation?.id === conversation.id"
+                    (click)="selectConversation(conversation)">
+                    <span class="avatar">{{ getInitials(conversation.otherUserName) }}</span>
+                    <span class="conversation-info">
+                        <span class="conversation-top">
+                            <span class="name">{{ conversation.otherUserName }}</span>
+                            @if (conversation.unreadCount > 0) {
+                            <span class="unread-badge">{{ conversation.unreadCount }}</span>
+                            }
+                        </span>
+                        <span class="service-title">{{ conversation.serviceTitle }}</span>
+                        @if (conversation.lastMessage) {
+                        <span class="last-message">{{ conversation.lastMessage }}</span>
+                        }
+                    </span>
+                </button>
+            </li>
+            }
+        </ul>
+        }
+    </aside>
+
+    <section class="thread-panel">
+        @if (!selectedConversation) {
+        <div class="thread-empty">
+            <span class="mat-icon">forum</span>
+            <p>Selecione uma conversa para ver as mensagens.</p>
+        </div>
+        } @else {
+        <div class="thread-header">
+            <span class="avatar">{{ getInitials(selectedConversation.otherUserName) }}</span>
+            <div>
+                <p class="name">{{ selectedConversation.otherUserName }}</p>
+                <p class="service-title">Sobre: {{ selectedConversation.serviceTitle }}</p>
+            </div>
+        </div>
+
+        <div class="thread-messages">
+            @if (loadingMessages) {
+            <p class="panel-status">Carregando mensagens...</p>
+            } @else {
+            @for (message of messages; track message.id) {
+            <div class="message-row" [class.mine]="message.mine">
+                <div class="message-bubble">
+                    <p class="message-content">{{ message.content }}</p>
+                    <span class="message-time">{{ message.sentAt | date: 'dd/MM HH:mm' }}</span>
+                </div>
+            </div>
+            }
+            }
+            <div #messagesEnd></div>
+        </div>
+
+        <form class="thread-composer" (ngSubmit)="send()">
+            <input
+                type="text"
+                placeholder="Escreva uma mensagem..."
+                [(ngModel)]="draft"
+                name="draft"
+                autocomplete="off">
+            <button type="submit" [disabled]="sending || !draft.trim()">
+                <span class="mat-icon">send</span>
+            </button>
+        </form>
+        }
+    </section>
+</div>
