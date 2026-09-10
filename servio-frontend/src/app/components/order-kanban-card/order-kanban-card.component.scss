@@ -11,6 +11,34 @@
     }
   }
 
+  .kanban-card-accept {
+    margin-bottom: 8px;
+
+    .btn-accept {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      background: #6366f1;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+
+      .mat-icon {
+        font-size: 18px;
+      }
+
+      &:hover {
+        background: #4f46e5;
+      }
+    }
+  }
+
   .kanban-card-footer {
     display: flex;
     gap: 8px;

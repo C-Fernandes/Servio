@@ -1,0 +1,104 @@
+.order-journey {
+  margin-top: 8px;
+}
+
+.journey-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted, #64748b);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 12px;
+}
+
+.journey-status {
+  font-size: 14px;
+  color: var(--color-text-muted, #64748b);
+  margin: 0;
+
+  &.error {
+    color: #ef4444;
+  }
+}
+
+.journey-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.journey-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+
+  &:not(:last-child) .step-icon::after {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 26px;
+    width: 2px;
+    height: calc(100% - 12px);
+    background: #e2e8f0;
+  }
+
+  .step-icon {
+    font-size: 22px;
+    color: #cbd5e1;
+    z-index: 1;
+  }
+
+  .step-label {
+    font-size: 14px;
+    color: var(--color-text-muted, #64748b);
+  }
+
+  .step-time {
+    font-size: 12px;
+    color: #94a3b8;
+    white-space: nowrap;
+  }
+
+  &.state-done {
+    .step-icon {
+      color: #22c55e;
+    }
+    .step-label {
+      color: var(--color-text-main, #222639);
+    }
+  }
+
+  &.state-current {
+    .step-icon {
+      color: #6366f1;
+    }
+    .step-label {
+      color: #6366f1;
+      font-weight: 600;
+    }
+  }
+
+  &.state-skipped {
+    .step-icon,
+    .step-label {
+      color: #cbd5e1;
+    }
+  }
+}
+
+.journey-cancelled {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ef4444;
+
+  .mat-icon {
+    font-size: 18px;
+  }
+}

@@ -93,7 +93,7 @@ jornada reconstruída a partir do status atual. Inclui a etapa real "Aceito"
 (`PENDING → CONFIRMED`) no fluxo do prestador.
 - **Especificação:** [SPEC-002](specs/SPEC-002-jornada-do-pedido.md)
 - **Evidência (backend):** entidade `OrderStatusHistory`; `GET /orders/{id}/journey` (`OrderJourneyResponseDTO`) com verificação de participante (403); transições `PENDING → CONFIRMED → IN_PROGRESS → COMPLETED`; `OrderJourneyServiceTest` (8) + `OrderServiceTest` (3).
-- **Pendente:** linha do tempo no front-end (`order-details-modal`) e ação "Aceitar" no painel do prestador (SPEC-002 T9–T11).
+- **Evidência (frontend):** `OrderJourneyComponent` (linha do tempo) no detalhe do pedido do prestador e no painel do cliente ("Ver jornada"); botão "Aceitar pedido" no Kanban do prestador.
 
 ---
 

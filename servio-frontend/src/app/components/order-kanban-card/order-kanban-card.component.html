@@ -15,6 +15,13 @@
             {{ order().amount | currency:'BRL':'symbol':'1.2-2' }}
         </div>
     </div>
+    @if (order().statusUI === 'pending') {
+    <div class="kanban-card-accept">
+        <button class="btn-accept" (click)="accept()">
+            <span class="mat-icon">check</span> Aceitar pedido
+        </button>
+    </div>
+    }
     <div class="kanban-card-footer">
         <select class="status-select outline flex-grow"
             [value]="order().statusUI"

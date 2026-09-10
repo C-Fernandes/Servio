@@ -60,6 +60,37 @@
   gap: 0.35rem;
 }
 
+.order-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.journey-toggle {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 0.25rem;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary, #6366f1);
+
+  .mat-icon {
+    font-size: 18px;
+  }
+}
+
+app-order-journey {
+  display: block;
+  margin-top: 0.5rem;
+  width: 100%;
+  max-width: 420px;
+}
+
 .order-title,
 .review-service-title {
   margin: 0;

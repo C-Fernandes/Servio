@@ -1,0 +1,28 @@
+<div class="order-journey">
+  <p class="journey-title">Jornada do pedido</p>
+
+  @if (loading()) {
+  <p class="journey-status">Carregando jornada...</p>
+  } @else if (error()) {
+  <p class="journey-status error">Não foi possível carregar a jornada.</p>
+  } @else if (journey(); as j) {
+  <ol class="journey-steps">
+    @for (step of j.steps; track step.key) {
+    <li class="journey-step" [class]="'state-' + step.state.toLowerCase()">
+      <span class="step-icon mat-icon">{{ iconFor(step.state) }}</span>
+      <span class="step-label">{{ step.label }}</span>
+      @if (step.reachedAt) {
+      <span class="step-time">{{ step.reachedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+      }
+    </li>
+    }
+  </ol>
+
+  @if (j.cancelledAt) {
+  <p class="journey-cancelled">
+    <span class="mat-icon">cancel</span>
+    Cancelado em {{ j.cancelledAt | date:'dd/MM/yyyy HH:mm' }}
+  </p>
+  }
+  }
+</div>

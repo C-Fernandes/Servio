@@ -26,6 +26,10 @@ export class OrderKanbanCardComponent {
     this.statusChange.emit({ id: this.order().id, newStatus });
   }
 
+  accept() {
+    this.statusChange.emit({ id: this.order().id, newStatus: 'confirmed' });
+  }
+
   onViewDetails() {
     this.viewDetails.emit(this.order().id);
   } openModal() {

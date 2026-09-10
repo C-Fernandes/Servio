@@ -23,3 +23,19 @@ export interface OrderStatusUpdateRequestDTO {
     date: string;
     startTime: string;
 }
+
+export type OrderJourneyStepState = 'DONE' | 'CURRENT' | 'PENDING' | 'SKIPPED';
+
+export interface OrderJourneyStepDTO {
+    key: string;
+    label: string;
+    state: OrderJourneyStepState;
+    reachedAt: string | null;
+}
+
+export interface OrderJourneyResponseDTO {
+    orderId: number;
+    currentStatus: OrderStatusEnum;
+    steps: OrderJourneyStepDTO[];
+    cancelledAt: string | null;
+}

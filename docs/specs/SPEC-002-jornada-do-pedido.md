@@ -182,11 +182,11 @@ mapeamento) — ou consulta direta pelo repositório, a decidir na ADR.
 - [x] **T6 (Controller)**: `GET /orders/{id}/journey` com verificação de participante (cliente/prestador/ADMIN) → 403 caso contrário.
 - [x] **T7 (DTOs)**: `OrderJourneyResponseDTO`, `OrderJourneyStepDTO`.
 - [x] **T8 (Testes)**: `OrderJourneyServiceTest` (8) + `OrderServiceTest` (3) cobrindo os 3 cenários + casos de borda.
-- [ ] **T9 (Frontend — serviço)**: `OrderService.getJourney(orderId)` no Angular.
-- [ ] **T10 (Frontend — componente)**: linha do tempo no `order-details-modal` (cliente e prestador), com estados e datas; renderização especial para cancelado.
-- [ ] **T11 (Frontend — ações)**: botão/ação "Aceitar" no painel do prestador (Kanban `PENDING → CONFIRMED`).
-- [ ] **T12 (Doc)**: ADR do histórico de status; atualizar `docs/requisitos-funcionais.md` (RF-13) e `docs/diagrams/` com um diagrama da jornada.
-- [ ] **T13 (Homologação)**: validar todos os critérios de aceite.
+- [x] **T9 (Frontend — serviço)**: `OrderService.getJourney(orderId)` no Angular + tipos em `models/Order.ts`.
+- [x] **T10 (Frontend — componente)**: `OrderJourneyComponent` (linha do tempo com estados/datas e destaque para cancelado), embutido no `order-details-modal` (prestador) e no `dashboard-client` (cliente, via "Ver jornada").
+- [x] **T11 (Frontend — ações)**: botão "Aceitar pedido" no card do Kanban para pedidos pendentes (`PENDING → CONFIRMED`); opção "Confirmado" já presente nos selects de status.
+- [ ] **T12 (Doc)**: ADR do histórico de status; atualizar `docs/requisitos-funcionais.md` (RF-13, feito) e `docs/diagrams/` com um diagrama da jornada.
+- [ ] **T13 (Homologação)**: validar todos os critérios de aceite (demo).
 
 ---
 

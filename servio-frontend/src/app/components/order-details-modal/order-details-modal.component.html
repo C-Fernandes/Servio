@@ -75,6 +75,13 @@
                 }
             </div>
 
+            <div class="detail-group full-width">
+                <app-order-journey
+                    [orderId]="order().id"
+                    [status]="order().statusUI">
+                </app-order-journey>
+            </div>
+
         </div>
 
     </div>

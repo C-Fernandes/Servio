@@ -80,6 +80,21 @@
                 com {{ order.provider }} ·
                 {{ formatDateTime(order.date, order.startTime) }}
             </p>
+
+            <button
+                type="button"
+                class="journey-toggle"
+                (click)="toggleJourney(order.id)">
+                <span class="mat-icon">timeline</span>
+                {{ expandedJourneyId() === order.id ? 'Ocultar jornada' : 'Ver jornada' }}
+            </button>
+
+            @if (expandedJourneyId() === order.id) {
+            <app-order-journey
+                [orderId]="order.id"
+                [status]="order.status">
+            </app-order-journey>
+            }
         </div>
         <div class="order-side">
             <strong class="order-price">

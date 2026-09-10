@@ -11,10 +11,11 @@ import { OrderService } from '../../../services/order/order.service';
 import { ReviewService } from '../../../services/review/review.service';
 
 import { ReviewModalComponent } from '../../../components/review-modal/review-modal.component';
+import { OrderJourneyComponent } from '../../../components/order-journey/order-journey.component';
 
 @Component({
   selector: 'app-dashboard-client',
-  imports: [CommonModule, RouterLink, ReviewModalComponent],
+  imports: [CommonModule, RouterLink, ReviewModalComponent, OrderJourneyComponent],
   templateUrl: './dashboard-client.component.html',
   styleUrl: './dashboard-client.component.scss',
 })
@@ -30,6 +31,7 @@ export class DashboardClientComponent {
   reviews = signal<ReviewResponseDTO[]>([]);
   cancellingOrderId = signal<number | null>(null);
   selectedOrderToReview = signal<OrderResponseDTO | null>(null);
+  expandedJourneyId = signal<number | null>(null);
 
   mappedOrders = computed(() =>
     this.orders().map((order) => ({
@@ -72,6 +74,10 @@ export class DashboardClientComponent {
 
   setTab(tab: 'reservas' | 'avaliacoes') {
     this.activeTab.set(tab);
+  }
+
+  toggleJourney(orderId: number) {
+    this.expandedJourneyId.update((current) => (current === orderId ? null : orderId));
   }
 
   formatDateTime(date?: string, time?: string): string {

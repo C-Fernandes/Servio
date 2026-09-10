@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { OrderCreateRequestDTO, OrderResponseDTO, OrderStatusEnum, OrderStatusUpdateRequestDTO } from '../../models/Order';
+import { OrderCreateRequestDTO, OrderJourneyResponseDTO, OrderResponseDTO, OrderStatusEnum, OrderStatusUpdateRequestDTO } from '../../models/Order';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -23,5 +23,8 @@ export class OrderService {
   }
   create(dto: OrderCreateRequestDTO): Observable<OrderResponseDTO> {
     return this.http.post<OrderResponseDTO>(this.API_URL, dto);
+  }
+  getJourney(orderId: number): Observable<OrderJourneyResponseDTO> {
+    return this.http.get<OrderJourneyResponseDTO>(`${this.API_URL}/${orderId}/journey`);
   }
 }

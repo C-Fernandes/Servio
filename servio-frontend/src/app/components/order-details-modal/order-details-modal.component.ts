@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
 
+import { OrderJourneyComponent } from '../order-journey/order-journey.component';
+
 export interface OrderUI {
   id: number;
   service: string;
@@ -12,7 +14,7 @@ export interface OrderUI {
 
 @Component({
   selector: 'app-order-details-modal',
-  imports: [CommonModule],
+  imports: [CommonModule, OrderJourneyComponent],
   templateUrl: './order-details-modal.component.html',
   styleUrl: './order-details-modal.component.scss',
 })
