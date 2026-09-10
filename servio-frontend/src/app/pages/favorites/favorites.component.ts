@@ -3,9 +3,10 @@ import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { ServiceCardComponent } from '../../components/service-card/service-card.component';
-import { Service } from '../../models/Service';
 import { FavoriteService } from '../../services/favorite/favorite.service';
 import { ToastService } from '../../services/toast/toast.service';
+import { FavoriteResponseDTO } from '../../models/Favorite';
+import { Service } from '../../models/Service';
 
 @Component({
   selector: 'app-favorites',
@@ -17,34 +18,33 @@ export class FavoritesComponent {
   private favoriteService = inject(FavoriteService);
   private toast = inject(ToastService);
 
-  favorites: Service[] = [];
-  isLoading = true;
+  loading = true;
+  services: Service[] = [];
 
   ngOnInit(): void {
     this.loadFavorites();
   }
 
-  loadFavorites(): void {
-    this.isLoading = true;
-
-    this.favoriteService.findAll().subscribe({
-      next: (services) => {
-        this.favorites = services.map((service) => ({ ...service, favorite: true }));
-        this.isLoading = false;
+  loadFavorites() {
+    this.loading = true;
+    this.favoriteService.findMine().subscribe({
+      next: (favorites) => {
+        this.services = favorites.map((f) => this.toService(f));
+        this.loading = false;
       },
       error: (err) => {
-        console.error('Erro ao buscar favoritos:', err);
+        console.error('Erro ao carregar favoritos:', err);
         this.toast.showToast('Não foi possível carregar seus favoritos.', 'error');
-        this.isLoading = false;
+        this.loading = false;
       },
     });
   }
 
-  removeFavorite(service: Service): void {
+  onRemoveFavorite(service: Service) {
     this.favoriteService.remove(service.id).subscribe({
       next: () => {
-        this.favorites = this.favorites.filter((item) => item.id !== service.id);
-        this.toast.showToast('Serviço removido dos favoritos.', 'success');
+        this.services = this.services.filter((s) => s.id !== service.id);
+        this.toast.showToast('Serviço removido dos favoritos.', 'info');
       },
       error: (err) => {
         console.error('Erro ao remover favorito:', err);
@@ -52,5 +52,21 @@ export class FavoritesComponent {
       },
     });
   }
-}
 
+  private toService(favorite: FavoriteResponseDTO): Service {
+    return {
+      id: favorite.serviceId,
+      title: favorite.title,
+      description: favorite.description,
+      price: favorite.price,
+      provider: favorite.provider ?? '',
+      durationInMinutes: favorite.durationInMinutes,
+      image: favorite.image ?? '',
+      averageRating: favorite.averageRating,
+      reviewCount: favorite.reviewCount,
+      active: favorite.active,
+      category: favorite.category ?? '',
+      tags: [],
+    };
+  }
+}

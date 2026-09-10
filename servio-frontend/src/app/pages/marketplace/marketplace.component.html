@@ -141,8 +141,9 @@
             @for (item of services; track item.id) {
             <app-service-card
                 [service]="item"
-                (favoriteEvent)="toggleFavorite($event)">
-            </app-service-card>
+                [showFavorite]="isClient"
+                [isFavorite]="favoriteIds.has(item.id)"
+                (favoriteEvent)="onFavoriteToggle($event)"></app-service-card>
             } @empty {
             @if (!loading) {
             <p class="empty-state">

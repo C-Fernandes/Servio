@@ -44,4 +44,8 @@ export class SidebarComponent {
     const role = this.authService.getUserRole();
     return role === 'ADMIN';
   }
+
+  get isClient(): boolean {
+    return this.authService.getUserRole() === 'CLIENT';
+  }
 }

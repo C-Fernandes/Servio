@@ -9,6 +9,7 @@ import { ServiceCardComponent } from '../../components/service-card/service-card
 import { ServiceService } from '../../services/service/service.service';
 import { CategoryService } from '../../services/category/category.service';
 import { FavoriteService } from '../../services/favorite/favorite.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { Service, ServiceSearchFilters, ServiceSortOption } from '../../models/Service';
 import { Category } from '../../models/Category';
@@ -24,6 +25,7 @@ export class MarketplaceComponent implements OnInit, OnDestroy {
   private serviceService = inject(ServiceService);
   private categoryService = inject(CategoryService);
   private favoriteService = inject(FavoriteService);
+  private authService = inject(AuthService);
   private toast = inject(ToastService);
 
   private readonly searchTrigger = new Subject<void>();
@@ -34,6 +36,7 @@ export class MarketplaceComponent implements OnInit, OnDestroy {
   services: Service[] = [];
 
   loading = false;
+  favoriteIds = new Set<number>();
 
   searchTerm = '';
   selectedCategoryId: number | null = null;
@@ -43,11 +46,59 @@ export class MarketplaceComponent implements OnInit, OnDestroy {
   selectedLocation = '';
   sortBy: ServiceSortOption = 'recent';
 
+  get isClient(): boolean {
+    return this.authService.getUserRole() === 'CLIENT';
+  }
+
   ngOnInit(): void {
     this.loadCategories();
     this.loadLocations();
+    this.loadFavorites();
     this.listenToSearch();
     this.search();
+  }
+
+  loadFavorites() {
+    if (!this.isClient) {
+      return;
+    }
+
+    this.favoriteService.findMine().subscribe({
+      next: (favorites) => {
+        this.favoriteIds = new Set(favorites.map((f) => f.serviceId));
+      },
+      error: (err) => {
+        console.error('Erro ao carregar favoritos:', err);
+      },
+    });
+  }
+
+  onFavoriteToggle(service: Service) {
+    if (this.favoriteIds.has(service.id)) {
+      this.favoriteService.remove(service.id).subscribe({
+        next: () => {
+          this.favoriteIds.delete(service.id);
+          this.favoriteIds = new Set(this.favoriteIds);
+          this.toast.showToast('Serviço removido dos favoritos.', 'info');
+        },
+        error: (err: unknown) => this.handleFavoriteError(err),
+      });
+      return;
+    }
+
+    this.favoriteService.add(service.id).subscribe({
+      next: () => {
+        this.favoriteIds.add(service.id);
+        this.favoriteIds = new Set(this.favoriteIds);
+        this.toast.showToast('Serviço adicionado aos favoritos!', 'success');
+      },
+      error: (err: unknown) => this.handleFavoriteError(err),
+    });
+  }
+
+  private handleFavoriteError(err: unknown) {
+    console.error('Erro ao atualizar favorito:', err);
+    this.toast.showToast('Não foi possível atualizar os favoritos.', 'error');
   }
 
   ngOnDestroy(): void {
@@ -82,27 +133,6 @@ export class MarketplaceComponent implements OnInit, OnDestroy {
       this.selectedLocation !== '' ||
       this.sortBy !== 'recent'
     );
-  }
-
-  toggleFavorite(service: Service) {
-    if (service.favorite) {
-      this.favoriteService.remove(service.id).subscribe({
-        next: () => this.updateFavoriteState(service, false),
-        error: (err: unknown) => {
-          console.error('Erro ao remover favorito:', err);
-          this.toast.showToast('Não foi possível remover o favorito.', 'error');
-        },
-      });
-      return;
-    }
-
-    this.favoriteService.add(service.id).subscribe({
-      next: () => this.updateFavoriteState(service, true),
-      error: (err: unknown) => {
-        console.error('Erro ao adicionar favorito:', err);
-        this.toast.showToast('Não foi possível adicionar o favorito.', 'error');
-      },
-    });
   }
 
   // Cada digitação e cada ajuste de filtro passa por aqui: o debounce evita uma
@@ -165,16 +195,5 @@ export class MarketplaceComponent implements OnInit, OnDestroy {
         console.error('Erro ao buscar localizações:', err);
       },
     });
-  }
-
-  private updateFavoriteState(service: Service, favorite: boolean): void {
-    this.services = this.services.map((item) =>
-      item.id === service.id ? { ...item, favorite } : item
-    );
-
-    const message = favorite
-      ? 'Serviço adicionado aos favoritos.'
-      : 'Serviço removido dos favoritos.';
-    this.toast.showToast(message, 'success');
   }
 }

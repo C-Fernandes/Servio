@@ -79,7 +79,8 @@ export const routes: Routes = [
         path: 'favorites',
         loadComponent: () => import('./pages/favorites/favorites.component').then(m => m.FavoritesComponent),
         canActivate: [authGuard],
-        title: 'Favoritos | Servio'
+        data: {roles: ['CLIENT']},
+        title: 'Meus Favoritos | Servio'
       },
       {
         path: '',

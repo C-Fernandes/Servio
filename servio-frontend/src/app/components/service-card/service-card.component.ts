@@ -13,6 +13,8 @@ export class ServiceCardComponent {
   private router = inject(Router);
   @Input({ required: true }) service!: Service;
   @Input() variant: 'marketplace' | 'provider' = 'marketplace';
+  @Input() showFavorite = false;
+  @Input() isFavorite = false;
 
   @Output() editEvent = new EventEmitter<Service>();
   @Output() deleteEvent = new EventEmitter<Service>();
@@ -37,7 +39,7 @@ export class ServiceCardComponent {
     this.toggleEvent.emit(this.service);
   }
 
-  onToggleFavorite(event: MouseEvent) {
+  onFavorite(event: MouseEvent) {
     event.stopPropagation();
     this.favoriteEvent.emit(this.service);
   }

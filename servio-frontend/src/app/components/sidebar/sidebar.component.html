@@ -35,10 +35,12 @@
         <span>Explorar serviços</span>
       </a>
 
-      <a routerLink="/favorites" routerLinkActive="active" class="nav-item">
-        <span class="mat-icon">favorite</span>
-        <span>Favoritos</span>
-      </a>
+      @if (isClient) {
+        <a routerLink="/favorites" routerLinkActive="active" class="nav-item">
+          <span class="mat-icon">favorite</span>
+          <span>Meus favoritos</span>
+        </a>
+      }
     </nav>
 
     @if (isProviderOrAdmin) {

@@ -23,7 +23,7 @@ import com.ufrn.ppgti.servio.dto.request.ServiceSearchRequestDTO;
 import com.ufrn.ppgti.servio.repository.specification.ServiceSpecifications;
 import com.ufrn.ppgti.servio.exceptions.BusinessException;
 import com.ufrn.ppgti.servio.repository.CategoryRepository;
-import com.ufrn.ppgti.servio.repository.FavoriteServiceRepository;
+import com.ufrn.ppgti.servio.repository.FavoriteRepository;
 import com.ufrn.ppgti.servio.repository.OrderRepository;
 import com.ufrn.ppgti.servio.repository.ServiceRepository;
 import com.ufrn.ppgti.servio.repository.TagRepository;
@@ -54,13 +54,13 @@ public class ServiceService {
     private final OrderRepository orderRepository;
     private final AvailabilityService availabilityService;
     private final ReviewService reviewService;
-    private final FavoriteServiceRepository favoriteServiceRepository;
+    private final FavoriteRepository favoriteRepository;
 
     public ServiceService(ServiceRepository repository, ServiceMapper mapper,
             AuthService authService, CategoryRepository categoryRepository, TagRepository tagRepository,
             AvailabilityMapper availabilityMapper, OrderRepository orderRepository,
             AvailabilityService availabilityService, ReviewService reviewService,
-            FavoriteServiceRepository favoriteServiceRepository) {
+            FavoriteRepository favoriteRepository) {
         this.repository = repository;
         this.mapper = mapper;
         this.authService = authService;
@@ -70,7 +70,7 @@ public class ServiceService {
         this.orderRepository = orderRepository;
         this.availabilityService = availabilityService;
         this.reviewService = reviewService;
-        this.favoriteServiceRepository = favoriteServiceRepository;
+        this.favoriteRepository = favoriteRepository;
     }
 
     public List<ServiceResponseDTO> findAllActive() {
@@ -321,7 +321,7 @@ public class ServiceService {
         }
 
         if (userId != null && entity.getId() != null) {
-            dto.setFavorite(favoriteServiceRepository.existsByClientIdAndServiceId(userId, entity.getId()));
+            dto.setFavorite(favoriteRepository.existsByUserIdAndServiceId(userId, entity.getId()));
         }
 
         return dto;
