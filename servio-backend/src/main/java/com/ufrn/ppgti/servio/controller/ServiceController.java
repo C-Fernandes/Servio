@@ -19,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ufrn.ppgti.servio.annotations.Client;
 import com.ufrn.ppgti.servio.annotations.Provider;
+import com.ufrn.ppgti.servio.dto.LocalityDTO;
 import com.ufrn.ppgti.servio.dto.request.ServiceRequestDTO;
+import com.ufrn.ppgti.servio.dto.request.ServiceSearchRequestDTO;
 import com.ufrn.ppgti.servio.dto.response.ServiceResponseDTO;
 import com.ufrn.ppgti.servio.service.ServiceService;
 
@@ -39,6 +41,18 @@ public class ServiceController {
     @GetMapping
     public ResponseEntity<List<ServiceResponseDTO>> findAll() {
         return ResponseEntity.ok(service.findAllActive());
+    }
+
+    @Client
+    @GetMapping("/search")
+    public ResponseEntity<List<ServiceResponseDTO>> search(@Valid ServiceSearchRequestDTO filters) {
+        return ResponseEntity.ok(service.search(filters));
+    }
+
+    @Client
+    @GetMapping("/locations")
+    public ResponseEntity<List<LocalityDTO>> findAvailableLocations() {
+        return ResponseEntity.ok(service.findAvailableLocalities());
     }
 
     @Provider

@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { of, Subject } from 'rxjs';
+import { catchError, debounceTime, switchMap, takeUntil } from 'rxjs/operators';
 
 import { ServiceCardComponent } from '../../components/service-card/service-card.component';
 import { ServiceService } from '../../services/service/service.service';
@@ -9,8 +11,9 @@ import { CategoryService } from '../../services/category/category.service';
 import { FavoriteService } from '../../services/favorite/favorite.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { ToastService } from '../../services/toast/toast.service';
-import { Service } from '../../models/Service';
+import { Service, ServiceSearchFilters, ServiceSortOption } from '../../models/Service';
 import { Category } from '../../models/Category';
+import { Locality } from '../../models/Locality';
 
 @Component({
   selector: 'app-marketplace',
@@ -18,24 +21,30 @@ import { Category } from '../../models/Category';
   templateUrl: './marketplace.component.html',
   styleUrl: './marketplace.component.scss',
 })
-export class MarketplaceComponent {
+export class MarketplaceComponent implements OnInit, OnDestroy {
   private serviceService = inject(ServiceService);
   private categoryService = inject(CategoryService);
   private favoriteService = inject(FavoriteService);
   private authService = inject(AuthService);
   private toast = inject(ToastService);
 
-  categories: Category[] = [];
+  private readonly searchTrigger = new Subject<void>();
+  private readonly destroy = new Subject<void>();
 
-  allServices: Service[] = [];
+  categories: Category[] = [];
+  locations: Locality[] = [];
   services: Service[] = [];
 
+  loading = false;
   favoriteIds = new Set<number>();
 
-  selectedCategory = '';
-  maxPrice = 2000;
-  minRating = 0;
   searchTerm = '';
+  selectedCategoryId: number | null = null;
+  minPrice: number | null = null;
+  maxPrice: number | null = null;
+  minRating = 0;
+  selectedLocation = '';
+  sortBy: ServiceSortOption = 'recent';
 
   get isClient(): boolean {
     return this.authService.getUserRole() === 'CLIENT';
@@ -43,8 +52,10 @@ export class MarketplaceComponent {
 
   ngOnInit(): void {
     this.loadCategories();
-    this.loadActiveServices();
+    this.loadLocations();
     this.loadFavorites();
+    this.listenToSearch();
+    this.search();
   }
 
   loadFavorites() {
@@ -90,59 +101,99 @@ export class MarketplaceComponent {
     this.toast.showToast('Não foi possível atualizar os favoritos.', 'error');
   }
 
-  loadCategories() {
+  ngOnDestroy(): void {
+    this.destroy.next();
+    this.destroy.complete();
+  }
+
+  search(): void {
+    this.loading = true;
+    this.searchTrigger.next();
+  }
+
+  clearFilters(): void {
+    this.searchTerm = '';
+    this.selectedCategoryId = null;
+    this.minPrice = null;
+    this.maxPrice = null;
+    this.minRating = 0;
+    this.selectedLocation = '';
+    this.sortBy = 'recent';
+
+    this.search();
+  }
+
+  get hasActiveFilters(): boolean {
+    return (
+      this.searchTerm.trim() !== '' ||
+      this.selectedCategoryId !== null ||
+      this.minPrice !== null ||
+      this.maxPrice !== null ||
+      Number(this.minRating) > 0 ||
+      this.selectedLocation !== '' ||
+      this.sortBy !== 'recent'
+    );
+  }
+
+  // Cada digitação e cada ajuste de filtro passa por aqui: o debounce evita uma
+  // requisição por tecla e o switchMap descarta respostas de buscas já superadas.
+  private listenToSearch(): void {
+    this.searchTrigger
+      .pipe(
+        debounceTime(300),
+        switchMap(() =>
+          this.serviceService.search(this.buildFilters()).pipe(
+            catchError((err: unknown) => {
+              console.error('Erro ao buscar serviços do marketplace:', err);
+              this.toast.showToast('Não foi possível carregar os serviços.', 'error');
+              return of<Service[]>([]);
+            })
+          )
+        ),
+        takeUntil(this.destroy)
+      )
+      .subscribe((data) => {
+        this.services = data;
+        this.loading = false;
+      });
+  }
+
+  private buildFilters(): ServiceSearchFilters {
+    const [city, state] = this.selectedLocation
+      ? this.selectedLocation.split('|')
+      : [null, null];
+
+    return {
+      term: this.searchTerm,
+      categoryId: this.selectedCategoryId,
+      minPrice: this.minPrice,
+      maxPrice: this.maxPrice,
+      minRating: Number(this.minRating),
+      city,
+      state,
+      sortBy: this.sortBy,
+    };
+  }
+
+  private loadCategories(): void {
     this.categoryService.findAll().subscribe({
       next: (data) => {
         this.categories = data;
       },
-      error: (err) => {
+      error: (err: unknown) => {
         console.error('Erro ao buscar categorias:', err);
-      }
-    });
-  }
-
-  loadActiveServices() {
-    this.serviceService.findAllActive().subscribe({
-      next: (data) => {
-        this.allServices = data;
-        this.applyFilters();
-
-        console.log('Serviços ativos carregados:', this.allServices);
       },
-      error: (err) => {
-        console.error('Erro ao buscar serviços do marketplace:', err);
-      }
     });
   }
 
-  applyFilters() {
-    let filtered = [...this.allServices];
-
-    if (this.selectedCategory) {
-      filtered = filtered.filter(service =>
-        service.category === this.selectedCategory
-      );
-    }
-
-    filtered = filtered.filter(service =>
-      Number(service.price || 0) <= Number(this.maxPrice)
-    );
-
-    if (Number(this.minRating) > 0) {
-      filtered = filtered.filter(service =>
-        Number(service.averageRating || 0) >= Number(this.minRating)
-      );
-    }
-
-    const term = this.searchTerm.trim().toLowerCase();
-
-    if (term) {
-      filtered = filtered.filter(service =>
-        service.title?.toLowerCase().includes(term) ||
-        service.description?.toLowerCase().includes(term)
-      );
-    }
-
-    this.services = filtered;
+  private loadLocations(): void {
+    this.serviceService.findLocations().subscribe({
+      next: (data) => {
+        this.locations = data;
+      },
+      error: (err: unknown) => {
+        console.error('Erro ao buscar localizações:', err);
+      },
+    });
   }
 }
