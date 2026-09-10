@@ -59,7 +59,10 @@ da revisão humana de diff.
 
 ## 3. Evidência de Bloqueio Real
 
-> Preencher com a captura/log da execução em que o guardrail abortou um commit.
+Registrada em [`evidencia-guardrail-bloqueio.md`](evidencia-guardrail-bloqueio.md):
+em 2026-09-09 uma asserção do `FavoriteServiceTest` foi quebrada de propósito, o
+`pre-commit` executou `mvn test`, detectou a falha, imprimiu `COMMIT REJEITADO` e
+encerrou com `exit 1`; o `git log` confirma que o HEAD não avançou.
 
 Procedimento para gerar a evidência:
 
@@ -101,7 +104,7 @@ Guardar o log de terminal (texto ou screenshot) em `docs/harness/` como
 
 - [x] Nível de autonomia definido e justificado (ADR-001, seção 1 deste doc)
 - [x] Guardrail configurado de fato (`.githooks/pre-commit` + `core.hooksPath`)
-- [ ] Evidência de bloqueio real registrada (seção 3)
+- [x] Evidência de bloqueio real registrada (seção 3 / `evidencia-guardrail-bloqueio.md`)
 - [x] Observabilidade: transcript de sessão + revisão de diffs antes de aceitar
 - [x] Pelo menos um ADR de decisão relevante (ADR-001, ADR-002)
 - [x] Diagrama de arquitetura/modelo com apoio de IA (`docs/diagrams/`)
