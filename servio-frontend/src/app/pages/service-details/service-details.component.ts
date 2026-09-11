@@ -10,10 +10,13 @@ import { ReviewService } from '../../services/review/review.service';
 import { ReviewResponseDTO } from '../../models/Review';
 import { ChatService } from '../../services/chat/chat.service';
 import { AuthService } from '../../services/auth/auth.service';
+import { ReportService } from '../../services/report/report.service';
+import { CreateReportRequestDTO } from '../../models/Report';
+import { ReportModalComponent, ReportTarget } from '../../components/report-modal/report-modal.component';
 
 @Component({
   selector: 'app-service-details',
-  imports: [CommonModule],
+  imports: [CommonModule, ReportModalComponent],
   templateUrl: './service-details.component.html',
   styleUrl: './service-details.component.scss',
 })
@@ -26,6 +29,7 @@ export class ServiceDetailsComponent {
   private toast = inject(ToastService);
   private chatService = inject(ChatService);
   private authService = inject(AuthService);
+  private reportService = inject(ReportService);
 
   serviceData = signal<Service | undefined>(undefined);
   reviews = signal<ReviewResponseDTO[]>([]);
@@ -33,6 +37,7 @@ export class ServiceDetailsComponent {
   isLoading = signal(true);
   isReserving = signal(false);
   isStartingChat = signal(false);
+  reportTarget = signal<ReportTarget | null>(null);
 
   get isClient(): boolean {
     return this.authService.getUserRole() === 'CLIENT';
@@ -146,6 +151,38 @@ export class ServiceDetailsComponent {
         console.error('Erro ao iniciar conversa:', err);
         this.isStartingChat.set(false);
         this.toast.showToast(err.error?.message ?? 'Não foi possível iniciar a conversa.', 'error');
+      },
+    });
+  }
+
+  openReportModal() {
+    const service = this.serviceData();
+
+    if (!service || !service.id) {
+      return;
+    }
+
+    this.reportTarget.set({
+      targetType: 'SERVICE',
+      targetId: service.id,
+      targetLabel: service.title,
+    });
+  }
+
+  closeReportModal() {
+    this.reportTarget.set(null);
+  }
+
+  submitReport(dto: CreateReportRequestDTO) {
+    this.reportService.create(dto).subscribe({
+      next: () => {
+        this.closeReportModal();
+        this.toast.showToast('Denúncia enviada. Nossa equipe vai analisar.', 'success');
+      },
+      error: (err) => {
+        console.error('Erro ao enviar denúncia:', err);
+        this.closeReportModal();
+        this.toast.showToast(err.error?.message ?? 'Não foi possível enviar a denúncia.', 'error');
       },
     });
   }

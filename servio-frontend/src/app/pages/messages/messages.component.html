@@ -53,10 +53,14 @@
         } @else {
         <div class="thread-header">
             <span class="avatar">{{ getInitials(selectedConversation.otherUserName) }}</span>
-            <div>
+            <div class="thread-header-info">
                 <p class="name">{{ selectedConversation.otherUserName }}</p>
                 <p class="service-title">Sobre: {{ selectedConversation.serviceTitle }}</p>
             </div>
+            <button type="button" class="report-user-btn" (click)="openReportModal()">
+                <span class="mat-icon">flag</span>
+                Denunciar
+            </button>
         </div>
 
         <div class="thread-messages">
@@ -90,3 +94,9 @@
         }
     </section>
 </div>
+
+<app-report-modal
+    [target]="reportTarget"
+    (close)="closeReportModal()"
+    (submitReport)="submitReport($event)">
+</app-report-modal>

@@ -521,6 +521,33 @@
   }
 }
 
+.report-service-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px 16px;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  font-size: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+
+  .mat-icon {
+    font-size: 18px;
+  }
+
+  &:hover {
+    background: var(--color-bg-soft);
+    color: #ef4444;
+  }
+}
+
 .tabs-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

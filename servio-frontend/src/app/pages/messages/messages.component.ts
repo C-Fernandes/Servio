@@ -7,13 +7,16 @@ import { takeUntil } from 'rxjs/operators';
 
 import { ChatService } from '../../services/chat/chat.service';
 import { ToastService } from '../../services/toast/toast.service';
+import { ReportService } from '../../services/report/report.service';
 import { ConversationResponseDTO, MessageResponseDTO } from '../../models/Chat';
+import { CreateReportRequestDTO } from '../../models/Report';
+import { ReportModalComponent, ReportTarget } from '../../components/report-modal/report-modal.component';
 
 const POLL_INTERVAL_MS = 4000;
 
 @Component({
   selector: 'app-messages',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReportModalComponent],
   templateUrl: './messages.component.html',
   styleUrl: './messages.component.scss',
 })
@@ -21,6 +24,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
   private chatService = inject(ChatService);
   private toast = inject(ToastService);
   private route = inject(ActivatedRoute);
+  private reportService = inject(ReportService);
 
   private readonly destroy = new Subject<void>();
   private preselectId?: number;
@@ -30,6 +34,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
   conversations: ConversationResponseDTO[] = [];
   messages: MessageResponseDTO[] = [];
   selectedConversation: ConversationResponseDTO | null = null;
+  reportTarget: ReportTarget | null = null;
 
   loadingConversations = true;
   loadingMessages = false;
@@ -113,6 +118,38 @@ export class MessagesComponent implements OnInit, OnDestroy {
         console.error('Erro ao enviar mensagem:', err);
         this.toast.showToast('Não foi possível enviar a mensagem.', 'error');
         this.sending = false;
+      },
+    });
+  }
+
+  openReportModal(): void {
+    const conversation = this.selectedConversation;
+
+    if (!conversation) {
+      return;
+    }
+
+    this.reportTarget = {
+      targetType: 'USER',
+      targetId: conversation.otherUserId,
+      targetLabel: conversation.otherUserName,
+    };
+  }
+
+  closeReportModal(): void {
+    this.reportTarget = null;
+  }
+
+  submitReport(dto: CreateReportRequestDTO): void {
+    this.reportService.create(dto).subscribe({
+      next: () => {
+        this.closeReportModal();
+        this.toast.showToast('Denúncia enviada. Nossa equipe vai analisar.', 'success');
+      },
+      error: (err) => {
+        console.error('Erro ao enviar denúncia:', err);
+        this.closeReportModal();
+        this.toast.showToast(err.error?.message ?? 'Não foi possível enviar a denúncia.', 'error');
       },
     });
   }
