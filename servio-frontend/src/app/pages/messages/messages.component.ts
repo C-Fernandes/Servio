@@ -87,6 +87,11 @@ export class MessagesComponent implements OnInit, OnDestroy {
     });
   }
 
+  onEnterKey(event: Event): void {
+    event.preventDefault();
+    this.send();
+  }
+
   send(): void {
     const content = this.draft.trim();
     const conversation = this.selectedConversation;

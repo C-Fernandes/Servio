@@ -81,7 +81,8 @@
                 placeholder="Escreva uma mensagem..."
                 [(ngModel)]="draft"
                 name="draft"
-                autocomplete="off">
+                autocomplete="off"
+                (keydown.enter)="onEnterKey($event)">
             <button type="submit" [disabled]="sending || !draft.trim()">
                 <span class="mat-icon">send</span>
             </button>
