@@ -8,6 +8,8 @@ import { OrderService } from '../../services/order/order.service';
 import { ToastService } from '../../services/toast/toast.service';
 import { ReviewService } from '../../services/review/review.service';
 import { ReviewResponseDTO } from '../../models/Review';
+import { ChatService } from '../../services/chat/chat.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-service-details',
@@ -22,12 +24,19 @@ export class ServiceDetailsComponent {
   private reviewService = inject(ReviewService);
   private router = inject(Router);
   private toast = inject(ToastService);
+  private chatService = inject(ChatService);
+  private authService = inject(AuthService);
 
   serviceData = signal<Service | undefined>(undefined);
   reviews = signal<ReviewResponseDTO[]>([]);
 
   isLoading = signal(true);
   isReserving = signal(false);
+  isStartingChat = signal(false);
+
+  get isClient(): boolean {
+    return this.authService.getUserRole() === 'CLIENT';
+  }
 
   selectedSlot = signal<{ date: string; time: string } | null>(null);
 
@@ -115,6 +124,28 @@ export class ServiceDetailsComponent {
         console.error('Erro ao criar pedido:', err);
         this.isReserving.set(false);
         this.toast.showToast(err.error.message, 'error');
+      },
+    });
+  }
+
+  startChat() {
+    const service = this.serviceData();
+
+    if (!service || !service.id) {
+      return;
+    }
+
+    this.isStartingChat.set(true);
+
+    this.chatService.startConversation(service.id).subscribe({
+      next: (conversation) => {
+        this.isStartingChat.set(false);
+        this.router.navigate(['/messages'], { queryParams: { conversationId: conversation.id } });
+      },
+      error: (err) => {
+        console.error('Erro ao iniciar conversa:', err);
+        this.isStartingChat.set(false);
+        this.toast.showToast(err.error?.message ?? 'Não foi possível iniciar a conversa.', 'error');
       },
     });
   }

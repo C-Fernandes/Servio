@@ -325,14 +325,30 @@
         </div>
 
         <div class="provider-card">
-            <div class="avatar">PP</div>
+            <div class="avatar">{{ getInitials(data.provider) }}</div>
             <div class="provider-info">
                 <div class="name">
-                    Pedro Prestador
+                    {{ data.provider }}
                     <span class="mat-icon verified">verified</span>
                 </div>
-                <div class="role">Designer UI/UX Sênior</div>
+                <div class="role">{{ data.category }}</div>
             </div>
         </div>
+
+        @if (isClient) {
+        <button
+            type="button"
+            class="message-provider-btn"
+            [disabled]="isStartingChat()"
+            (click)="startChat()">
+            @if (isStartingChat()) {
+            <span class="mat-icon">hourglass_empty</span>
+            Abrindo conversa...
+            } @else {
+            <span class="mat-icon">chat</span>
+            Enviar mensagem
+            }
+        </button>
+        }
     </aside>
 </div>}
