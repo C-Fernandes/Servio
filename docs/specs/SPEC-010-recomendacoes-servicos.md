@@ -101,7 +101,7 @@ Então o sistema deve retornar status HTTP 200 (OK) com uma lista vazia, sem err
 
 | Método | Endpoint | Perfil | Resposta Sucesso | Erros Previstos |
 | :--- | :--- | :--- | :--- | :--- |
-| `GET` | `/services/recommendations` | CLIENT | `200 OK` (List<ServiceResponseDTO>, no máximo 8 itens) | 400 (perfil não é cliente) |
+| `GET` | `/services/recommendations` | CLIENT | `200 OK` (List<ServiceResponseDTO>, no máximo 3 itens) | 400 (perfil não é cliente) |
 
 ---
 

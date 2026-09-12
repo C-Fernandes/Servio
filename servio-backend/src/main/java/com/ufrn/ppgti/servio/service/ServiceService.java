@@ -51,7 +51,7 @@ public class ServiceService {
     private static final String SORT_TITLE_ASC = "title_asc";
     private static final String SORT_RATING_DESC = "rating_desc";
 
-    private static final int RECOMMENDATION_LIMIT = 8;
+    private static final int RECOMMENDATION_LIMIT = 3;
     private static final int RECOMMENDATION_CATEGORY_WEIGHT = 2;
     private static final int RECOMMENDATION_TAG_WEIGHT = 1;
 
