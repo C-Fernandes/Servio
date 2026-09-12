@@ -11,12 +11,16 @@ import { ReportService } from '../../services/report/report.service';
 import { ConversationResponseDTO, MessageResponseDTO } from '../../models/Chat';
 import { CreateReportRequestDTO } from '../../models/Report';
 import { ReportModalComponent, ReportTarget } from '../../components/report-modal/report-modal.component';
+import {
+  InteractionHistoryModalComponent,
+  InteractionTarget,
+} from '../../components/interaction-history-modal/interaction-history-modal.component';
 
 const POLL_INTERVAL_MS = 4000;
 
 @Component({
   selector: 'app-messages',
-  imports: [CommonModule, FormsModule, ReportModalComponent],
+  imports: [CommonModule, FormsModule, ReportModalComponent, InteractionHistoryModalComponent],
   templateUrl: './messages.component.html',
   styleUrl: './messages.component.scss',
 })
@@ -35,6 +39,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
   messages: MessageResponseDTO[] = [];
   selectedConversation: ConversationResponseDTO | null = null;
   reportTarget: ReportTarget | null = null;
+  historyTarget: InteractionTarget | null = null;
 
   loadingConversations = true;
   loadingMessages = false;
@@ -152,6 +157,23 @@ export class MessagesComponent implements OnInit, OnDestroy {
         this.toast.showToast(err.error?.message ?? 'Não foi possível enviar a denúncia.', 'error');
       },
     });
+  }
+
+  openHistoryModal(): void {
+    const conversation = this.selectedConversation;
+
+    if (!conversation) {
+      return;
+    }
+
+    this.historyTarget = {
+      userId: conversation.otherUserId,
+      userName: conversation.otherUserName,
+    };
+  }
+
+  closeHistoryModal(): void {
+    this.historyTarget = null;
   }
 
   private startPolling(): void {

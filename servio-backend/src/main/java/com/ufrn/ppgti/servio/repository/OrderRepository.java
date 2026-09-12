@@ -21,6 +21,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findByProvider_IdOrderByCreatedAtDesc(Long providerId);
 
+    List<Order> findByClient_IdAndProvider_IdOrderByCreatedAtDesc(Long clientId, Long providerId);
+
     boolean existsByProvider_IdAndDateAndStatusNotAndStartTimeLessThanAndEndTimeGreaterThan(
             Long providerId,
             LocalDate date,
