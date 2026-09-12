@@ -78,7 +78,7 @@
                     <h4>{{ order.serviceTitle }}</h4>
                     <p class="k-client">{{ order.clientName }}</p>
                     <p class="k-date">{{ order.date }}</p>
-                    <p class="k-price">{{ order.servicePrice |
+                    <p class="k-price">{{ (order.finalPrice ?? order.servicePrice) |
                         currency:'BRL':'symbol':'1.2-2' }}</p>
                     <div class="k-select-mock">Pendente <span
                             class="mat-icon">expand_more</span></div>
@@ -91,7 +91,7 @@
                     <h4>{{ order.serviceTitle }}</h4>
                     <p class="k-client">{{ order.clientName }}</p>
                     <p class="k-date">{{ order.date }}</p>
-                    <p class="k-price">{{ order.servicePrice |
+                    <p class="k-price">{{ (order.finalPrice ?? order.servicePrice) |
                         currency:'BRL':'symbol':'1.2-2' }}</p>
                     <div class="k-select-mock">Em andamento <span
                             class="mat-icon">expand_more</span></div>
@@ -104,7 +104,7 @@
                     <h4>{{ order.serviceTitle }}</h4>
                     <p class="k-client">{{ order.clientName }}</p>
                     <p class="k-date">{{ order.date }}</p>
-                    <p class="k-price">{{ order.servicePrice |
+                    <p class="k-price">{{ (order.finalPrice ?? order.servicePrice) |
                         currency:'BRL':'symbol':'1.2-2' }}</p>
                     <div class="k-select-mock">Concluído <span
                             class="mat-icon">expand_more</span></div>
@@ -117,7 +117,7 @@
                     <h4>{{ order.serviceTitle }}</h4>
                     <p class="k-client">{{ order.clientName }}</p>
                     <p class="k-date">{{ order.date }}</p>
-                    <p class="k-price">{{ order.servicePrice |
+                    <p class="k-price">{{ (order.finalPrice ?? order.servicePrice) |
                         currency:'BRL':'symbol':'1.2-2' }}</p>
                     <div class="k-select-mock">Cancelado <span
                             class="mat-icon">expand_more</span></div>

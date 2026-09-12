@@ -105,7 +105,8 @@ public class FinancialDashboardService {
 
             } else if (order.getStatus() == OrderStatus.COMPLETED) {
                 completedOrders++;
-                totalSpent = totalSpent.add(BigDecimal.valueOf(order.getService().getPrice()));
+                Double spent = order.getFinalPrice() != null ? order.getFinalPrice() : order.getService().getPrice();
+                totalSpent = totalSpent.add(BigDecimal.valueOf(spent));
 
             } else if (order.getStatus() == OrderStatus.CANCELLED) {
                 cancelledOrders++;

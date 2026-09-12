@@ -51,7 +51,7 @@ export class DashboardProviderComponent {
     const transactions: any[] = [];
 
     completed.forEach(order => {
-      const grossAmount = order.servicePrice || 0;
+      const grossAmount = order.finalPrice ?? order.servicePrice ?? 0;
       const feeAmount = grossAmount * 0.10; // 10% da plataforma
 
       // 1. Linha do Recebimento (90% do valor)

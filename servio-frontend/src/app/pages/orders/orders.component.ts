@@ -109,7 +109,7 @@ export class OrdersComponent implements OnInit {
       service: dto.serviceTitle || 'Service not provided',
       client: dto.clientName || 'Anonymous client',
       date: `${dto.date} ${dto.startTime}`,
-      amount: dto.servicePrice || 0,
+      amount: dto.finalPrice ?? dto.servicePrice ?? 0,
       statusUI: this.mapStatusFromAPI(dto.status),
       statusEnum: dto.status
     };

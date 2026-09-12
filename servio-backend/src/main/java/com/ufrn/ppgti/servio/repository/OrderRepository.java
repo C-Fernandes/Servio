@@ -35,7 +35,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     java.util.Optional<Order> findByIdAndProvider_Id(Long id, Long providerId);
 
     @Query("""
-        select coalesce(sum(o.service.price), 0)
+        select coalesce(sum(coalesce(o.finalPrice, o.service.price)), 0)
         from Order o
         where o.service.provider.id = :providerId
           and o.status = com.ufrn.ppgti.servio.model.enums.OrderStatus.COMPLETED

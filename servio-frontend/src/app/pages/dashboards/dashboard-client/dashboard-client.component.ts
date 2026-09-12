@@ -40,7 +40,7 @@ export class DashboardClientComponent {
       provider: order.providerName,
       date: order.date,
       startTime: order.startTime,
-      amount: order.servicePrice,
+      amount: order.finalPrice ?? order.servicePrice,
       status: order.status,
     }))
   );
