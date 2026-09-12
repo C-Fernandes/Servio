@@ -70,6 +70,13 @@ export const routes: Routes = [
         title: 'Painel do Cliente | Servio'
       },
       {
+        path: 'coupons',
+        loadComponent: () => import('./pages/coupons/coupons.component').then(m => m.CouponsComponent),
+        canActivate: [authGuard],
+        data: {roles: ['PROVIDER', 'ADMIN']},
+        title: 'Meus Cupons | Servio'
+      },
+      {
         path: 'calendar',
         loadComponent: () => import('./pages/calendar/calendar.component').then(m => m.CalendarComponent),
         canActivate: [authGuard],

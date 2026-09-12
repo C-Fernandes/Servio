@@ -18,6 +18,8 @@ public class OrderCreateRequestDTO {
     @NotNull(message = "O horário de início é obrigatório")
     private LocalTime startTime;
 
+    private String couponCode;
+
     public Long getServiceId() {
         return serviceId;
     }
@@ -40,5 +42,13 @@ public class OrderCreateRequestDTO {
 
     public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
+    }
+
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
     }
 }

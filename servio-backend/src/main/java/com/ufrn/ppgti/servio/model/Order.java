@@ -54,6 +54,11 @@ public class Order {
     @OneToOne(mappedBy = "order")
     private Review review;
 
+    private Double originalPrice;
+    private Double discountPercentage;
+    private Double finalPrice;
+    private String couponCode;
+
     public Long getId() {
         return this.id;
     }
@@ -140,6 +145,38 @@ public class Order {
 
     public void setReview(Review review) {
         this.review = review;
+    }
+
+    public Double getOriginalPrice() {
+        return this.originalPrice;
+    }
+
+    public void setOriginalPrice(Double originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
+    public Double getDiscountPercentage() {
+        return this.discountPercentage;
+    }
+
+    public void setDiscountPercentage(Double discountPercentage) {
+        this.discountPercentage = discountPercentage;
+    }
+
+    public Double getFinalPrice() {
+        return this.finalPrice;
+    }
+
+    public void setFinalPrice(Double finalPrice) {
+        this.finalPrice = finalPrice;
+    }
+
+    public String getCouponCode() {
+        return this.couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
     }
 
 }

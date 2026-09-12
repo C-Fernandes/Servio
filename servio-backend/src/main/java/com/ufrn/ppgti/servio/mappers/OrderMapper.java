@@ -39,6 +39,11 @@ public class OrderMapper {
             dto.setServicePrice(entity.getService().getPrice());
         }
 
+        dto.setOriginalPrice(entity.getOriginalPrice());
+        dto.setDiscountPercentage(entity.getDiscountPercentage());
+        dto.setFinalPrice(entity.getFinalPrice());
+        dto.setCouponCode(entity.getCouponCode());
+
         return dto;
     }
 }

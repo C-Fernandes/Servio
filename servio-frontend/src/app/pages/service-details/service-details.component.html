@@ -286,11 +286,48 @@
                     }
                 </div>
 
+                @if (isClient) {
+                <div class="coupon-box">
+                    @if (appliedCoupon(); as coupon) {
+                    <div class="coupon-applied">
+                        <span class="mat-icon">local_offer</span>
+                        <span>Cupom <strong>{{ coupon.code }}</strong> aplicado
+                            ({{ coupon.discountPercentage }}% off)</span>
+                        <button type="button" class="remove-coupon" (click)="removeCoupon()">Remover</button>
+                    </div>
+                    } @else {
+                    <div class="coupon-input-row">
+                        <input
+                            type="text"
+                            placeholder="Código do cupom"
+                            [ngModel]="couponCode()"
+                            (ngModelChange)="couponCode.set($event)">
+                        <button
+                            type="button"
+                            class="apply-coupon-btn"
+                            [disabled]="isValidatingCoupon() || !couponCode().trim()"
+                            (click)="validateCoupon()">
+                            @if (isValidatingCoupon()) { Validando... } @else { Aplicar }
+                        </button>
+                    </div>
+                    @if (couponError()) {
+                    <span class="coupon-error">{{ couponError() }}</span>
+                    }
+                    }
+                </div>
+                }
+
                 <div class="price-breakdown">
                     <div class="row">
                         <span>Serviço</span>
-                        <span class="value">R$ 850,00</span>
+                        <span class="value">{{ data.price | currency:'BRL' }}</span>
                     </div>
+                    @if (appliedCoupon(); as coupon) {
+                    <div class="row discount-row">
+                        <span>Desconto ({{ coupon.discountPercentage }}%)</span>
+                        <span class="value">- {{ (coupon.originalPrice - coupon.finalPrice) | currency:'BRL' }}</span>
+                    </div>
+                    }
                     <div class="row">
                         <span>Taxa da plataforma</span>
                         <span class="value">Inclusa</span>
@@ -299,7 +336,7 @@
 
                 <div class="price-total">
                     <span>Total</span>
-                    <span class="value-highlight">{{ data.price | currency:'BRL'
+                    <span class="value-highlight">{{ displayPrice | currency:'BRL'
                         }}</span>
                 </div>
 

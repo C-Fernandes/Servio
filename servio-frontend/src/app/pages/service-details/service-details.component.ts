@@ -3,6 +3,7 @@ import { ServiceService } from '../../services/service/service.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Service } from '../../models/Service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { OrderCreateRequestDTO } from '../../models/Order';
 import { OrderService } from '../../services/order/order.service';
 import { ToastService } from '../../services/toast/toast.service';
@@ -13,10 +14,12 @@ import { AuthService } from '../../services/auth/auth.service';
 import { ReportService } from '../../services/report/report.service';
 import { CreateReportRequestDTO } from '../../models/Report';
 import { ReportModalComponent, ReportTarget } from '../../components/report-modal/report-modal.component';
+import { CouponService } from '../../services/coupon/coupon.service';
+import { CouponValidationResponseDTO } from '../../models/Coupon';
 
 @Component({
   selector: 'app-service-details',
-  imports: [CommonModule, ReportModalComponent],
+  imports: [CommonModule, FormsModule, ReportModalComponent],
   templateUrl: './service-details.component.html',
   styleUrl: './service-details.component.scss',
 })
@@ -30,6 +33,7 @@ export class ServiceDetailsComponent {
   private chatService = inject(ChatService);
   private authService = inject(AuthService);
   private reportService = inject(ReportService);
+  private couponService = inject(CouponService);
 
   serviceData = signal<Service | undefined>(undefined);
   reviews = signal<ReviewResponseDTO[]>([]);
@@ -38,6 +42,11 @@ export class ServiceDetailsComponent {
   isReserving = signal(false);
   isStartingChat = signal(false);
   reportTarget = signal<ReportTarget | null>(null);
+
+  couponCode = signal('');
+  isValidatingCoupon = signal(false);
+  appliedCoupon = signal<CouponValidationResponseDTO | null>(null);
+  couponError = signal<string | null>(null);
 
   get isClient(): boolean {
     return this.authService.getUserRole() === 'CLIENT';
@@ -102,6 +111,41 @@ export class ServiceDetailsComponent {
     this.selectedSlot.set(slot);
   }
 
+  get displayPrice(): number {
+    return this.appliedCoupon()?.finalPrice ?? this.serviceData()?.price ?? 0;
+  }
+
+  validateCoupon() {
+    const service = this.serviceData();
+    const code = this.couponCode().trim();
+
+    if (!service || !service.id || !code) {
+      return;
+    }
+
+    this.isValidatingCoupon.set(true);
+    this.couponError.set(null);
+
+    this.couponService.validate(code, service.id).subscribe({
+      next: (result) => {
+        this.isValidatingCoupon.set(false);
+        this.appliedCoupon.set(result);
+        this.toast.showToast(`Cupom aplicado: ${result.discountPercentage}% de desconto!`, 'success');
+      },
+      error: (err) => {
+        this.isValidatingCoupon.set(false);
+        this.appliedCoupon.set(null);
+        this.couponError.set(err.error?.message ?? 'Cupom inválido.');
+      },
+    });
+  }
+
+  removeCoupon() {
+    this.couponCode.set('');
+    this.appliedCoupon.set(null);
+    this.couponError.set(null);
+  }
+
   reserve() {
     const slot = this.selectedSlot();
     const service = this.serviceData();
@@ -117,6 +161,7 @@ export class ServiceDetailsComponent {
       serviceId: service.id,
       date: slot.date,
       startTime: slot.time,
+      couponCode: this.appliedCoupon()?.code ?? null,
     };
 
     this.orderService.create(payload).subscribe({

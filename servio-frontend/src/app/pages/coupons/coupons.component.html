@@ -1,0 +1,91 @@
+<header class="page-header">
+    <div class="header-content">
+        <div class="text-side">
+            <h1 class="page-title">Meus cupons</h1>
+            <p class="page-subtitle">Crie cupons de desconto para os seus serviços</p>
+        </div>
+        <button class="btn-primary-action" (click)="openForm()">
+            <span class="mat-icon">add</span>
+            Novo cupom
+        </button>
+    </div>
+</header>
+
+@if (isFormOpen) {
+<div class="coupon-form-card">
+    <div class="form-row">
+        <label>
+            Serviço
+            <select [(ngModel)]="form.serviceId">
+                <option [ngValue]="null">Selecione um serviço</option>
+                @for (service of myServices; track service.id) {
+                <option [ngValue]="service.id">{{ service.title }}</option>
+                }
+            </select>
+        </label>
+
+        <label>
+            Código
+            <input type="text" [(ngModel)]="form.code" placeholder="Ex: PROMO10" maxlength="30">
+        </label>
+
+        <label>
+            Desconto (%)
+            <input type="number" [(ngModel)]="form.discountPercentage" min="1" max="100">
+        </label>
+
+        <label>
+            Expira em (opcional)
+            <input type="date" [(ngModel)]="form.expiresAt">
+        </label>
+    </div>
+
+    <div class="form-actions">
+        <button class="btn-secondary" (click)="closeForm()">Cancelar</button>
+        <button class="btn-primary-action" [disabled]="isSaving" (click)="submitForm()">
+            @if (isSaving) { Salvando... } @else { Criar cupom }
+        </button>
+    </div>
+</div>
+}
+
+<div class="coupons-table-wrapper">
+    <table class="coupons-table">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Serviço</th>
+                <th>Desconto</th>
+                <th>Expira em</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (coupon of coupons; track coupon.id) {
+            <tr>
+                <td class="code-cell">{{ coupon.code }}</td>
+                <td>{{ coupon.serviceTitle }}</td>
+                <td>{{ coupon.discountPercentage }}%</td>
+                <td>{{ coupon.expiresAt ? (coupon.expiresAt | date:'dd/MM/yyyy') : 'Sem validade' }}</td>
+                <td>
+                    <span class="status-badge" [class.inactive]="!coupon.active">
+                        {{ coupon.active ? 'Ativo' : 'Inativo' }}
+                    </span>
+                </td>
+                <td>
+                    @if (coupon.active) {
+                    <button class="icon-btn delete" (click)="deactivate(coupon)" title="Desativar">
+                        <span class="mat-icon">block</span>
+                    </button>
+                    }
+                </td>
+            </tr>
+            } @empty {
+            <tr>
+                <td colspan="6" class="empty-state">Nenhum cupom cadastrado ainda.</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -14,6 +14,10 @@ export interface OrderResponseDTO {
     serviceId: number;
     serviceTitle: string;
     servicePrice: number;
+    originalPrice: number | null;
+    discountPercentage: number | null;
+    finalPrice: number | null;
+    couponCode: string | null;
 }
 
 export interface OrderStatusUpdateRequestDTO {
@@ -22,6 +26,7 @@ export interface OrderStatusUpdateRequestDTO {
     serviceId: number;
     date: string;
     startTime: string;
+    couponCode?: string | null;
 }
 
 export type OrderJourneyStepState = 'DONE' | 'CURRENT' | 'PENDING' | 'SKIPPED';
