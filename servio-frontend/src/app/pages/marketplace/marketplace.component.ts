@@ -34,8 +34,10 @@ export class MarketplaceComponent implements OnInit, OnDestroy {
   categories: Category[] = [];
   locations: Locality[] = [];
   services: Service[] = [];
+  recommendations: Service[] = [];
 
   loading = false;
+  loadingRecommendations = false;
   favoriteIds = new Set<number>();
 
   searchTerm = '';
@@ -54,6 +56,7 @@ export class MarketplaceComponent implements OnInit, OnDestroy {
     this.loadCategories();
     this.loadLocations();
     this.loadFavorites();
+    this.loadRecommendations();
     this.listenToSearch();
     this.search();
   }
@@ -69,6 +72,25 @@ export class MarketplaceComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Erro ao carregar favoritos:', err);
+      },
+    });
+  }
+
+  loadRecommendations() {
+    if (!this.isClient) {
+      return;
+    }
+
+    this.loadingRecommendations = true;
+
+    this.serviceService.findRecommendations().subscribe({
+      next: (data) => {
+        this.recommendations = data;
+        this.loadingRecommendations = false;
+      },
+      error: (err) => {
+        console.error('Erro ao carregar recomendações:', err);
+        this.loadingRecommendations = false;
       },
     });
   }

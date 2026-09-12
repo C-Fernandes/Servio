@@ -6,7 +6,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Base64;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.nio.file.Path;
@@ -30,10 +33,13 @@ import com.ufrn.ppgti.servio.repository.TagRepository;
 import com.ufrn.ppgti.servio.mappers.AvailabilityMapper;
 import com.ufrn.ppgti.servio.mappers.ServiceMapper;
 import com.ufrn.ppgti.servio.model.Category;
+import com.ufrn.ppgti.servio.model.Favorite;
+import com.ufrn.ppgti.servio.model.Order;
 import com.ufrn.ppgti.servio.model.ProviderProfile;
 import com.ufrn.ppgti.servio.model.Review;
 import com.ufrn.ppgti.servio.model.Tag;
 import com.ufrn.ppgti.servio.model.User;
+import com.ufrn.ppgti.servio.model.enums.Role;
 
 @Service
 public class ServiceService {
@@ -44,6 +50,10 @@ public class ServiceService {
     private static final String SORT_PRICE_DESC = "price_desc";
     private static final String SORT_TITLE_ASC = "title_asc";
     private static final String SORT_RATING_DESC = "rating_desc";
+
+    private static final int RECOMMENDATION_LIMIT = 8;
+    private static final int RECOMMENDATION_CATEGORY_WEIGHT = 2;
+    private static final int RECOMMENDATION_TAG_WEIGHT = 1;
 
     private final ServiceRepository repository;
     private final ServiceMapper mapper;
@@ -105,6 +115,58 @@ public class ServiceService {
     @Transactional(readOnly = true)
     public List<LocalityDTO> findAvailableLocalities() {
         return repository.findAvailableLocalities();
+    }
+
+    /**
+     * Recomenda serviços com base no perfil de interesse do cliente: categorias e
+     * tags dos serviços que ele já favoritou ou contratou. Sem sinal de interesse
+     * (cliente novo, sem favoritos/pedidos), cai no fallback de melhor avaliados.
+     */
+    @Transactional(readOnly = true)
+    public List<ServiceResponseDTO> getRecommendations() {
+        User user = authService.getAuthenticadUser();
+
+        if (user.getRole() != Role.CLIENT) {
+            throw new BusinessException("Recomendações estão disponíveis apenas para clientes.");
+        }
+
+        Set<Long> interactedServiceIds = new HashSet<>();
+        Set<Long> interestCategoryIds = new HashSet<>();
+        Set<Long> interestTagIds = new HashSet<>();
+
+        for (Favorite favorite : favoriteRepository.findByUserIdWithService(user.getId())) {
+            collectInterest(favorite.getService(), interactedServiceIds, interestCategoryIds, interestTagIds);
+        }
+        for (Order order : orderRepository.findByClient_IdOrderByCreatedAtDesc(user.getId())) {
+            collectInterest(order.getService(), interactedServiceIds, interestCategoryIds, interestTagIds);
+        }
+
+        boolean hasInterestSignal = !interestCategoryIds.isEmpty() || !interestTagIds.isEmpty();
+
+        List<com.ufrn.ppgti.servio.model.Service> candidates = repository.findByActiveTrueAndDeletedFalse().stream()
+                .filter(entity -> !interactedServiceIds.contains(entity.getId()))
+                .toList();
+
+        List<ServiceResponseDTO> recommendations = candidates.stream()
+                .map(entity -> toResponseDTOWithDetails(entity, user.getId()))
+                .collect(Collectors.toList());
+
+        if (hasInterestSignal) {
+            Map<Long, Integer> scoreByServiceId = candidates.stream()
+                    .collect(Collectors.toMap(
+                            com.ufrn.ppgti.servio.model.Service::getId,
+                            entity -> interestScoreOf(entity, interestCategoryIds, interestTagIds)));
+
+            recommendations.sort(
+                    Comparator
+                            .comparingInt((ServiceResponseDTO dto) -> scoreByServiceId.getOrDefault(dto.getId(), 0))
+                            .reversed()
+                            .thenComparing(this::ratingOf, Comparator.reverseOrder()));
+        } else {
+            recommendations.sort(Comparator.comparing(this::ratingOf, Comparator.reverseOrder()));
+        }
+
+        return recommendations.stream().limit(RECOMMENDATION_LIMIT).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -259,6 +321,49 @@ public class ServiceService {
 
     private double ratingOf(ServiceResponseDTO dto) {
         return dto.getAverageRating() == null ? 0.0 : dto.getAverageRating();
+    }
+
+    private void collectInterest(
+            com.ufrn.ppgti.servio.model.Service service,
+            Set<Long> interactedServiceIds,
+            Set<Long> interestCategoryIds,
+            Set<Long> interestTagIds) {
+        if (service == null || service.getId() == null) {
+            return;
+        }
+
+        interactedServiceIds.add(service.getId());
+
+        if (service.getCategory() != null) {
+            interestCategoryIds.add(service.getCategory().getId());
+        }
+
+        if (service.getTags() != null) {
+            for (Tag tag : service.getTags()) {
+                interestTagIds.add(tag.getId());
+            }
+        }
+    }
+
+    private int interestScoreOf(
+            com.ufrn.ppgti.servio.model.Service entity,
+            Set<Long> interestCategoryIds,
+            Set<Long> interestTagIds) {
+        int score = 0;
+
+        if (entity.getCategory() != null && interestCategoryIds.contains(entity.getCategory().getId())) {
+            score += RECOMMENDATION_CATEGORY_WEIGHT;
+        }
+
+        if (entity.getTags() != null) {
+            for (Tag tag : entity.getTags()) {
+                if (interestTagIds.contains(tag.getId())) {
+                    score += RECOMMENDATION_TAG_WEIGHT;
+                }
+            }
+        }
+
+        return score;
     }
 
     private String saveImageToDisk(MultipartFile image) {

@@ -4,7 +4,7 @@ Levantamento dos requisitos funcionais (RF) do sistema, para a apresentação da
 disciplina **Desenvolvimento de Software com IA** (PPGTI / UFRN). A especificação
 exige no mínimo **10 RF claramente identificáveis e demonstráveis** (seção III).
 
-O sistema atende **19 RF**. Os requisitos **RF-12 (Favoritos)**,
+O sistema atende **20 RF**. Os requisitos **RF-12 (Favoritos)**,
 **RF-13 (Jornada do Pedido)**, **RF-14 (Notificações de Status)**,
 **RF-15 (Relatório de Desempenho do Prestador)**, **RF-17 (Bloqueio de
 Horários)** e **RF-18 (Cupons de Desconto)** foram implementados seguindo o ciclo de
@@ -14,15 +14,17 @@ Spec-Driven Development (ver [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md),
 [SPEC-005](specs/SPEC-005-bloqueio-de-horarios.md) e
 [SPEC-006](specs/SPEC-006-sistema-de-cupons-de-desconto.md)).
 
-O **RF-05 (Busca Avançada)**, o **RF-16 (Chat)** e o **RF-19 (Histórico de
-Interações)** foram implementados por Bianca Antonelly em paralelo, **fora do
-fluxo estrito de SDD no momento da implementação**. As três receberam
-especificação **retroativa** em 2026-09-12 — [SPEC-007](specs/SPEC-007-busca-avancada-servicos.md),
-[SPEC-008](specs/SPEC-008-chat-cliente-prestador.md) e
-[SPEC-009](specs/SPEC-009-historico-interacoes.md) — escrita a partir do
+O **RF-05 (Busca Avançada)**, o **RF-16 (Chat)**, o **RF-19 (Histórico de
+Interações)** e o **RF-20 (Recomendações de Serviços)** foram implementados
+por Bianca Antonelly em paralelo, **fora do fluxo estrito de SDD no momento
+da implementação**. Os quatro receberam especificação **retroativa** em
+2026-09-12 — [SPEC-007](specs/SPEC-007-busca-avancada-servicos.md),
+[SPEC-008](specs/SPEC-008-chat-cliente-prestador.md),
+[SPEC-009](specs/SPEC-009-historico-interacoes.md) e
+[SPEC-010](specs/SPEC-010-recomendacoes-servicos.md) — escrita a partir do
 código e dos testes manuais já realizados, e não antes da implementação como
 o fluxo padrão do projeto prevê. O gap remanescente é a ausência de **testes
-automatizados** para essas três, reconhecido explicitamente como aprendizado
+automatizados** para os quatro, reconhecido explicitamente como aprendizado
 do processo (ver seção V.7 da apresentação).
 
 * **Autoras**: Bianca Antonelly, Maria Clara Fernandes
@@ -168,6 +170,15 @@ partir do status atual.
 - **Especificação (retroativa):** [SPEC-009](specs/SPEC-009-historico-interacoes.md).
 - **Nota SDD:** implementado antes da especificação; teste automatizado ainda pendente (gap reconhecido, ver introdução).
 
+### RF-20 — Recomendações de serviços por perfil/interesse do cliente
+Serviços ativos recomendados ao cliente com base na categoria e nas tags dos
+serviços que ele já favoritou ou contratou, excluindo o que ele já conhece.
+Sem nenhum sinal de interesse (cliente novo), o sistema recomenda os serviços
+mais bem avaliados do catálogo.
+- **Evidência:** `GET /services/recommendations`; seção "Recomendados para você" no topo da página "Explorar serviços" (só sem filtros ativos).
+- **Especificação (retroativa):** [SPEC-010](specs/SPEC-010-recomendacoes-servicos.md).
+- **Nota SDD:** implementado antes da especificação; teste automatizado ainda pendente (gap reconhecido, ver introdução).
+
 ---
 
 ## Cobertura de testes automatizados
@@ -183,4 +194,4 @@ partir do status atual.
 | RF-18 | `CouponServiceTest` — criação/validação de cupom + casos de borda (reuso, dono, expirado, código duplicado, serviço errado) da SPEC-006 |
 | (infra) | `ServioApplicationTests` — carga do contexto Spring |
 
-Total: **47 testes automatizados** cobrindo 6 requisitos funcionais novos (RF-05, RF-16 e RF-19 ainda sem cobertura — gap reconhecido, ver SPEC-007, SPEC-008 e SPEC-009).
+Total: **47 testes automatizados** cobrindo 6 requisitos funcionais novos (RF-05, RF-16, RF-19 e RF-20 ainda sem cobertura — gap reconhecido, ver SPEC-007, SPEC-008, SPEC-009 e SPEC-010).
