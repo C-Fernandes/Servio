@@ -108,6 +108,36 @@
     color: var(--color-text-muted);
   }
 
+  .recommendations-section {
+    margin-bottom: 28px;
+
+    .recommendations-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-weight: 700;
+      color: var(--color-text-primary);
+
+      .mat-icon {
+        color: var(--color-primary);
+        font-size: 20px;
+      }
+    }
+
+    .recommendations-row {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .recommendation-card {
+      flex: 0 0 260px;
+      width: 260px;
+    }
+  }
+
   .search-container {
     position: relative;
     margin-bottom: 24px;

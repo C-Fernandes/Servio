@@ -117,6 +117,31 @@
     </aside>
 
     <section class="results-area">
+        @if (isClient && !hasActiveFilters && (loadingRecommendations || recommendations.length > 0)) {
+        <div class="recommendations-section">
+            <div class="recommendations-header">
+                <span class="mat-icon">auto_awesome</span>
+                <span>Recomendados para você</span>
+            </div>
+
+            @if (loadingRecommendations) {
+            <p class="results-count">Buscando recomendações...</p>
+            } @else {
+            <div class="recommendations-row">
+                @for (item of recommendations; track item.id) {
+                <div class="recommendation-card">
+                    <app-service-card
+                        [service]="item"
+                        [showFavorite]="isClient"
+                        [isFavorite]="favoriteIds.has(item.id)"
+                        (favoriteEvent)="onFavoriteToggle($event)"></app-service-card>
+                </div>
+                }
+            </div>
+            }
+        </div>
+        }
+
         <div class="search-container">
             <span class="mat-icon">search</span>
 

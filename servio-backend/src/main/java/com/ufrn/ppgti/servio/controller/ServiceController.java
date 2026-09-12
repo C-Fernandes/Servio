@@ -55,6 +55,12 @@ public class ServiceController {
         return ResponseEntity.ok(service.findAvailableLocalities());
     }
 
+    @Client
+    @GetMapping("/recommendations")
+    public ResponseEntity<List<ServiceResponseDTO>> recommendations() {
+        return ResponseEntity.ok(service.getRecommendations());
+    }
+
     @Provider
     @GetMapping("/my-services")
     public ResponseEntity<List<ServiceResponseDTO>> findMyServices() {
