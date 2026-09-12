@@ -1,0 +1,45 @@
+@if (target) {
+<div class="modal-backdrop" (click)="onClose()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <div>
+                <h2>Denunciar {{ target.targetType === 'SERVICE' ? 'serviço' : 'usuário' }}</h2>
+                <p>{{ target.targetLabel }}</p>
+            </div>
+
+            <button type="button" class="close-btn" (click)="onClose()">
+                <span class="mat-icon">close</span>
+            </button>
+        </div>
+
+        <label class="field-label" for="report-reason">Motivo</label>
+        <select id="report-reason" class="reason-select" [(ngModel)]="reason">
+            <option value="" disabled selected>Selecione um motivo</option>
+            @for (option of reasons; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+            }
+        </select>
+
+        <label class="field-label" for="report-description">Descreva o que aconteceu</label>
+        <textarea
+            id="report-description"
+            [(ngModel)]="description"
+            rows="4"
+            maxlength="1000"
+            placeholder="Conte com detalhes o que motivou a denúncia...">
+      </textarea>
+
+        <div class="comment-counter">
+            {{ description.length }}/1000
+        </div>
+
+        <button
+            type="button"
+            class="submit-btn"
+            [disabled]="!canSubmit"
+            (click)="onSubmit()">
+            Enviar denúncia
+        </button>
+    </div>
+</div>
+}

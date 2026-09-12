@@ -350,5 +350,17 @@
             }
         </button>
         }
+
+        <button type="button" class="report-service-btn" (click)="openReportModal()">
+            <span class="mat-icon">flag</span>
+            Denunciar serviço
+        </button>
     </aside>
-</div>}
+</div>
+
+<app-report-modal
+    [target]="reportTarget()"
+    (close)="closeReportModal()"
+    (submitReport)="submitReport($event)">
+</app-report-modal>
+}

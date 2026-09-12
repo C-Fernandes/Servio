@@ -1,0 +1,95 @@
+<header class="page-header">
+    <h1 class="page-title">Denúncias</h1>
+    <p class="page-subtitle">Modere serviços e usuários denunciados pela comunidade</p>
+</header>
+
+<div class="page-content">
+    <nav class="toggle-container">
+        <button
+            class="toggle-btn"
+            [class.active]="statusFilter === 'PENDING'"
+            (click)="setStatusFilter('PENDING')">
+            Pendentes
+        </button>
+        <button
+            class="toggle-btn"
+            [class.active]="statusFilter === 'REVIEWED'"
+            (click)="setStatusFilter('REVIEWED')">
+            Analisadas
+        </button>
+        <button
+            class="toggle-btn"
+            [class.active]="statusFilter === 'DISMISSED'"
+            (click)="setStatusFilter('DISMISSED')">
+            Arquivadas
+        </button>
+        <button
+            class="toggle-btn"
+            [class.active]="statusFilter === 'ALL'"
+            (click)="setStatusFilter('ALL')">
+            Todas
+        </button>
+    </nav>
+
+    <div class="card table-card">
+        <div class="table-header">
+            <span class="record-count">{{ reports.length }} denúncia(s)</span>
+        </div>
+
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Alvo</th>
+                    <th>Motivo</th>
+                    <th>Descrição</th>
+                    <th>Denunciante</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                    <th class="actions-column">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (loading) {
+                <tr>
+                    <td colspan="7" class="empty-row">Carregando denúncias...</td>
+                </tr>
+                } @else {
+                @for (report of reports; track report.id) {
+                <tr>
+                    <td>
+                        <span class="target-type">{{ report.targetType === 'SERVICE' ? 'Serviço' : 'Usuário' }}</span>
+                        <strong>{{ report.targetLabel }}</strong>
+                    </td>
+                    <td>{{ reasonLabels[report.reason] }}</td>
+                    <td class="description-cell">{{ report.description }}</td>
+                    <td>{{ report.reporterName }}</td>
+                    <td>{{ formatDate(report.createdAt) }}</td>
+                    <td>
+                        <span class="status-badge" [class.pending]="report.status === 'PENDING'"
+                            [class.reviewed]="report.status === 'REVIEWED'"
+                            [class.dismissed]="report.status === 'DISMISSED'">
+                            {{ statusLabels[report.status] }}
+                        </span>
+                    </td>
+                    <td class="actions-cell">
+                        @if (report.status === 'PENDING') {
+                        <button class="icon-btn approve" title="Marcar como analisada"
+                            (click)="markAs(report, 'REVIEWED')">
+                            <span class="mat-icon">check_circle</span>
+                        </button>
+                        <button class="icon-btn delete" title="Arquivar" (click)="markAs(report, 'DISMISSED')">
+                            <span class="mat-icon">archive</span>
+                        </button>
+                        }
+                    </td>
+                </tr>
+                } @empty {
+                <tr>
+                    <td colspan="7" class="empty-row">Nenhuma denúncia encontrada.</td>
+                </tr>
+                }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -30,6 +30,13 @@ export const routes: Routes = [
         title: 'Gerenciar Categorias | Servio'
       },
       {
+        path: 'reports',
+        loadComponent: () => import('./pages/manage-reports/manage-reports.component').then(m => m.ManageReportsComponent),
+        canActivate: [authGuard],
+        data: {roles: ['ADMIN']},
+        title: 'Denúncias | Servio'
+      },
+      {
         path: 'service/details/:id',
         loadComponent: () => import('./pages/service-details/service-details.component').then(m => m.ServiceDetailsComponent),
         canActivate: [authGuard],

@@ -43,6 +43,15 @@ public class NotificationService {
         }
     }
 
+    /**
+     * Notificação avulsa, sem pedido associado. Executa em transação própria
+     * (REQUIRES_NEW) para não reverter a operação que a originou em caso de falha.
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void notifyGeneric(User recipient, String message) {
+        notificationRepository.save(new Notification(recipient, message, null));
+    }
+
     @Transactional(readOnly = true)
     public List<NotificationResponseDTO> listMine() {
         User user = authService.getAuthenticadUser();
