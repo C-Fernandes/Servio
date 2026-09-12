@@ -21,6 +21,10 @@ public class OrderResponseDTO {
     private Long serviceId;
     private String serviceTitle;
     private Double servicePrice;
+    private Double originalPrice;
+    private Double discountPercentage;
+    private Double finalPrice;
+    private String couponCode;
 
     public Long getId() {
         return id;
@@ -124,5 +128,37 @@ public class OrderResponseDTO {
 
     public void setServicePrice(Double servicePrice) {
         this.servicePrice = servicePrice;
+    }
+
+    public Double getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public void setOriginalPrice(Double originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
+    public Double getDiscountPercentage() {
+        return discountPercentage;
+    }
+
+    public void setDiscountPercentage(Double discountPercentage) {
+        this.discountPercentage = discountPercentage;
+    }
+
+    public Double getFinalPrice() {
+        return finalPrice;
+    }
+
+    public void setFinalPrice(Double finalPrice) {
+        this.finalPrice = finalPrice;
+    }
+
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
     }
 }

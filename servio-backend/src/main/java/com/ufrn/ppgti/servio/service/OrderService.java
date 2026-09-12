@@ -15,6 +15,7 @@ import com.ufrn.ppgti.servio.dto.response.OrderResponseDTO;
 import com.ufrn.ppgti.servio.exceptions.BusinessException;
 import com.ufrn.ppgti.servio.mappers.OrderMapper;
 import com.ufrn.ppgti.servio.model.Availability;
+import com.ufrn.ppgti.servio.model.Coupon;
 import com.ufrn.ppgti.servio.model.Order;
 import com.ufrn.ppgti.servio.model.OrderStatusHistory;
 import com.ufrn.ppgti.servio.model.ProviderProfile;
@@ -36,19 +37,22 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final OrderStatusHistoryRepository orderStatusHistoryRepository;
     private final NotificationService notificationService;
+    private final CouponService couponService;
 
     public OrderService(OrderRepository orderRepository,
             ServiceRepository serviceRepository,
             AuthService authService,
             OrderMapper orderMapper,
             OrderStatusHistoryRepository orderStatusHistoryRepository,
-            NotificationService notificationService) {
+            NotificationService notificationService,
+            CouponService couponService) {
         this.orderRepository = orderRepository;
         this.serviceRepository = serviceRepository;
         this.authService = authService;
         this.orderMapper = orderMapper;
         this.orderStatusHistoryRepository = orderStatusHistoryRepository;
         this.notificationService = notificationService;
+        this.couponService = couponService;
     }
 
     @Transactional
@@ -80,6 +84,15 @@ public class OrderService {
         validateAvailability(provider, dto.getDate().getDayOfWeek(), dto.getDate(), dto.getStartTime(), endTime);
         validateProviderConflict(provider.getId(), dto.getDate(), dto.getStartTime(), endTime);
 
+        double originalPrice = service.getPrice() != null ? service.getPrice() : 0;
+        double finalPrice = originalPrice;
+        Coupon coupon = null;
+
+        if (dto.getCouponCode() != null && !dto.getCouponCode().isBlank()) {
+            coupon = couponService.findUsableCoupon(dto.getCouponCode(), service.getId(), currentUser);
+            finalPrice = couponService.computeFinalPrice(originalPrice, coupon.getDiscountPercentage());
+        }
+
         Order order = new Order();
         order.setClient(currentUser);
         order.setService(service);
@@ -89,9 +102,19 @@ public class OrderService {
         order.setEndTime(endTime);
         order.setCreatedAt(LocalDateTime.now());
         order.setStatus(OrderStatus.PENDING);
+        order.setOriginalPrice(originalPrice);
+        order.setFinalPrice(finalPrice);
+        if (coupon != null) {
+            order.setDiscountPercentage(coupon.getDiscountPercentage());
+            order.setCouponCode(coupon.getCode());
+        }
 
         order = orderRepository.save(order);
         recordStatusHistory(order, OrderStatus.PENDING, currentUser.getRole());
+
+        if (coupon != null) {
+            couponService.registerUsage(coupon, currentUser, order);
+        }
 
         return orderMapper.toResponseDTO(order);
     }

@@ -4,14 +4,15 @@ Levantamento dos requisitos funcionais (RF) do sistema, para a apresentação da
 disciplina **Desenvolvimento de Software com IA** (PPGTI / UFRN). A especificação
 exige no mínimo **10 RF claramente identificáveis e demonstráveis** (seção III).
 
-O sistema atende **17 RF**. Os requisitos **RF-12 (Favoritos)**,
+O sistema atende **18 RF**. Os requisitos **RF-12 (Favoritos)**,
 **RF-13 (Jornada do Pedido)**, **RF-14 (Notificações de Status)**,
-**RF-15 (Relatório de Desempenho do Prestador)** e **RF-17 (Bloqueio de
-Horários)** foram implementados seguindo o ciclo de Spec-Driven Development
-(ver [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md),
+**RF-15 (Relatório de Desempenho do Prestador)**, **RF-17 (Bloqueio de
+Horários)** e **RF-18 (Cupons de Desconto)** foram implementados seguindo o ciclo de
+Spec-Driven Development (ver [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md),
 [SPEC-002](specs/SPEC-002-jornada-do-pedido.md), [SPEC-003](specs/SPEC-003-notificacoes-de-status.md),
-[SPEC-004](specs/SPEC-004-relatorio-desempenho-prestador.md) e
-[SPEC-005](specs/SPEC-005-bloqueio-de-horarios.md)).
+[SPEC-004](specs/SPEC-004-relatorio-desempenho-prestador.md),
+[SPEC-005](specs/SPEC-005-bloqueio-de-horarios.md) e
+[SPEC-006](specs/SPEC-006-sistema-de-cupons-de-desconto.md)).
 
 O **RF-05 (Busca Avançada)** foi ampliado e o **RF-16 (Chat)** foi adicionado por
 Bianca Antonelly, em paralelo, **fora do fluxo estrito de SDD** desta
@@ -139,6 +140,16 @@ opções de agendamento (`generateAvailableSlots`) sem apagar a regra semanal.
 - **Evidência (backend):** `POST/GET /api/calendar/blocks`, `DELETE /api/calendar/blocks/{id}` (dono → 403); `AvailabilityServiceTest` (7).
 - **Evidência (frontend):** seção "Bloqueios de horário" na página Agenda (criar/listar/remover).
 
+### RF-18 — Cupons de desconto por serviço (NOVO — via SDD)
+Prestador cria cupons de desconto percentual restritos a um dos próprios serviços.
+Cliente valida o código antes de reservar (vê preço original e preço com desconto) e o
+aplica na criação do pedido; cada cliente pode usar um mesmo cupom no máximo uma vez. O
+pedido grava preço original, percentual de desconto e preço final, preservados mesmo se o
+cupom for desativado depois.
+- **Especificação:** [SPEC-006](specs/SPEC-006-sistema-de-cupons-de-desconto.md) · [ADR-005](adr/ADR-005-modelagem-sistema-cupons.md)
+- **Evidência (backend):** entidades `Coupon`/`CouponUsage`; `POST/GET /coupons`, `GET /coupons/my-coupons`, `DELETE /coupons/{id}` (dono → 403), `GET /coupons/validate`; `couponCode` opcional em `POST /orders`; `CouponServiceTest` (7).
+- **Evidência (frontend):** página "Meus cupons" (criar/listar/desativar) na sidebar do prestador; campo de cupom com validação e preço com desconto na reserva do serviço.
+
 ---
 
 ## Cobertura de testes automatizados
@@ -151,6 +162,7 @@ opções de agendamento (`generateAvailableSlots`) sem apagar a regra semanal.
 | RF-14 | `NotificationServiceTest` — 4 cenários + casos de borda (ADMIN notifica ambos, 403, idempotência, marcar todas sem nenhuma, 404) da SPEC-003 |
 | RF-15 | `FinancialDashboardServiceTest` — ranking ordenado + casos de borda (sem concluídos, sem perfil de prestador) da SPEC-004 |
 | RF-17 | `AvailabilityServiceTest` — exclusão de horário bloqueado + casos de borda (intervalo inválido, dono, 404) da SPEC-005 |
+| RF-18 | `CouponServiceTest` — criação/validação de cupom + casos de borda (reuso, dono, expirado, código duplicado, serviço errado) da SPEC-006 |
 | (infra) | `ServioApplicationTests` — carga do contexto Spring |
 
-Total: **40 testes automatizados** cobrindo 5 requisitos funcionais novos (RF-05 e RF-16 ainda sem cobertura — gap reconhecido).
+Total: **47 testes automatizados** cobrindo 6 requisitos funcionais novos (RF-05 e RF-16 ainda sem cobertura — gap reconhecido).

@@ -366,6 +366,73 @@
       }
     }
 
+    .coupon-box {
+      margin-bottom: 16px;
+
+      .coupon-input-row {
+        display: flex;
+        gap: 8px;
+
+        input {
+          flex: 1;
+          padding: 10px 12px;
+          border-radius: 10px;
+          border: 1px solid var(--color-indigo-50);
+          font-size: 14px;
+          text-transform: uppercase;
+        }
+
+        .apply-coupon-btn {
+          padding: 10px 16px;
+          border-radius: 10px;
+          border: none;
+          background: var(--color-primary);
+          color: white;
+          font-weight: 600;
+          cursor: pointer;
+          white-space: nowrap;
+
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+        }
+      }
+
+      .coupon-error {
+        display: block;
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--color-rose-600, #e11d48);
+      }
+
+      .coupon-applied {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: var(--color-bg-soft);
+        font-size: 13px;
+        color: var(--color-text-primary);
+
+        .mat-icon {
+          color: var(--color-primary);
+          font-size: 18px;
+        }
+
+        .remove-coupon {
+          margin-left: auto;
+          background: transparent;
+          border: none;
+          color: var(--color-text-muted);
+          text-decoration: underline;
+          cursor: pointer;
+          font-size: 12px;
+        }
+      }
+    }
+
     .price-breakdown {
       border-top: 1px solid var(--color-indigo-50);
       border-bottom: 1px solid var(--color-indigo-50);
@@ -384,6 +451,11 @@
         .value {
           color: var(--color-text-primary);
         }
+      }
+
+      .discount-row .value {
+        color: var(--color-primary);
+        font-weight: 600;
       }
     }
 
