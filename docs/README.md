@@ -22,7 +22,11 @@ docs/
 │   ├── SPEC-002-jornada-do-pedido.md
 │   ├── SPEC-003-notificacoes-de-status.md
 │   ├── SPEC-004-relatorio-desempenho-prestador.md
-│   └── SPEC-005-bloqueio-de-horarios.md
+│   ├── SPEC-005-bloqueio-de-horarios.md
+│   ├── SPEC-006-sistema-de-cupons-de-desconto.md
+│   ├── SPEC-007-busca-avancada-servicos.md     (retroativa)
+│   ├── SPEC-008-chat-cliente-prestador.md      (retroativa)
+│   └── SPEC-009-historico-interacoes.md        (retroativa)
 ├── harness/                      # Harness, guardrails e observabilidade
 │   ├── guardrail-policy.md
 │   └── evidencia-guardrail-bloqueio.md

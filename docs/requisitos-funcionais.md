@@ -4,7 +4,7 @@ Levantamento dos requisitos funcionais (RF) do sistema, para a apresentação da
 disciplina **Desenvolvimento de Software com IA** (PPGTI / UFRN). A especificação
 exige no mínimo **10 RF claramente identificáveis e demonstráveis** (seção III).
 
-O sistema atende **18 RF**. Os requisitos **RF-12 (Favoritos)**,
+O sistema atende **19 RF**. Os requisitos **RF-12 (Favoritos)**,
 **RF-13 (Jornada do Pedido)**, **RF-14 (Notificações de Status)**,
 **RF-15 (Relatório de Desempenho do Prestador)**, **RF-17 (Bloqueio de
 Horários)** e **RF-18 (Cupons de Desconto)** foram implementados seguindo o ciclo de
@@ -14,10 +14,16 @@ Spec-Driven Development (ver [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md),
 [SPEC-005](specs/SPEC-005-bloqueio-de-horarios.md) e
 [SPEC-006](specs/SPEC-006-sistema-de-cupons-de-desconto.md)).
 
-O **RF-05 (Busca Avançada)** foi ampliado e o **RF-16 (Chat)** foi adicionado por
-Bianca Antonelly, em paralelo, **fora do fluxo estrito de SDD** desta
-documentação — sem SPEC/ADR/teste dedicados. Gap reconhecido explicitamente
-como aprendizado do processo (ver seção V.7 da apresentação).
+O **RF-05 (Busca Avançada)**, o **RF-16 (Chat)** e o **RF-19 (Histórico de
+Interações)** foram implementados por Bianca Antonelly em paralelo, **fora do
+fluxo estrito de SDD no momento da implementação**. As três receberam
+especificação **retroativa** em 2026-09-12 — [SPEC-007](specs/SPEC-007-busca-avancada-servicos.md),
+[SPEC-008](specs/SPEC-008-chat-cliente-prestador.md) e
+[SPEC-009](specs/SPEC-009-historico-interacoes.md) — escrita a partir do
+código e dos testes manuais já realizados, e não antes da implementação como
+o fluxo padrão do projeto prevê. O gap remanescente é a ausência de **testes
+automatizados** para essas três, reconhecido explicitamente como aprendizado
+do processo (ver seção V.7 da apresentação).
 
 * **Autoras**: Bianca Antonelly, Maria Clara Fernandes
 * **Data**: 2026-09-09
@@ -60,7 +66,8 @@ localização (cidade/estado) e texto livre, com ordenação. Backend com filtro
 dinâmicos via JPA Specifications (join com a localidade do prestador, subquery
 de avaliação média).
 - **Evidência:** `GET /services/search`, `GET /services/locations`; página "Explorar serviços".
-- **Nota SDD:** implementado por Bianca fora do fluxo estrito de SPEC/ADR/teste desta documentação (gap reconhecido).
+- **Especificação (retroativa):** [SPEC-007](specs/SPEC-007-busca-avancada-servicos.md).
+- **Nota SDD:** implementado antes da especificação; teste automatizado ainda pendente (gap reconhecido).
 
 ### RF-06 — Solicitação e acompanhamento de pedidos (cliente)
 Cliente cria um pedido a partir de um serviço, lista seus pedidos e acompanha o status.
@@ -130,7 +137,8 @@ sem nova tabela.
 Canal de mensagens entre cliente e prestador antes da contratação
 (`Conversation`/`Message`), com página dedicada e link na sidebar.
 - **Evidência:** `ChatController`/`ChatService`; página "Mensagens".
-- **Nota SDD:** implementado por Bianca fora do fluxo estrito de SPEC/ADR/teste desta documentação (gap reconhecido, ver introdução).
+- **Especificação (retroativa):** [SPEC-008](specs/SPEC-008-chat-cliente-prestador.md).
+- **Nota SDD:** implementado antes da especificação; teste automatizado ainda pendente (gap reconhecido, ver introdução).
 
 ### RF-17 — Bloqueio de horários específicos na disponibilidade (NOVO — via SDD)
 Prestador bloqueia uma data/horário específico (ex.: feriado, compromisso),
@@ -150,6 +158,16 @@ cupom for desativado depois.
 - **Evidência (backend):** entidades `Coupon`/`CouponUsage`; `POST/GET /coupons`, `GET /coupons/my-coupons`, `DELETE /coupons/{id}` (dono → 403), `GET /coupons/validate`; `couponCode` opcional em `POST /orders`; `CouponServiceTest` (7).
 - **Evidência (frontend):** página "Meus cupons" (criar/listar/desativar) na sidebar do prestador; campo de cupom com validação e preço com desconto na reserva do serviço.
 
+### RF-19 — Histórico detalhado de interações entre cliente e prestador
+Linha do tempo única, ordenada da mais recente para a mais antiga, reunindo
+mensagens de chat (todas as conversas entre o par, não só uma), mudanças de
+status de pedidos e avaliações trocadas entre um cliente e um prestador
+específicos. Pedidos legados sem histórico de status são reconstruídos a
+partir do status atual.
+- **Evidência:** `GET /interactions/{otherUserId}`; botão "Ver histórico" no cabeçalho da conversa, na página "Mensagens".
+- **Especificação (retroativa):** [SPEC-009](specs/SPEC-009-historico-interacoes.md).
+- **Nota SDD:** implementado antes da especificação; teste automatizado ainda pendente (gap reconhecido, ver introdução).
+
 ---
 
 ## Cobertura de testes automatizados
@@ -165,4 +183,4 @@ cupom for desativado depois.
 | RF-18 | `CouponServiceTest` — criação/validação de cupom + casos de borda (reuso, dono, expirado, código duplicado, serviço errado) da SPEC-006 |
 | (infra) | `ServioApplicationTests` — carga do contexto Spring |
 
-Total: **47 testes automatizados** cobrindo 6 requisitos funcionais novos (RF-05 e RF-16 ainda sem cobertura — gap reconhecido).
+Total: **47 testes automatizados** cobrindo 6 requisitos funcionais novos (RF-05, RF-16 e RF-19 ainda sem cobertura — gap reconhecido, ver SPEC-007, SPEC-008 e SPEC-009).

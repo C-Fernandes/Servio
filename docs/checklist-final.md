@@ -31,7 +31,7 @@ Verificação item a item do que o professor Jean Mário pediu na especificaçã
 | Plataforma livre e justificada | ✅ | Web (Angular + Spring Boot), evolução de base já web |
 | Arquitetura: modularidade, baixo acoplamento, contratos claros | ✅ | `docs/diagrams/arquitetura-geral.md`, `docs/adr/ADR-001` |
 | Controle de versão com histórico real ao longo do desenvolvimento | ✅ | commits incrementais por task, branches por domínio, 14 PRs |
-| Testes automatizados cobrindo parte dos RF | ⚠️ | **40 testes automatizados no backend** (RF-12, RF-13, RF-14, RF-15, RF-17). RF-05 (busca) e RF-16 (chat) sem teste; **frontend sem testes automatizados escritos** (gap reconhecido) |
+| Testes automatizados cobrindo parte dos RF | ⚠️ | **47 testes automatizados no backend** (RF-12, RF-13, RF-14, RF-15, RF-17, RF-18). RF-05 (busca), RF-16 (chat) e RF-19 (histórico) sem teste; **frontend sem testes automatizados escritos** (gap reconhecido) |
 
 ## IV. Processo de Desenvolvimento Assistido por IA
 
@@ -40,7 +40,7 @@ Verificação item a item do que o professor Jean Mário pediu na especificaçã
 | :--- | :---: | :--- |
 | Especificação com behavior, requisitos, critérios de aceite (G/W/T) com edge case, tasklist | ✅ | `SPEC-001` a `SPEC-005` (favoritos, jornada, notificações, relatório, bloqueio de horários) |
 | Formato de spec estruturado + justificativa | ✅ | `docs/tools-and-prompts.md` seção 3 |
-| **Gap reconhecido** | ⚠️ | RF-05 (busca avançada) e RF-16 (chat) foram construídos **fora** do fluxo de SDD — sem SPEC/ADR/teste dedicados. Registrado em `requisitos-funcionais.md` e vira "aprendizado" na apresentação (seção V.7) |
+| **Gap reconhecido** | ⚠️ | RF-05 (busca avançada), RF-16 (chat) e RF-19 (histórico de interações) foram construídos **fora** do fluxo de SDD no momento da implementação. Receberam **SPEC retroativa** em 12/09 ([SPEC-007](specs/SPEC-007-busca-avancada-servicos.md), [SPEC-008](specs/SPEC-008-chat-cliente-prestador.md), [SPEC-009](specs/SPEC-009-historico-interacoes.md)), escrita a partir do código já implementado — cobre requisitos, Gherkin com casos de borda e tasklist, mas não substitui o processo prévio real. Nenhuma das três tem teste automatizado ou ADR dedicado. Registrado em `requisitos-funcionais.md` e vira "aprendizado" na apresentação (seção V.7) |
 
 ### Harness e controle de agentes
 | Item | Status | Evidência |
