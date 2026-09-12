@@ -20,7 +20,8 @@ docs/
 ├── specs/                        # Especificações funcionais (Spec-Driven Development)
 │   ├── SPEC-001-sistema-de-favoritos.md
 │   ├── SPEC-002-jornada-do-pedido.md
-│   └── SPEC-003-notificacoes-de-status.md
+│   ├── SPEC-003-notificacoes-de-status.md
+│   └── SPEC-004-relatorio-desempenho-prestador.md
 ├── harness/                      # Harness, guardrails e observabilidade
 │   ├── guardrail-policy.md
 │   └── evidencia-guardrail-bloqueio.md
@@ -54,11 +55,11 @@ O desenvolvimento das novas funcionalidades segue o fluxo:
 
 | Requisito da disciplina | Situação |
 | :--- | :--- |
-| Mínimo de 10 requisitos funcionais demonstráveis | ✅ 14 RF (ver [requisitos-funcionais.md](requisitos-funcionais.md)) |
-| SDD com critérios de aceite e casos de borda | ✅ [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md), [SPEC-002](specs/SPEC-002-jornada-do-pedido.md), [SPEC-003](specs/SPEC-003-notificacoes-de-status.md) |
+| Mínimo de 10 requisitos funcionais demonstráveis | ✅ 16 RF (ver [requisitos-funcionais.md](requisitos-funcionais.md)) |
+| SDD com critérios de aceite e casos de borda | ✅ [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md), [SPEC-002](specs/SPEC-002-jornada-do-pedido.md), [SPEC-003](specs/SPEC-003-notificacoes-de-status.md), [SPEC-004](specs/SPEC-004-relatorio-desempenho-prestador.md) |
 | Harness com guardrail ativo e evidência de bloqueio real | ✅ [guardrail-policy.md](harness/guardrail-policy.md), [evidencia-guardrail-bloqueio.md](harness/evidencia-guardrail-bloqueio.md) |
 | Pelo menos um ADR de decisão relevante | ✅ ADR-001 a ADR-004 |
 | Diagrama de arquitetura (C4/Mermaid) | ✅ [arquitetura-geral.md](diagrams/arquitetura-geral.md) e diagramas por RF |
-| Testes automatizados cobrindo parte dos RF | ✅ 30 testes (RF-12, RF-13, RF-14) |
+| Testes automatizados cobrindo parte dos RF | ✅ 33 testes (RF-12, RF-13, RF-14, RF-15) |
 | Transcript de sessão do agente (observabilidade) | ⏳ pendente |
 | Apresentação (PPT) e post no LinkedIn (STAR) | ⏳ pendente |

@@ -7,3 +7,11 @@ export interface ProviderFinancialDashboardResponseDTO {
     completedOrders: number;
     activeOrders: number; cancelledOrders: number;
 }
+
+export interface TopServiceResponseDTO {
+    serviceId: number;
+    title: string;
+    completedOrders: number;
+    averageRating: number;
+    reviewCount: number;
+}

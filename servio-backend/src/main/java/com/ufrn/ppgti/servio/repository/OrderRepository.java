@@ -47,4 +47,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
           and o.status = com.ufrn.ppgti.servio.model.enums.OrderStatus.COMPLETED
     """)
     Long countCompletedOrdersByProviderId(Long providerId);
+
+    @Query("""
+        select o.service.id, o.service.title, count(o)
+        from Order o
+        where o.service.provider.id = :providerId
+          and o.status = com.ufrn.ppgti.servio.model.enums.OrderStatus.COMPLETED
+        group by o.service.id, o.service.title
+        order by count(o) desc
+    """)
+    List<Object[]> countCompletedOrdersGroupedByService(Long providerId);
 }

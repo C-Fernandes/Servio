@@ -2,6 +2,7 @@ package com.ufrn.ppgti.servio.service;
 
 import com.ufrn.ppgti.servio.dto.response.ClientFinancialDashboardResponseDTO;
 import com.ufrn.ppgti.servio.dto.response.ProviderFinancialDashboardResponseDTO;
+import com.ufrn.ppgti.servio.dto.response.TopServiceResponseDTO;
 import com.ufrn.ppgti.servio.exceptions.BusinessException;
 import com.ufrn.ppgti.servio.model.Order;
 import com.ufrn.ppgti.servio.model.User;
@@ -19,10 +20,15 @@ public class FinancialDashboardService {
 
     private final OrderRepository orderRepository;
     private final AuthService authService;
+    private final ReviewService reviewService;
 
-    public FinancialDashboardService(OrderRepository orderRepository, AuthService authService) {
+    public FinancialDashboardService(
+            OrderRepository orderRepository,
+            AuthService authService,
+            ReviewService reviewService) {
         this.orderRepository = orderRepository;
         this.authService = authService;
+        this.reviewService = reviewService;
     }
 
     @Transactional(readOnly = true)
@@ -50,6 +56,32 @@ public class FinancialDashboardService {
                 totalEarnings,
                 totalCompletedOrders,
                 averageTicket);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TopServiceResponseDTO> getTopServices() {
+        User user = authService.getAuthenticadUser();
+
+        if (user.getProviderProfile() == null) {
+            throw new BusinessException("Apenas prestadores podem visualizar o relatório de desempenho.");
+        }
+
+        Long providerId = user.getProviderProfile().getId();
+
+        return orderRepository.countCompletedOrdersGroupedByService(providerId).stream()
+                .map(row -> {
+                    Long serviceId = (Long) row[0];
+                    String title = (String) row[1];
+                    Long completedOrders = (Long) row[2];
+
+                    return new TopServiceResponseDTO(
+                            serviceId,
+                            title,
+                            completedOrders,
+                            reviewService.getAverageRatingByServiceId(serviceId),
+                            reviewService.getReviewCountByServiceId(serviceId));
+                })
+                .toList();
     }
 
     @Transactional(readOnly = true)

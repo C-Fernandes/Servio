@@ -4,12 +4,17 @@ Levantamento dos requisitos funcionais (RF) do sistema, para a apresentação da
 disciplina **Desenvolvimento de Software com IA** (PPGTI / UFRN). A especificação
 exige no mínimo **10 RF claramente identificáveis e demonstráveis** (seção III).
 
-O sistema atende **14 RF**. Os requisitos **RF-12 (Favoritos)**,
-**RF-13 (Jornada do Pedido)** e **RF-14 (Notificações de Status)** são novos,
-implementados neste projeto seguindo o ciclo de Spec-Driven Development
-(ver [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md),
-[SPEC-002](specs/SPEC-002-jornada-do-pedido.md) e
-[SPEC-003](specs/SPEC-003-notificacoes-de-status.md)).
+O sistema atende **16 RF**. Os requisitos **RF-12 (Favoritos)**,
+**RF-13 (Jornada do Pedido)**, **RF-14 (Notificações de Status)** e
+**RF-15 (Relatório de Desempenho do Prestador)** foram implementados seguindo o
+ciclo de Spec-Driven Development (ver [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md),
+[SPEC-002](specs/SPEC-002-jornada-do-pedido.md), [SPEC-003](specs/SPEC-003-notificacoes-de-status.md)
+e [SPEC-004](specs/SPEC-004-relatorio-desempenho-prestador.md)).
+
+O **RF-05 (Busca Avançada)** foi ampliado e o **RF-16 (Chat)** foi adicionado por
+Bianca Antonelly, em paralelo, **fora do fluxo estrito de SDD** desta
+documentação — sem SPEC/ADR/teste dedicados. Gap reconhecido explicitamente
+como aprendizado do processo (ver seção V.7 da apresentação).
 
 * **Autoras**: Bianca Antonelly, Maria Clara Fernandes
 * **Data**: 2026-09-09
@@ -46,9 +51,13 @@ Listagem de serviços ativos e visualização de detalhes com prestador, avalia�
 média e horários disponíveis.
 - **Evidência:** `GET /services`, `GET /services/{id}`; página "Explorar serviços" e página de detalhes.
 
-### RF-05 — Busca e filtro de serviços
-Filtro por categoria, preço máximo, avaliação mínima e busca textual por título/descrição.
-- **Evidência:** filtros da página "Explorar serviços" (marketplace).
+### RF-05 — Busca avançada de serviços
+Busca reativa (com debounce) por categoria, faixa de preço, avaliação mínima,
+localização (cidade/estado) e texto livre, com ordenação. Backend com filtros
+dinâmicos via JPA Specifications (join com a localidade do prestador, subquery
+de avaliação média).
+- **Evidência:** `GET /services/search`, `GET /services/locations`; página "Explorar serviços".
+- **Nota SDD:** implementado por Bianca fora do fluxo estrito de SPEC/ADR/teste desta documentação (gap reconhecido).
 
 ### RF-06 — Solicitação e acompanhamento de pedidos (cliente)
 Cliente cria um pedido a partir de um serviço, lista seus pedidos e acompanha o status.
@@ -106,13 +115,19 @@ não reverte a mudança de status.
 - **Evidência (backend):** entidade `Notification`; `GET /notifications`, `GET /notifications/unread-count`, `PATCH /notifications/{id}/read` (dono → 403), `PATCH /notifications/read-all`; gatilho em `OrderService.updateStatus` (try/catch, `REQUIRES_NEW`); `NotificationServiceTest` (10).
 - **Evidência (frontend):** `NotificationBellComponent` (sino com badge, dropdown, "marcar todas") no topo da sidebar; recarga do contador a cada navegação.
 
----
+### RF-15 — Relatório de desempenho do prestador (NOVO — via SDD)
+Ranking dos próprios serviços por pedidos concluídos, com avaliação média e
+quantidade de avaliações de cada um. Reaproveita dados de `Order` e `Review`
+sem nova tabela.
+- **Especificação:** [SPEC-004](specs/SPEC-004-relatorio-desempenho-prestador.md)
+- **Evidência (backend):** `GET /financial-dashboard/provider/top-services`; `FinancialDashboardServiceTest` (3).
+- **Evidência (frontend):** tabela "Serviços mais contratados" na aba Finanças do painel do prestador.
 
-## Requisitos novos planejados (se houver tempo até 12/09)
-
-| ID | Requisito | Status |
-| :--- | :--- | :--- |
-| RF-15 | Página pública de perfil do prestador (serviços + avaliações) | não iniciado |
+### RF-16 — Chat entre cliente e prestador
+Canal de mensagens entre cliente e prestador antes da contratação
+(`Conversation`/`Message`), com página dedicada e link na sidebar.
+- **Evidência:** `ChatController`/`ChatService`; página "Mensagens".
+- **Nota SDD:** implementado por Bianca fora do fluxo estrito de SPEC/ADR/teste desta documentação (gap reconhecido, ver introdução).
 
 ---
 
@@ -124,6 +139,7 @@ não reverte a mudança de status.
 | RF-13 | `OrderJourneyServiceTest` — 3 cenários + casos de borda (cancelado, legado, acesso indevido, 404) da SPEC-002 |
 | RF-13 | `OrderServiceTest` — registro de histórico e validação das novas transições de status |
 | RF-14 | `NotificationServiceTest` — 4 cenários + casos de borda (ADMIN notifica ambos, 403, idempotência, marcar todas sem nenhuma, 404) da SPEC-003 |
+| RF-15 | `FinancialDashboardServiceTest` — ranking ordenado + casos de borda (sem concluídos, sem perfil de prestador) da SPEC-004 |
 | (infra) | `ServioApplicationTests` — carga do contexto Spring |
 
-Total: **30 testes automatizados** cobrindo 3 requisitos funcionais novos.
+Total: **33 testes automatizados** cobrindo 4 requisitos funcionais novos (RF-05 e RF-16 ainda sem cobertura — gap reconhecido).

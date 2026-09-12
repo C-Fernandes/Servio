@@ -2,7 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { OrderResponseDTO } from '../../../models/Order';
 import { OrderService } from '../../../services/order/order.service';
 import { FinancialDashboardService } from '../../../services/financial-dashboard/financial-dashboard.service';
-import { ProviderFinancialDashboardResponseDTO } from '../../../models/Dashboard';
+import { ProviderFinancialDashboardResponseDTO, TopServiceResponseDTO } from '../../../models/Dashboard';
 import { CommonModule } from '@angular/common';
 import { ServiceService } from '../../../services/service/service.service';
 import { Service } from '../../../models/Service';
@@ -27,6 +27,7 @@ export class DashboardProviderComponent {
   orders = signal<OrderResponseDTO[]>([]);
   financialDashboard = signal<ProviderFinancialDashboardResponseDTO | null>(null);
   providerServices = signal<Service[]>([]);
+  topServices = signal<TopServiceResponseDTO[]>([]);
   statusCounts = computed(() => {
     const list = this.orders();
     return {
@@ -90,6 +91,11 @@ export class DashboardProviderComponent {
     this.serviceService.findMyServices().subscribe({
       next: (data) => this.providerServices.set(data),
       error: (err) => console.error('Erro ao carregar serviços', err)
+    });
+
+    this.financialService.getTopServices().subscribe({
+      next: (data) => this.topServices.set(data),
+      error: (err) => console.error('Erro ao carregar relatório de desempenho', err)
     });
   }
   setTab(tab: 'pedidos' | 'servicos' | 'financas') {

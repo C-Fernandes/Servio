@@ -161,6 +161,40 @@
     }
 
     @if (activeTab() === 'financas') {
+    <section class="top-services-report">
+        <h3 class="report-title">Serviços mais contratados</h3>
+
+        @if (topServices().length > 0) {
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th>Serviço</th>
+                    <th>Pedidos concluídos</th>
+                    <th>Avaliação média</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (item of topServices(); track item.serviceId) {
+                <tr>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.completedOrders }}</td>
+                    <td>
+                        @if (item.reviewCount > 0) {
+                        <span class="mat-icon rating-star">star</span>
+                        {{ item.averageRating | number:'1.1-1' }} ({{ item.reviewCount }})
+                        } @else {
+                        Sem avaliações
+                        }
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        } @else {
+        <p class="report-empty">Nenhum pedido concluído ainda.</p>
+        }
+    </section>
+
     <div class="list-layout finance-layout">
         @for (tx of financialTransactions(); track tx.id) {
         <div class="card list-row">
