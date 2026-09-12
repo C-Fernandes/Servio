@@ -26,16 +26,19 @@ public class ReportService {
     private final ServiceRepository serviceRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
+    private final NotificationService notificationService;
 
     public ReportService(
             ReportRepository reportRepository,
             ServiceRepository serviceRepository,
             UserRepository userRepository,
-            AuthService authService) {
+            AuthService authService,
+            NotificationService notificationService) {
         this.reportRepository = reportRepository;
         this.serviceRepository = serviceRepository;
         this.userRepository = userRepository;
         this.authService = authService;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -82,7 +85,33 @@ public class ReportService {
         report.setReviewedAt(LocalDateTime.now());
         report.setReviewedBy(admin);
 
-        return toResponseDTO(reportRepository.save(report));
+        Report saved = reportRepository.save(report);
+
+        if (newStatus == ReportStatus.REVIEWED) {
+            notifyReportedParty(saved);
+        }
+
+        return toResponseDTO(saved);
+    }
+
+    private void notifyReportedParty(Report report) {
+        User recipient;
+        String message;
+
+        if (report.getTargetType() == ReportTargetType.SERVICE) {
+            recipient = report.getReportedService().getProvider() != null
+                    ? report.getReportedService().getProvider().getUser()
+                    : null;
+            message = "Seu serviço \"" + report.getReportedService().getTitle()
+                    + "\" foi analisado pela nossa equipe de moderação após uma denúncia.";
+        } else {
+            recipient = report.getReportedUser();
+            message = "Sua conta foi analisada pela nossa equipe de moderação após uma denúncia.";
+        }
+
+        if (recipient != null) {
+            notificationService.notifyGeneric(recipient, message);
+        }
     }
 
     private Report buildServiceReport(CreateReportRequestDTO dto, User reporter) {
