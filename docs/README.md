@@ -9,14 +9,22 @@ Este diretório centraliza a documentação de engenharia de software, processos
 ```
 docs/
 ├── README.md                     # Este arquivo (índice geral)
-├── requisitos-funcionais.md      # Lista dos 13 RF do sistema e evidências
+├── requisitos-funcionais.md      # Lista dos 20 RF do sistema e evidências
+├── checklist-final.md            # Checagem item a item contra a especificação da disciplina
+├── documento-de-entrega.md       # Nomes, links e resumo do projeto (entregável da seção I)
+├── roteiro-demo.md               # Roteiro da demonstração ao vivo
+├── post-linkedin.md              # Rascunho do post STAR (divulgação, seção VII)
 ├── tools-and-prompts.md          # Ferramentas, modelos de IA e estratégias de prompt
 ├── adr/                          # Architecture Decision Records (ADRs)
 │   ├── template-adr.md
 │   ├── ADR-001-adocao-sdd-e-harness-de-ia.md
 │   ├── ADR-002-modelagem-sistema-favoritos.md
 │   ├── ADR-003-historico-de-status-e-jornada-do-pedido.md
-│   └── ADR-004-notificacoes-in-app-melhor-esforco.md
+│   ├── ADR-004-notificacoes-in-app-melhor-esforco.md
+│   ├── ADR-005-modelagem-sistema-cupons.md
+│   ├── ADR-006-modelagem-chat-cliente-prestador.md      (retroativo)
+│   ├── ADR-007-modelagem-historico-interacoes.md        (retroativo)
+│   └── ADR-008-modelagem-sistema-denuncias.md           (retroativo)
 ├── specs/                        # Especificações funcionais (Spec-Driven Development)
 │   ├── SPEC-001-sistema-de-favoritos.md
 │   ├── SPEC-002-jornada-do-pedido.md
@@ -26,10 +34,13 @@ docs/
 │   ├── SPEC-006-sistema-de-cupons-de-desconto.md
 │   ├── SPEC-007-busca-avancada-servicos.md     (retroativa)
 │   ├── SPEC-008-chat-cliente-prestador.md      (retroativa)
-│   └── SPEC-009-historico-interacoes.md        (retroativa)
+│   ├── SPEC-009-historico-interacoes.md        (retroativa)
+│   └── SPEC-010-denuncia-servico-usuario.md    (retroativa)
 ├── harness/                      # Harness, guardrails e observabilidade
 │   ├── guardrail-policy.md
-│   └── evidencia-guardrail-bloqueio.md
+│   ├── evidencia-guardrail-bloqueio.md
+│   ├── sessao-2026-09-09-a-12.md          # Transcript de sessão do agente
+│   └── coordenacao-multiagentes.md        # Estratégia de agentes em paralelo
 └── diagrams/                     # Diagramas (Mermaid)
     ├── diagrama-favoritos.md
     ├── arquitetura-geral.md
@@ -60,11 +71,11 @@ O desenvolvimento das novas funcionalidades segue o fluxo:
 
 | Requisito da disciplina | Situação |
 | :--- | :--- |
-| Mínimo de 10 requisitos funcionais demonstráveis | ✅ 17 RF (ver [requisitos-funcionais.md](requisitos-funcionais.md)) |
-| SDD com critérios de aceite e casos de borda | ✅ [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md), [SPEC-002](specs/SPEC-002-jornada-do-pedido.md), [SPEC-003](specs/SPEC-003-notificacoes-de-status.md), [SPEC-004](specs/SPEC-004-relatorio-desempenho-prestador.md), [SPEC-005](specs/SPEC-005-bloqueio-de-horarios.md) |
+| Mínimo de 10 requisitos funcionais demonstráveis | ✅ 20 RF (ver [requisitos-funcionais.md](requisitos-funcionais.md)) |
+| SDD com critérios de aceite e casos de borda | ✅ [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md) a [SPEC-010](specs/SPEC-010-denuncia-servico-usuario.md) |
 | Harness com guardrail ativo e evidência de bloqueio real | ✅ [guardrail-policy.md](harness/guardrail-policy.md), [evidencia-guardrail-bloqueio.md](harness/evidencia-guardrail-bloqueio.md) |
-| Pelo menos um ADR de decisão relevante | ✅ ADR-001 a ADR-004 |
+| Pelo menos um ADR de decisão relevante | ✅ ADR-001 a ADR-008 |
 | Diagrama de arquitetura (C4/Mermaid) | ✅ [arquitetura-geral.md](diagrams/arquitetura-geral.md) e diagramas por RF |
-| Testes automatizados cobrindo parte dos RF | ✅ 40 testes (RF-12, RF-13, RF-14, RF-15, RF-17) |
-| Transcript de sessão do agente (observabilidade) | ⏳ pendente |
+| Testes automatizados cobrindo parte dos RF | ✅ 65 testes (RF-05, RF-12 a RF-20) |
+| Transcript de sessão do agente (observabilidade) | ✅ [sessao-2026-09-09-a-12.md](harness/sessao-2026-09-09-a-12.md) |
 | Apresentação (PPT) e post no LinkedIn (STAR) | ⏳ pendente |

@@ -4,7 +4,7 @@ Levantamento dos requisitos funcionais (RF) do sistema, para a apresentação da
 disciplina **Desenvolvimento de Software com IA** (PPGTI / UFRN). A especificação
 exige no mínimo **10 RF claramente identificáveis e demonstráveis** (seção III).
 
-O sistema atende **19 RF**. Os requisitos **RF-12 (Favoritos)**,
+O sistema atende **20 RF**. Os requisitos **RF-12 (Favoritos)**,
 **RF-13 (Jornada do Pedido)**, **RF-14 (Notificações de Status)**,
 **RF-15 (Relatório de Desempenho do Prestador)**, **RF-17 (Bloqueio de
 Horários)** e **RF-18 (Cupons de Desconto)** foram implementados seguindo o ciclo de
@@ -14,16 +14,35 @@ Spec-Driven Development (ver [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md),
 [SPEC-005](specs/SPEC-005-bloqueio-de-horarios.md) e
 [SPEC-006](specs/SPEC-006-sistema-de-cupons-de-desconto.md)).
 
-O **RF-05 (Busca Avançada)**, o **RF-16 (Chat)** e o **RF-19 (Histórico de
-Interações)** foram implementados por Bianca Antonelly em paralelo, **fora do
-fluxo estrito de SDD no momento da implementação**. As três receberam
-especificação **retroativa** em 2026-09-12 — [SPEC-007](specs/SPEC-007-busca-avancada-servicos.md),
-[SPEC-008](specs/SPEC-008-chat-cliente-prestador.md) e
-[SPEC-009](specs/SPEC-009-historico-interacoes.md) — escrita a partir do
+O **RF-05 (Busca Avançada)**, o **RF-16 (Chat)**, o **RF-19 (Histórico de
+Interações)** e o **RF-20 (Denúncia)** foram implementados por Bianca Antonelly
+em paralelo, **fora do fluxo estrito de SDD no momento da implementação**.
+Todos receberam especificação **retroativa** em 2026-09-12 —
+[SPEC-007](specs/SPEC-007-busca-avancada-servicos.md),
+[SPEC-008](specs/SPEC-008-chat-cliente-prestador.md),
+[SPEC-009](specs/SPEC-009-historico-interacoes.md) e
+[SPEC-010](specs/SPEC-010-denuncia-servico-usuario.md) — escrita a partir do
 código e dos testes manuais já realizados, e não antes da implementação como
-o fluxo padrão do projeto prevê. O gap remanescente é a ausência de **testes
-automatizados** para essas três, reconhecido explicitamente como aprendizado
-do processo (ver seção V.7 da apresentação).
+o fluxo padrão do projeto prevê. O **RF-20 (Denúncia)** foi o caso mais grave:
+identificado só em 2026-09-12 durante a checagem final de conformidade,
+estava merged em `main` desde a PR #15 mas **sem nenhuma documentação** (nem
+RF, nem SPEC, nem ADR, nem teste) até esta revisão. Nesta mesma checagem, o
+gap foi fechado por completo nos quatro: RF-16 ganhou
+[ADR-006](adr/ADR-006-modelagem-chat-cliente-prestador.md) e `ChatServiceTest`,
+RF-19 ganhou [ADR-007](adr/ADR-007-modelagem-historico-interacoes.md) e
+`InteractionServiceTest`, RF-20 ganhou
+[ADR-008](adr/ADR-008-modelagem-sistema-denuncias.md) e `ReportServiceTest`, e
+RF-05 ganhou `ServiceServiceSearchTest` (sem ADR — a própria SPEC-007 justifica
+que não há decisão de arquitetura nova o bastante pra um). Nenhum dos quatro
+teve o SPEC ou o ADR escritos **antes** da implementação, como o fluxo padrão
+do projeto prevê — isso continua registrado como aprendizado do processo
+(ver seção V.7 da apresentação).
+
+**Nota**: a dupla também tem uma quinta funcionalidade de Bianca —
+recomendações de serviços por perfil/interesse (`GET /services/recommendations`)
+— pronta na branch `origin/feature/recomendacoes-servicos`, mas **não
+mergeada em `main`** até a apresentação. Decisão consciente: fica fora do
+escopo desta entrega, não conta como RF.
 
 * **Autoras**: Bianca Antonelly, Maria Clara Fernandes
 * **Data**: 2026-09-09
@@ -66,8 +85,9 @@ localização (cidade/estado) e texto livre, com ordenação. Backend com filtro
 dinâmicos via JPA Specifications (join com a localidade do prestador, subquery
 de avaliação média).
 - **Evidência:** `GET /services/search`, `GET /services/locations`; página "Explorar serviços".
-- **Especificação (retroativa):** [SPEC-007](specs/SPEC-007-busca-avancada-servicos.md).
-- **Nota SDD:** implementado antes da especificação; teste automatizado ainda pendente (gap reconhecido).
+- **Especificação (retroativa):** [SPEC-007](specs/SPEC-007-busca-avancada-servicos.md) (justifica a ausência de ADR: reuso do padrão `Specification` já usado no projeto).
+- **Evidência (teste):** `ServiceServiceSearchTest` (3).
+- **Nota SDD:** implementado antes da especificação.
 
 ### RF-06 — Solicitação e acompanhamento de pedidos (cliente)
 Cliente cria um pedido a partir de um serviço, lista seus pedidos e acompanha o status.
@@ -137,8 +157,9 @@ sem nova tabela.
 Canal de mensagens entre cliente e prestador antes da contratação
 (`Conversation`/`Message`), com página dedicada e link na sidebar.
 - **Evidência:** `ChatController`/`ChatService`; página "Mensagens".
-- **Especificação (retroativa):** [SPEC-008](specs/SPEC-008-chat-cliente-prestador.md).
-- **Nota SDD:** implementado antes da especificação; teste automatizado ainda pendente (gap reconhecido, ver introdução).
+- **Especificação (retroativa):** [SPEC-008](specs/SPEC-008-chat-cliente-prestador.md) · [ADR-006](adr/ADR-006-modelagem-chat-cliente-prestador.md)
+- **Evidência (teste):** `ChatServiceTest` (5).
+- **Nota SDD:** implementado antes da especificação.
 
 ### RF-17 — Bloqueio de horários específicos na disponibilidade (NOVO — via SDD)
 Prestador bloqueia uma data/horário específico (ex.: feriado, compromisso),
@@ -165,8 +186,30 @@ status de pedidos e avaliações trocadas entre um cliente e um prestador
 específicos. Pedidos legados sem histórico de status são reconstruídos a
 partir do status atual.
 - **Evidência:** `GET /interactions/{otherUserId}`; botão "Ver histórico" no cabeçalho da conversa, na página "Mensagens".
-- **Especificação (retroativa):** [SPEC-009](specs/SPEC-009-historico-interacoes.md).
-- **Nota SDD:** implementado antes da especificação; teste automatizado ainda pendente (gap reconhecido, ver introdução).
+- **Especificação (retroativa):** [SPEC-009](specs/SPEC-009-historico-interacoes.md) · [ADR-007](adr/ADR-007-modelagem-historico-interacoes.md)
+- **Evidência (teste):** `InteractionServiceTest` (5).
+- **Nota SDD:** implementado antes da especificação.
+
+### RF-20 — Denúncia de serviço ou usuário
+Cliente denuncia um serviço ou um usuário por conteúdo inapropriado, spam,
+fraude, assédio, perfil falso ou outro motivo, com comentário livre. Admin
+lista as denúncias (com filtro por status), analisa e marca como
+"Revisada"/"Descartada"; ao marcar como revisada, a parte denunciada (dono do
+serviço ou usuário) recebe uma notificação in-app informando que sua
+conta/serviço foi analisado pela moderação.
+- **Evidência (backend):** entidade `Report` (`ReportTargetType`: SERVICE/USER;
+  `ReportReason`: INAPPROPRIATE_CONTENT, SPAM, FRAUD, HARASSMENT, FAKE_PROFILE,
+  OTHER; `ReportStatus`: PENDING/REVIEWED/DISMISSED); `POST /reports` (Client),
+  `GET /reports/my` (Client), `GET /reports` com filtro de status (Admin),
+  `PATCH /reports/{id}/status` (Admin) — notifica a parte denunciada quando
+  o novo status é REVIEWED.
+- **Evidência (frontend):** `report-modal` (denunciar serviço/usuário), página
+  "Denúncias" (`/reports`, admin) para listar e analisar.
+- **Especificação (retroativa):** [SPEC-010](specs/SPEC-010-denuncia-servico-usuario.md) · [ADR-008](adr/ADR-008-modelagem-sistema-denuncias.md)
+- **Evidência (teste):** `ReportServiceTest` (5).
+- **Nota SDD:** implementado por Bianca Antonelly fora do fluxo de SDD;
+  identificado sem nenhuma documentação em 2026-09-12 — RF, SPEC, ADR e teste
+  automatizado escritos retroativamente na mesma revisão.
 
 ---
 
@@ -174,13 +217,17 @@ partir do status atual.
 
 | RF | Teste |
 | :--- | :--- |
+| RF-05 | `ServiceServiceSearchTest` — ordenação por avaliação + casos de borda (preço inválido, sem filtro) da SPEC-007 |
 | RF-12 | `FavoriteServiceTest` — 3 cenários Gherkin + 3 casos de borda da SPEC-001 |
 | RF-13 | `OrderJourneyServiceTest` — 3 cenários + casos de borda (cancelado, legado, acesso indevido, 404) da SPEC-002 |
 | RF-13 | `OrderServiceTest` — registro de histórico e validação das novas transições de status |
 | RF-14 | `NotificationServiceTest` — 4 cenários + casos de borda (ADMIN notifica ambos, 403, idempotência, marcar todas sem nenhuma, 404) da SPEC-003 |
 | RF-15 | `FinancialDashboardServiceTest` — ranking ordenado + casos de borda (sem concluídos, sem perfil de prestador) da SPEC-004 |
+| RF-16 | `ChatServiceTest` — 3 cenários + casos de borda (não participante, prestador tentando iniciar) da SPEC-008 |
 | RF-17 | `AvailabilityServiceTest` — exclusão de horário bloqueado + casos de borda (intervalo inválido, dono, 404) da SPEC-005 |
 | RF-18 | `CouponServiceTest` — criação/validação de cupom + casos de borda (reuso, dono, expirado, código duplicado, serviço errado) da SPEC-006 |
+| RF-19 | `InteractionServiceTest` — 3 cenários + casos de borda (pedido legado, role incompatível) da SPEC-009 |
+| RF-20 | `ReportServiceTest` — 3 cenários + casos de borda (denúncia duplicada pendente reaproveitada, auto-denúncia bloqueada) da SPEC-010 |
 | (infra) | `ServioApplicationTests` — carga do contexto Spring |
 
-Total: **47 testes automatizados** cobrindo 6 requisitos funcionais novos (RF-05, RF-16 e RF-19 ainda sem cobertura — gap reconhecido, ver SPEC-007, SPEC-008 e SPEC-009).
+Total: **65 testes automatizados** cobrindo 10 requisitos funcionais novos — todos os RF construídos além da base têm pelo menos um teste automatizado.
