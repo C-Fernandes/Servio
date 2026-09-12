@@ -10,11 +10,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.ufrn.ppgti.servio.dto.AvailabilityDTO;
 import com.ufrn.ppgti.servio.dto.AvailableSlotDTO;
 import com.ufrn.ppgti.servio.dto.CalendarDTO;
+import com.ufrn.ppgti.servio.exceptions.BusinessException;
 import com.ufrn.ppgti.servio.mappers.AvailabilityMapper;
 import com.ufrn.ppgti.servio.model.Availability;
 import com.ufrn.ppgti.servio.model.Order;
@@ -69,6 +72,62 @@ public class AvailabilityService {
         return mapper.toCalendarRequest(allAvailabilities);
     }
 
+    @Transactional
+    public AvailabilityDTO createBlock(AvailabilityDTO dto) {
+        ProviderProfile provider = getAuthenticatedProvider();
+        validateBlockRange(dto);
+
+        Availability block = new Availability();
+        block.setProvider(provider);
+        block.setDayOfWeek(null);
+        block.setSpecificDate(dto.getSpecificDate());
+        block.setStartTime(dto.getStartTime());
+        block.setEndTime(dto.getEndTime());
+        block.setIsAvailable(false);
+
+        return mapper.toDTO(availabilityRepository.save(block));
+    }
+
+    public List<AvailabilityDTO> listBlocks() {
+        ProviderProfile provider = getAuthenticatedProvider();
+
+        return availabilityRepository.findByProviderId(provider.getId()).stream()
+                .filter(this::isBlock)
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void removeBlock(Long id) {
+        ProviderProfile provider = getAuthenticatedProvider();
+
+        Availability block = availabilityRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Bloqueio não encontrado."));
+
+        if (!block.getProvider().getId().equals(provider.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bloqueio pertence a outro prestador.");
+        }
+
+        if (!isBlock(block)) {
+            throw new BusinessException("Este registro não é um bloqueio.");
+        }
+
+        availabilityRepository.delete(block);
+    }
+
+    private boolean isBlock(Availability availability) {
+        return availability.getSpecificDate() != null && Boolean.FALSE.equals(availability.getIsAvailable());
+    }
+
+    private void validateBlockRange(AvailabilityDTO dto) {
+        if (dto.getSpecificDate() == null) {
+            throw new BusinessException("Informe a data do bloqueio.");
+        }
+        if (dto.getStartTime() == null || dto.getEndTime() == null || !dto.getStartTime().isBefore(dto.getEndTime())) {
+            throw new BusinessException("Intervalo de horário do bloqueio é inválido.");
+        }
+    }
+
     public List<AvailableSlotDTO> generateAvailableSlots(com.ufrn.ppgti.servio.model.Service service) {
         List<AvailableSlotDTO> allSlots = new ArrayList<>();
 
@@ -87,8 +146,9 @@ public class AvailabilityService {
             LocalDate currentDate = today.plusDays(i);
 
             List<Availability> dayRules = getRulesForDate(allRules, currentDate);
+            List<Availability> dayBlocks = getBlocksForDate(allRules, currentDate);
 
-            allSlots.addAll(generateSlotsForDay(currentDate, dayRules, duration, bookedOrders));
+            allSlots.addAll(generateSlotsForDay(currentDate, dayRules, duration, bookedOrders, dayBlocks));
         }
         allSlots.sort(Comparator.comparing(AvailableSlotDTO::getDate)
                 .thenComparing(AvailableSlotDTO::getTime));
@@ -109,11 +169,19 @@ public class AvailabilityService {
         return dayRules;
     }
 
+    /** Bloqueios pontuais (isAvailable = false) que valem para esta data. */
+    private List<Availability> getBlocksForDate(List<Availability> allRules, LocalDate date) {
+        return allRules.stream()
+                .filter(a -> date.equals(a.getSpecificDate()) && Boolean.FALSE.equals(a.getIsAvailable()))
+                .collect(Collectors.toList());
+    }
+
     private List<AvailableSlotDTO> generateSlotsForDay(
             LocalDate date,
             List<Availability> dayRules,
             int duration,
-            List<Order> bookedOrders) {
+            List<Order> bookedOrders,
+            List<Availability> dayBlocks) {
         List<AvailableSlotDTO> dailySlots = new ArrayList<>();
         Set<LocalTime> generatedTimesForDay = new HashSet<>();
 
@@ -131,8 +199,9 @@ public class AvailabilityService {
 
                 boolean isPastOrNow = !slotDateTime.isAfter(now);
                 boolean conflict = hasTimeConflict(date, currentSlotStart, currentSlotEnd, bookedOrders);
+                boolean blocked = hasBlockConflict(currentSlotStart, currentSlotEnd, dayBlocks);
 
-                if (!isPastOrNow && !conflict && !generatedTimesForDay.contains(currentSlotStart)) {
+                if (!isPastOrNow && !conflict && !blocked && !generatedTimesForDay.contains(currentSlotStart)) {
                     dailySlots.add(new AvailableSlotDTO(date, currentSlotStart));
                     generatedTimesForDay.add(currentSlotStart);
                 }
@@ -150,6 +219,11 @@ public class AvailabilityService {
                 .anyMatch(order -> order.getDate().equals(date) &&
                         start.isBefore(order.getEndTime()) &&
                         end.isAfter(order.getStartTime()));
+    }
+
+    private boolean hasBlockConflict(LocalTime start, LocalTime end, List<Availability> dayBlocks) {
+        return dayBlocks.stream()
+                .anyMatch(block -> start.isBefore(block.getEndTime()) && end.isAfter(block.getStartTime()));
     }
 
     private ProviderProfile getAuthenticatedProvider() {

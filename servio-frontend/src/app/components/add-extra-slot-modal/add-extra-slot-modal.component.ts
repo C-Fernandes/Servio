@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ToastService } from '../../services/toast/toast.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +12,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class AddExtraSlotModalComponent {
   private toast = inject(ToastService);
+
+  @Input() title: string = 'Adicionar horário disponível';
+  @Input() confirmLabel: string = 'Adicionar';
 
   @Output() closeModal = new EventEmitter<void>();
   @Output() confirmSlot = new EventEmitter<{ startDate: string, startTime: string, endTime: string }>();

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AvailabilityService } from '../../services/availability/availability.service';
-import { Calendar, DaySchedule, ExtraSlot } from '../../models/Availability';
+import { Availability, Calendar, DaySchedule, ExtraSlot } from '../../models/Availability';
 import { debounceTime, Subject } from 'rxjs';
 import { ToastComponent } from '../../components/toast/toast.component';
 import { ToastService } from '../../services/toast/toast.service';
@@ -19,6 +19,8 @@ export class CalendarComponent implements OnInit {
   private availabilityService = inject(AvailabilityService);
   private autoSaveSubject = new Subject<void>();
   private toast = inject(ToastService); isModalOpen: boolean = false;
+  isBlockModalOpen: boolean = false;
+  blocks: Availability[] = [];
   weeklySchedule: DaySchedule[] = [
     { name: 'SUNDAY', label: 'Domingo', slots: [] },
     { name: 'MONDAY', label: 'Segunda', slots: [] },
@@ -34,8 +36,54 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCalendar();
+    this.loadBlocks();
     this.autoSaveSubject.pipe(debounceTime(800)).subscribe(() => {
       this.executeSync();
+    });
+  }
+
+  loadBlocks(): void {
+    this.availabilityService.listBlocks().subscribe({
+      next: (data) => this.blocks = data,
+      error: (err) => console.error('Erro ao carregar bloqueios', err)
+    });
+  }
+
+  openBlockModal(): void {
+    this.isBlockModalOpen = true;
+  }
+
+  closeBlockModal(): void {
+    this.isBlockModalOpen = false;
+  }
+
+  handleNewBlock(event: { startDate: string, startTime: string, endTime: string }): void {
+    this.availabilityService.createBlock({
+      specificDate: event.startDate,
+      startTime: event.startTime,
+      endTime: event.endTime
+    }).subscribe({
+      next: () => {
+        this.toast.showToast('Horário bloqueado com sucesso', 'success');
+        this.loadBlocks();
+        this.closeBlockModal();
+      },
+      error: (err) => {
+        const message = err.error?.message || 'Erro ao bloquear horário';
+        this.toast.showToast(message, 'error');
+      }
+    });
+  }
+
+  deleteBlock(id?: number): void {
+    if (!id) return;
+
+    this.availabilityService.removeBlock(id).subscribe({
+      next: () => {
+        this.blocks = this.blocks.filter(b => b.id !== id);
+        this.toast.showToast('Bloqueio removido', 'success');
+      },
+      error: (err) => console.error('Erro ao remover bloqueio', err)
     });
   }
 

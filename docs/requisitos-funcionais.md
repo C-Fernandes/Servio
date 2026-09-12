@@ -4,12 +4,14 @@ Levantamento dos requisitos funcionais (RF) do sistema, para a apresentação da
 disciplina **Desenvolvimento de Software com IA** (PPGTI / UFRN). A especificação
 exige no mínimo **10 RF claramente identificáveis e demonstráveis** (seção III).
 
-O sistema atende **16 RF**. Os requisitos **RF-12 (Favoritos)**,
-**RF-13 (Jornada do Pedido)**, **RF-14 (Notificações de Status)** e
-**RF-15 (Relatório de Desempenho do Prestador)** foram implementados seguindo o
-ciclo de Spec-Driven Development (ver [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md),
-[SPEC-002](specs/SPEC-002-jornada-do-pedido.md), [SPEC-003](specs/SPEC-003-notificacoes-de-status.md)
-e [SPEC-004](specs/SPEC-004-relatorio-desempenho-prestador.md)).
+O sistema atende **17 RF**. Os requisitos **RF-12 (Favoritos)**,
+**RF-13 (Jornada do Pedido)**, **RF-14 (Notificações de Status)**,
+**RF-15 (Relatório de Desempenho do Prestador)** e **RF-17 (Bloqueio de
+Horários)** foram implementados seguindo o ciclo de Spec-Driven Development
+(ver [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md),
+[SPEC-002](specs/SPEC-002-jornada-do-pedido.md), [SPEC-003](specs/SPEC-003-notificacoes-de-status.md),
+[SPEC-004](specs/SPEC-004-relatorio-desempenho-prestador.md) e
+[SPEC-005](specs/SPEC-005-bloqueio-de-horarios.md)).
 
 O **RF-05 (Busca Avançada)** foi ampliado e o **RF-16 (Chat)** foi adicionado por
 Bianca Antonelly, em paralelo, **fora do fluxo estrito de SDD** desta
@@ -129,6 +131,14 @@ Canal de mensagens entre cliente e prestador antes da contratação
 - **Evidência:** `ChatController`/`ChatService`; página "Mensagens".
 - **Nota SDD:** implementado por Bianca fora do fluxo estrito de SPEC/ADR/teste desta documentação (gap reconhecido, ver introdução).
 
+### RF-17 — Bloqueio de horários específicos na disponibilidade (NOVO — via SDD)
+Prestador bloqueia uma data/horário específico (ex.: feriado, compromisso),
+mesmo quando coberto por uma regra semanal recorrente. O horário some das
+opções de agendamento (`generateAvailableSlots`) sem apagar a regra semanal.
+- **Especificação:** [SPEC-005](specs/SPEC-005-bloqueio-de-horarios.md)
+- **Evidência (backend):** `POST/GET /api/calendar/blocks`, `DELETE /api/calendar/blocks/{id}` (dono → 403); `AvailabilityServiceTest` (7).
+- **Evidência (frontend):** seção "Bloqueios de horário" na página Agenda (criar/listar/remover).
+
 ---
 
 ## Cobertura de testes automatizados
@@ -140,6 +150,7 @@ Canal de mensagens entre cliente e prestador antes da contratação
 | RF-13 | `OrderServiceTest` — registro de histórico e validação das novas transições de status |
 | RF-14 | `NotificationServiceTest` — 4 cenários + casos de borda (ADMIN notifica ambos, 403, idempotência, marcar todas sem nenhuma, 404) da SPEC-003 |
 | RF-15 | `FinancialDashboardServiceTest` — ranking ordenado + casos de borda (sem concluídos, sem perfil de prestador) da SPEC-004 |
+| RF-17 | `AvailabilityServiceTest` — exclusão de horário bloqueado + casos de borda (intervalo inválido, dono, 404) da SPEC-005 |
 | (infra) | `ServioApplicationTests` — carga do contexto Spring |
 
-Total: **33 testes automatizados** cobrindo 4 requisitos funcionais novos (RF-05 e RF-16 ainda sem cobertura — gap reconhecido).
+Total: **40 testes automatizados** cobrindo 5 requisitos funcionais novos (RF-05 e RF-16 ainda sem cobertura — gap reconhecido).
