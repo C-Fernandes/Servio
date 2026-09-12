@@ -2,7 +2,7 @@
     <div class="modal-content" (click)="$event.stopPropagation()">
 
         <div class="modal-header">
-            <h2>Adicionar horário disponível</h2>
+            <h2>{{ title }}</h2>
             <button class="icon-btn close-btn" (click)="onClose()">
                 <span class="mat-icon">close</span>
             </button>
@@ -24,7 +24,7 @@
 
         <div class="modal-footer">
             <button class="btn-gradient full-width" (click)="onConfirm()">
-                Adicionar
+                {{ confirmLabel }}
             </button>
         </div>
 

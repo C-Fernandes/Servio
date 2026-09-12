@@ -95,9 +95,56 @@
         </div>
         }
     </div>
+</section>
+
+<section class="blocks-section">
+    <div class="section-header">
+        <div class="text">
+            <h3>Bloqueios de horário</h3>
+            <p>Datas/horários indisponíveis mesmo dentro da agenda semanal</p>
+        </div>
+        <button class="btn-primary-action" (click)="openBlockModal()">
+            <span class="mat-icon">block</span>
+            Bloquear horário
+        </button>
+    </div>
+
+    <div class="slots-grid">
+        @for (item of blocks; track item.id) {
+        <div class="card slot-card">
+            <div class="slot-info">
+                <div class="slot-date-row">
+                    <span class="mat-icon">event_busy</span>
+                    <strong>{{ item.specificDate | date:'dd/MM/yyyy' }}</strong>
+                </div>
+                <p class="slot-duration">
+                    <span class="mat-icon">history</span>
+                    {{ item.startTime }} às {{ item.endTime }}
+                </p>
+            </div>
+            <button class="icon-btn delete" (click)="deleteBlock(item.id)">
+                <span class="mat-icon">delete</span>
+            </button>
+        </div>
+        } @empty {
+        <div class="empty-state">
+            <span class="mat-icon">event_available</span>
+            <p>Nenhum horário bloqueado.</p>
+        </div>
+        }
+    </div>
 </section>@if (isModalOpen) {
 <app-add-extra-slot-modal
     (closeModal)="closeModal()"
     (confirmSlot)="handleNewExtraSlot($event)">
+</app-add-extra-slot-modal>
+}
+
+@if (isBlockModalOpen) {
+<app-add-extra-slot-modal
+    title="Bloquear horário"
+    confirmLabel="Bloquear"
+    (closeModal)="closeBlockModal()"
+    (confirmSlot)="handleNewBlock($event)">
 </app-add-extra-slot-modal>
 }
