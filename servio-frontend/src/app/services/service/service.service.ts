@@ -65,6 +65,10 @@ export class ServiceService {
     return this.http.get<Locality[]>(`${this.API_URL}/locations`);
   }
 
+  findRecommendations(): Observable<Service[]> {
+    return this.http.get<Service[]>(`${this.API_URL}/recommendations`);
+  }
+
   findById(id: number): Observable<Service> {
     return this.http.get<Service>(`${this.API_URL}/${id}`);
   }

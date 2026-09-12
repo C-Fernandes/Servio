@@ -4,7 +4,7 @@ Levantamento dos requisitos funcionais (RF) do sistema, para a apresentação da
 disciplina **Desenvolvimento de Software com IA** (PPGTI / UFRN). A especificação
 exige no mínimo **10 RF claramente identificáveis e demonstráveis** (seção III).
 
-O sistema atende **20 RF**. Os requisitos **RF-12 (Favoritos)**,
+O sistema atende **21 RF**. Os requisitos **RF-12 (Favoritos)**,
 **RF-13 (Jornada do Pedido)**, **RF-14 (Notificações de Status)**,
 **RF-15 (Relatório de Desempenho do Prestador)**, **RF-17 (Bloqueio de
 Horários)** e **RF-18 (Cupons de Desconto)** foram implementados seguindo o ciclo de
@@ -15,34 +15,34 @@ Spec-Driven Development (ver [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md),
 [SPEC-006](specs/SPEC-006-sistema-de-cupons-de-desconto.md)).
 
 O **RF-05 (Busca Avançada)**, o **RF-16 (Chat)**, o **RF-19 (Histórico de
-Interações)** e o **RF-20 (Denúncia)** foram implementados por Bianca Antonelly
-em paralelo, **fora do fluxo estrito de SDD no momento da implementação**.
-Todos receberam especificação **retroativa** em 2026-09-12 —
+Interações)**, o **RF-20 (Denúncia)** e o **RF-21 (Recomendações de
+Serviços)** foram implementados por Bianca Antonelly em paralelo, **fora do
+fluxo estrito de SDD no momento da implementação**. Todos receberam
+especificação **retroativa** em 2026-09-12 —
 [SPEC-007](specs/SPEC-007-busca-avancada-servicos.md),
 [SPEC-008](specs/SPEC-008-chat-cliente-prestador.md),
-[SPEC-009](specs/SPEC-009-historico-interacoes.md) e
-[SPEC-010](specs/SPEC-010-denuncia-servico-usuario.md) — escrita a partir do
+[SPEC-009](specs/SPEC-009-historico-interacoes.md),
+[SPEC-010](specs/SPEC-010-denuncia-servico-usuario.md) e
+[SPEC-011](specs/SPEC-011-recomendacoes-servicos.md) — escrita a partir do
 código e dos testes manuais já realizados, e não antes da implementação como
 o fluxo padrão do projeto prevê. O **RF-20 (Denúncia)** foi o caso mais grave:
 identificado só em 2026-09-12 durante a checagem final de conformidade,
 estava merged em `main` desde a PR #15 mas **sem nenhuma documentação** (nem
 RF, nem SPEC, nem ADR, nem teste) até esta revisão. Nesta mesma checagem, o
-gap foi fechado por completo nos quatro: RF-16 ganhou
+gap foi fechado por completo em quatro dos cinco: RF-16 ganhou
 [ADR-006](adr/ADR-006-modelagem-chat-cliente-prestador.md) e `ChatServiceTest`,
 RF-19 ganhou [ADR-007](adr/ADR-007-modelagem-historico-interacoes.md) e
 `InteractionServiceTest`, RF-20 ganhou
 [ADR-008](adr/ADR-008-modelagem-sistema-denuncias.md) e `ReportServiceTest`, e
 RF-05 ganhou `ServiceServiceSearchTest` (sem ADR — a própria SPEC-007 justifica
-que não há decisão de arquitetura nova o bastante pra um). Nenhum dos quatro
-teve o SPEC ou o ADR escritos **antes** da implementação, como o fluxo padrão
-do projeto prevê — isso continua registrado como aprendizado do processo
-(ver seção V.7 da apresentação).
-
-**Nota**: a dupla também tem uma quinta funcionalidade de Bianca —
-recomendações de serviços por perfil/interesse (`GET /services/recommendations`)
-— pronta na branch `origin/feature/recomendacoes-servicos`, mas **não
-mergeada em `main`** até a apresentação. Decisão consciente: fica fora do
-escopo desta entrega, não conta como RF.
+que não há decisão de arquitetura nova o bastante pra um). O **RF-21
+(Recomendações)** entrou na mesma checagem, com a SPEC-011 escrita a partir do
+código e da validação manual, mas segue **sem ADR** (mesma justificativa da
+SPEC-007: reuso de entidades e repositórios já existentes, sem decisão de
+arquitetura nova) e **sem teste automatizado** — gap reconhecido, registrado
+na própria SPEC-011. Nenhum dos cinco teve o SPEC ou o ADR escritos **antes**
+da implementação, como o fluxo padrão do projeto prevê — isso continua
+registrado como aprendizado do processo (ver seção V.7 da apresentação).
 
 * **Autoras**: Bianca Antonelly, Maria Clara Fernandes
 * **Data**: 2026-09-09
@@ -211,6 +211,15 @@ conta/serviço foi analisado pela moderação.
   identificado sem nenhuma documentação em 2026-09-12 — RF, SPEC, ADR e teste
   automatizado escritos retroativamente na mesma revisão.
 
+### RF-21 — Recomendações de serviços por perfil/interesse do cliente
+Serviços ativos recomendados ao cliente com base na categoria e nas tags dos
+serviços que ele já favoritou ou contratou, excluindo o que ele já conhece.
+Sem nenhum sinal de interesse (cliente novo), o sistema recomenda os serviços
+mais bem avaliados do catálogo.
+- **Evidência:** `GET /services/recommendations`; seção "Recomendados para você" no topo da página "Explorar serviços" (só sem filtros ativos).
+- **Especificação (retroativa):** [SPEC-011](specs/SPEC-011-recomendacoes-servicos.md).
+- **Nota SDD:** implementado antes da especificação; teste automatizado ainda pendente (gap reconhecido, ver introdução).
+
 ---
 
 ## Cobertura de testes automatizados
@@ -230,4 +239,6 @@ conta/serviço foi analisado pela moderação.
 | RF-20 | `ReportServiceTest` — 3 cenários + casos de borda (denúncia duplicada pendente reaproveitada, auto-denúncia bloqueada) da SPEC-010 |
 | (infra) | `ServioApplicationTests` — carga do contexto Spring |
 
-Total: **65 testes automatizados** cobrindo 10 requisitos funcionais novos — todos os RF construídos além da base têm pelo menos um teste automatizado.
+Total: **65 testes automatizados** cobrindo 10 dos 11 requisitos funcionais
+novos além da base (RF-21 ainda sem cobertura — gap reconhecido, ver
+SPEC-011).
