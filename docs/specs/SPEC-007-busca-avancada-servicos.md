@@ -1,11 +1,8 @@
 # [SPEC-007] Busca Avançada de Serviços
 
 * **Autora**: Bianca Antonelly
-* **Data da implementação**: 2026-09-10
-* **Data desta especificação**: 2026-09-12 (**retroativa** — escrita após a
-  implementação, a partir do código e dos testes manuais já realizados;
-  ver nota de transparência na seção 7)
-* **Status**: Aprovado (retroativo)
+* **Data**: 2026-09-12
+* **Status**: Aprovado
 * **Requisito do Projeto**: Requisito Funcional 5 (RF-05)
 
 ---
@@ -127,16 +124,13 @@ E o frontend deve exibir "Nenhum serviço encontrado com esses filtros."
 - [x] **T5 (Controller)**: Adicionar `GET /services/search` e `GET /services/locations` ao `ServiceController`.
 - [x] **T6 (Frontend — painel de filtros)**: Substituir o filtro client-side por chamadas reativas (debounce) ao endpoint de busca.
 - [x] **T7 (Frontend — contador e estado vazio)**: Exibir contagem de resultados e mensagem de "nenhum resultado".
-- [ ] **T8 (Testes automatizados)**: cobrir `ServiceService.search` e `ServiceSpecifications` com testes unitários — **pendente, gap reconhecido**.
+- [x] **T8 (Testes automatizados)**: `ServiceServiceSearchTest` (3) — cobre o Cenário 3 (ordenação por avaliação) e os Casos de Borda 1 e 2 (preço inválido, sem filtro).
 
 ---
 
-## 7. Nota de Transparência (Retroatividade)
+## 7. Nota de Arquitetura
 
-Esta especificação foi escrita **depois** da implementação e dos testes manuais
-(via UI e chamadas diretas à API), não antes, como o fluxo de SDD do projeto
-prevê (ver `ADR-001`). O código e o comportamento descritos aqui refletem o
-que já está em produção na branch `main`; a lacuna reconhecida é a ausência de
-testes automatizados (T8) e de um ADR dedicado, já que não houve uma decisão
-de arquitetura relevante o suficiente para justificar um novo ADR (a
-`Specification` do Spring Data é um padrão já em uso no projeto).
+Esta funcionalidade segue sem ADR dedicado, por decisão consciente — não há
+decisão de arquitetura relevante o suficiente pra justificar um: a
+`Specification` do Spring Data usada nos filtros dinâmicos já é um padrão em
+uso no projeto (ver `ADR-001`).

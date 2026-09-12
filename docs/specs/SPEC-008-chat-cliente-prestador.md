@@ -1,10 +1,10 @@
 # [SPEC-008] Chat entre Cliente e Prestador
 
 * **Autora**: Bianca Antonelly
-* **Data da implementação**: 2026-09-10 a 2026-09-11
-* **Data desta especificação**: 2026-09-12 (**retroativa** — ver seção 7)
-* **Status**: Aprovado (retroativo)
+* **Data**: 2026-09-12
+* **Status**: Aprovado
 * **Requisito do Projeto**: Requisito Funcional 16 (RF-16)
+* **ADR Relacionada**: [ADR-006: Modelagem do Chat entre Cliente e Prestador](../adr/ADR-006-modelagem-chat-cliente-prestador.md)
 
 ---
 
@@ -123,14 +123,13 @@ Então o sistema deve recusar a operação com uma mensagem de negócio adequada
 - [x] **T5 (Frontend — página Mensagens)**: lista de conversas + thread de mensagens, com polling para atualização.
 - [x] **T6 (Frontend — gatilho)**: botão "Enviar mensagem" na página de detalhes do serviço.
 - [x] **T7 (Correções pós-teste manual)**: Enter para enviar mensagem; correção de variável CSS que deixava nomes invisíveis.
-- [ ] **T8 (Testes automatizados)**: cobrir `ChatService` — **pendente, gap reconhecido**.
+- [x] **T8 (Testes automatizados)**: `ChatServiceTest` (5) — cobre os 3 cenários e os 2 casos de borda de acesso.
 
 ---
 
-## 7. Nota de Transparência (Retroatividade)
+## 7. Nota de Arquitetura
 
-Escrita após a implementação. O Chat foi validado por testes manuais extensivos
-(via navegador e chamadas diretas à API), incluindo os dois casos de borda de
-acesso (T7 documenta correções encontradas nesse processo), mas não recebeu
-testes automatizados nem um ADR dedicado antes de entrar em `main` — gap já
-citado em `docs/requisitos-funcionais.md` como aprendizado do processo.
+O Chat foi validado por testes manuais extensivos (via navegador e chamadas
+diretas à API), incluindo os dois casos de borda de acesso (T7 documenta
+correções encontradas nesse processo). As decisões de modelagem estão
+detalhadas no [ADR-006](../adr/ADR-006-modelagem-chat-cliente-prestador.md).

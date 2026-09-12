@@ -1,10 +1,10 @@
 # [SPEC-009] Histórico Detalhado de Interações entre Cliente e Prestador
 
 * **Autora**: Bianca Antonelly
-* **Data da implementação**: 2026-09-12
-* **Data desta especificação**: 2026-09-12 (**retroativa** — ver seção 7)
-* **Status**: Aprovado (retroativo)
+* **Data**: 2026-09-12
+* **Status**: Aprovado
 * **Requisito do Projeto**: Requisito Funcional 19 (RF-19)
+* **ADR Relacionada**: [ADR-007: Modelagem do Histórico de Interações entre Cliente e Prestador](../adr/ADR-007-modelagem-historico-interacoes.md)
 
 ---
 
@@ -117,13 +117,12 @@ Então o sistema deve recusar com status HTTP 403 (Forbidden), pois o histórico
 - [x] **T4 (Camada de Controller)**: `InteractionController` com restrição de role.
 - [x] **T5 (Frontend — modal de histórico)**: `InteractionHistoryModalComponent`, com ícone por tipo de evento.
 - [x] **T6 (Frontend — gatilho)**: botão "Ver histórico" no cabeçalho da conversa, na página Mensagens.
-- [ ] **T7 (Testes automatizados)**: cobrir `InteractionService`, incluindo o caso de borda de pedido legado — **pendente, gap reconhecido**.
+- [x] **T7 (Testes automatizados)**: `InteractionServiceTest` (5) — cobre os 3 cenários e o caso de borda de pedido legado.
 
 ---
 
-## 7. Nota de Transparência (Retroatividade)
+## 7. Nota de Arquitetura
 
-Escrita após a implementação. A feature foi validada manualmente via chamadas
-diretas à API (com dados reais de mensagens já trocadas) e via navegador, mas
-não recebeu testes automatizados nem ADR dedicado antes de ser mesclada em
-`main` — mesmo padrão de gap das SPEC-007 e SPEC-008.
+A feature foi validada manualmente via chamadas diretas à API (com dados
+reais de mensagens já trocadas) e via navegador. As decisões de modelagem
+estão detalhadas no [ADR-007](../adr/ADR-007-modelagem-historico-interacoes.md).

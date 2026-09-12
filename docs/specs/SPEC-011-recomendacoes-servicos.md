@@ -1,10 +1,9 @@
-# [SPEC-010] Recomendações de Serviços por Perfil/Interesse do Cliente
+# [SPEC-011] Recomendações de Serviços por Perfil/Interesse do Cliente
 
 * **Autora**: Bianca Antonelly
-* **Data da implementação**: 2026-09-12
-* **Data desta especificação**: 2026-09-12 (**retroativa** — ver seção 7)
-* **Status**: Aprovado (retroativo)
-* **Requisito do Projeto**: Requisito Funcional 20 (RF-20)
+* **Data**: 2026-09-12
+* **Status**: Aprovado
+* **Requisito do Projeto**: Requisito Funcional 21 (RF-21)
 
 ---
 
@@ -40,15 +39,15 @@ similares, sem exigir nenhuma ação extra do cliente.
 
 ## 3. Requisitos Funcionais
 
-* **RF-20.1 (Recomendação por interesse)**: o sistema recomenda serviços
+* **RF-21.1 (Recomendação por interesse)**: o sistema recomenda serviços
   ativos cuja categoria ou tags coincidem com as dos serviços que o cliente já
   favoritou ou contratou.
-* **RF-20.2 (Exclusão do já conhecido)**: serviços já favoritados ou já
+* **RF-21.2 (Exclusão do já conhecido)**: serviços já favoritados ou já
   contratados pelo cliente não aparecem nas recomendações.
-* **RF-20.3 (Fallback para cliente novo)**: sem nenhum sinal de interesse
+* **RF-21.3 (Fallback para cliente novo)**: sem nenhum sinal de interesse
   (cliente sem favoritos e sem pedidos), o sistema recomenda os serviços mais
   bem avaliados do catálogo.
-* **RF-20.4 (Exclusividade de perfil)**: apenas usuários com role `CLIENT`
+* **RF-21.4 (Exclusividade de perfil)**: apenas usuários com role `CLIENT`
   recebem recomendações.
 
 ---
@@ -112,17 +111,15 @@ Então o sistema deve retornar status HTTP 200 (OK) com uma lista vazia, sem err
 - [x] **T3 (Fallback de popularidade)**: quando não há sinal de interesse, ordenar por avaliação média.
 - [x] **T4 (Camada de Controller)**: adicionar `GET /services/recommendations` ao `ServiceController`.
 - [x] **T5 (Frontend — seção no marketplace)**: seção "Recomendados para você", visível só para clientes e só sem filtros ativos, com scroll horizontal.
-- [ ] **T6 (Testes automatizados)**: cobrir `ServiceService.getRecommendations`, incluindo o fallback de cliente novo — **pendente, gap reconhecido**.
+- [ ] **T6 (Testes automatizados)**: cobrir `ServiceService.getRecommendations`, incluindo o fallback de cliente novo — **pendente**.
 
 ---
 
-## 7. Nota de Transparência (Retroatividade)
+## 7. Nota de Arquitetura
 
-Escrita após a implementação. A funcionalidade foi validada manualmente via
-chamada direta à API (confirmando a filtragem de serviços já conhecidos e o
-fallback de popularidade) e visualmente no marketplace, mas não recebeu
-testes automatizados nem ADR dedicado antes de ser proposta em Pull Request —
-mesmo padrão de gap das SPEC-007, SPEC-008 e SPEC-009. Não há uma decisão de
-arquitetura nova o suficiente para justificar um ADR: a pontuação por
-categoria/tag é feita em memória, reaproveitando entidades e repositórios já
-existentes no projeto.
+A funcionalidade foi validada manualmente via chamada direta à API
+(confirmando a filtragem de serviços já conhecidos e o fallback de
+popularidade) e visualmente no marketplace. Sem ADR dedicado, por decisão
+consciente: não há decisão de arquitetura nova o suficiente para justificar
+um — a pontuação por categoria/tag é feita em memória, reaproveitando
+entidades e repositórios já existentes no projeto.

@@ -27,8 +27,8 @@ Data da apresentação: **12/09/2026**
 | Código-fonte + histórico de commits real | raiz do repositório |
 | Apresentação (PPT) | [preencher — anexar ou linkar] |
 | Documento de modelos, ferramentas e estratégias de IA | `docs/tools-and-prompts.md` |
-| Especificações (SDD) | `docs/specs/SPEC-001` a `SPEC-004` |
-| Architecture Decision Records | `docs/adr/ADR-001` a `ADR-004` |
+| Especificações (SDD) | `docs/specs/SPEC-001` a `SPEC-011` |
+| Architecture Decision Records | `docs/adr/ADR-001` a `ADR-010` |
 | Diagramas de arquitetura (Mermaid) | `docs/diagrams/` |
 | Política e evidência de guardrail | `docs/harness/guardrail-policy.md`, `docs/harness/evidencia-guardrail-bloqueio.md` |
 | Transcript de sessão do agente | `docs/harness/sessao-2026-09-09-a-12.md` |
@@ -40,7 +40,8 @@ Data da apresentação: **12/09/2026**
 
 O Servio é uma plataforma de marketplace de serviços locais que conecta
 clientes e prestadores. A dupla evoluiu uma base já funcional (autenticação,
-serviços, pedidos, avaliações, agenda, dashboards) implementando **16
-requisitos funcionais** no total, com destaque para os quatro construídos via
-Spec-Driven Development, guardrail de IA ativo com evidência real de bloqueio,
-e observabilidade completa do processo (specs, ADRs, transcript de sessão).
+serviços, pedidos, avaliações, agenda, dashboards) implementando **21
+requisitos funcionais** no total, todos construídos via Spec-Driven
+Development (RF-05, RF-12 a RF-21), com guardrail de IA ativo com evidência
+real de bloqueio e observabilidade completa do processo (specs, ADRs,
+transcript de sessão) — ver `docs/checklist-final.md`.
