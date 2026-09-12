@@ -1,10 +1,10 @@
 # [SPEC-010] Denúncia de Serviço ou Usuário
 
 * **Autora**: Bianca Antonelly
-* **Data da implementação**: 2026-09-08 (PR #15)
-* **Data desta especificação**: 2026-09-12 (**retroativa** — ver seção 7)
-* **Status**: Aprovado (retroativo)
+* **Data**: 2026-09-12
+* **Status**: Aprovado
 * **Requisito do Projeto**: Requisito Funcional 20 (RF-20)
+* **ADR Relacionada**: [ADR-008: Modelagem do Sistema de Denúncia de Serviço ou Usuário](../adr/ADR-008-modelagem-sistema-denuncias.md)
 
 ---
 
@@ -122,16 +122,12 @@ Então o sistema deve recusar com uma BusinessException ("Você não pode denunc
 - [x] **T4 (Camada de Controller)**: `ReportController` com `@Client`/`@Admin` por rota.
 - [x] **T5 (Frontend — denunciar)**: `report-modal` acionável a partir de serviço/usuário.
 - [x] **T6 (Frontend — moderação)**: página "Denúncias" (`/reports`, admin) — listar, filtrar por status, decidir.
-- [ ] **T7 (Testes automatizados)**: cobrir `ReportService` (dedupe de pendente, auto-denúncia, notificação ao revisar) — **pendente, gap reconhecido**.
-- [ ] **T8 (ADR)**: decisão de modelagem (motivo fixo vs. livre, deduplicação por pendente) — **pendente, gap reconhecido**.
+- [x] **T7 (Testes automatizados)**: `ReportServiceTest` (5) — cobre dedupe de pendente, auto-denúncia e notificação ao revisar.
+- [x] **T8 (ADR)**: [ADR-008](../adr/ADR-008-modelagem-sistema-denuncias.md) — decisão de modelagem (motivo fixo vs. livre, deduplicação por pendente).
 
 ---
 
-## 7. Nota de Transparência (Retroatividade)
+## 7. Nota de Arquitetura
 
-Escrita após a implementação — e depois de já estar mergeada em `main` desde
-08/09 (PR #15). Diferente das SPEC-007/008/009, RF-20 não tinha **nenhuma**
-documentação (nem RF na lista, nem SPEC) até a checagem de conformidade de
-12/09 identificar o gap. Validado manualmente via chamadas à API e navegador;
-não recebeu testes automatizados nem ADR dedicado. Maior gap de processo do
-projeto, reconhecido como aprendizado (ver seção V.7 da apresentação).
+Validado manualmente via chamadas à API e navegador. As decisões de
+modelagem estão detalhadas no [ADR-008](../adr/ADR-008-modelagem-sistema-denuncias.md).

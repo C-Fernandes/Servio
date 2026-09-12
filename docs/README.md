@@ -9,7 +9,7 @@ Este diretório centraliza a documentação de engenharia de software, processos
 ```
 docs/
 ├── README.md                     # Este arquivo (índice geral)
-├── requisitos-funcionais.md      # Lista dos 20 RF do sistema e evidências
+├── requisitos-funcionais.md      # Lista dos 21 RF do sistema e evidências
 ├── checklist-final.md            # Checagem item a item contra a especificação da disciplina
 ├── documento-de-entrega.md       # Nomes, links e resumo do projeto (entregável da seção I)
 ├── roteiro-demo.md               # Roteiro da demonstração ao vivo
@@ -22,9 +22,11 @@ docs/
 │   ├── ADR-003-historico-de-status-e-jornada-do-pedido.md
 │   ├── ADR-004-notificacoes-in-app-melhor-esforco.md
 │   ├── ADR-005-modelagem-sistema-cupons.md
-│   ├── ADR-006-modelagem-chat-cliente-prestador.md      (retroativo)
-│   ├── ADR-007-modelagem-historico-interacoes.md        (retroativo)
-│   └── ADR-008-modelagem-sistema-denuncias.md           (retroativo)
+│   ├── ADR-006-modelagem-chat-cliente-prestador.md
+│   ├── ADR-007-modelagem-historico-interacoes.md
+│   ├── ADR-008-modelagem-sistema-denuncias.md
+│   ├── ADR-009-modelagem-relatorio-desempenho-prestador.md
+│   └── ADR-010-modelagem-bloqueio-de-horarios.md
 ├── specs/                        # Especificações funcionais (Spec-Driven Development)
 │   ├── SPEC-001-sistema-de-favoritos.md
 │   ├── SPEC-002-jornada-do-pedido.md
@@ -32,10 +34,11 @@ docs/
 │   ├── SPEC-004-relatorio-desempenho-prestador.md
 │   ├── SPEC-005-bloqueio-de-horarios.md
 │   ├── SPEC-006-sistema-de-cupons-de-desconto.md
-│   ├── SPEC-007-busca-avancada-servicos.md     (retroativa)
-│   ├── SPEC-008-chat-cliente-prestador.md      (retroativa)
-│   ├── SPEC-009-historico-interacoes.md        (retroativa)
-│   └── SPEC-010-denuncia-servico-usuario.md    (retroativa)
+│   ├── SPEC-007-busca-avancada-servicos.md
+│   ├── SPEC-008-chat-cliente-prestador.md
+│   ├── SPEC-009-historico-interacoes.md
+│   ├── SPEC-010-denuncia-servico-usuario.md
+│   └── SPEC-011-recomendacoes-servicos.md
 ├── harness/                      # Harness, guardrails e observabilidade
 │   ├── guardrail-policy.md
 │   ├── evidencia-guardrail-bloqueio.md
@@ -71,11 +74,11 @@ O desenvolvimento das novas funcionalidades segue o fluxo:
 
 | Requisito da disciplina | Situação |
 | :--- | :--- |
-| Mínimo de 10 requisitos funcionais demonstráveis | ✅ 20 RF (ver [requisitos-funcionais.md](requisitos-funcionais.md)) |
-| SDD com critérios de aceite e casos de borda | ✅ [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md) a [SPEC-010](specs/SPEC-010-denuncia-servico-usuario.md) |
+| Mínimo de 10 requisitos funcionais demonstráveis | ✅ 21 RF (ver [requisitos-funcionais.md](requisitos-funcionais.md)) |
+| SDD com critérios de aceite e casos de borda | ✅ [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md) a [SPEC-011](specs/SPEC-011-recomendacoes-servicos.md) |
 | Harness com guardrail ativo e evidência de bloqueio real | ✅ [guardrail-policy.md](harness/guardrail-policy.md), [evidencia-guardrail-bloqueio.md](harness/evidencia-guardrail-bloqueio.md) |
-| Pelo menos um ADR de decisão relevante | ✅ ADR-001 a ADR-008 |
+| Pelo menos um ADR de decisão relevante | ✅ ADR-001 a ADR-010 |
 | Diagrama de arquitetura (C4/Mermaid) | ✅ [arquitetura-geral.md](diagrams/arquitetura-geral.md) e diagramas por RF |
-| Testes automatizados cobrindo parte dos RF | ✅ 65 testes (RF-05, RF-12 a RF-20) |
+| Testes automatizados cobrindo parte dos RF | ✅ 65 testes (RF-05, RF-12 a RF-20; RF-21 ainda sem teste) |
 | Transcript de sessão do agente (observabilidade) | ✅ [sessao-2026-09-09-a-12.md](harness/sessao-2026-09-09-a-12.md) |
 | Apresentação (PPT) e post no LinkedIn (STAR) | ⏳ pendente |

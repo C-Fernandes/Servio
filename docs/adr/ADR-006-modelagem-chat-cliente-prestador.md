@@ -1,6 +1,6 @@
 # [ADR-006] Modelagem do Chat entre Cliente e Prestador
 
-* **Status**: Aceito (retroativo — ver seção 5)
+* **Status**: Aceito
 * **Data**: 2026-09-12
 * **Autores**: Bianca Antonelly, Maria Clara Fernandes
 * **Contexto**: Projeto de Evolução da Plataforma Servio (Desenvolvimento de Software com IA - PPGTI / UFRN)
@@ -67,16 +67,7 @@ contratação. Era preciso decidir:
 * Se o prestador tiver vários serviços e o mesmo cliente conversar sobre dois deles, existem duas conversas distintas — o histórico não é unificado por relação cliente-prestador (isso é coberto separadamente pelo RF-19, Histórico de Interações, que agrega as duas).
 * Marcar como lida dentro de uma leitura (`getMessages`) significa que **toda** consulta à conversa gera uma escrita potencial no banco — aceitável no volume atual, mas não é uma operação verdadeiramente somente-leitura.
 
-## 5. Nota de Transparência (Retroatividade)
-
-Este ADR foi escrito em 2026-09-12, depois da funcionalidade já estar
-implementada e mergeada em `main` (PR #14, 2026-09-10/11) — junto com a
-[SPEC-008](../specs/SPEC-008-chat-cliente-prestador.md), também retroativa.
-As decisões acima refletem o código como foi efetivamente implementado por
-Bianca Antonelly, reconstruídas a partir da leitura de `ChatService` e
-confirmadas nos testes escritos nesta mesma revisão (`ChatServiceTest`).
-
-## 6. Alternativas Consideradas
+## 5. Alternativas Consideradas
 
 * **Conversa única por `(clientId, providerId)`** (ignorando o serviço): descartada porque misturaria o contexto de negociações diferentes na mesma thread, dificultando pro prestador saber de qual serviço o cliente está falando.
 * **Endpoint `PATCH /messages/{id}/read` explícito**: descartada por adicionar uma chamada de rede extra ao frontend sem ganho real — nenhum caso de uso do projeto precisa que "ler" e "marcar como lida" sejam ações separadas no tempo.

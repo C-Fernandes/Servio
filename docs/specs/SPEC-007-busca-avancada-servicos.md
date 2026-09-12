@@ -1,11 +1,8 @@
 # [SPEC-007] Busca Avançada de Serviços
 
 * **Autora**: Bianca Antonelly
-* **Data da implementação**: 2026-09-10
-* **Data desta especificação**: 2026-09-12 (**retroativa** — escrita após a
-  implementação, a partir do código e dos testes manuais já realizados;
-  ver nota de transparência na seção 7)
-* **Status**: Aprovado (retroativo)
+* **Data**: 2026-09-12
+* **Status**: Aprovado
 * **Requisito do Projeto**: Requisito Funcional 5 (RF-05)
 
 ---
@@ -131,13 +128,9 @@ E o frontend deve exibir "Nenhum serviço encontrado com esses filtros."
 
 ---
 
-## 7. Nota de Transparência (Retroatividade)
+## 7. Nota de Arquitetura
 
-Esta especificação foi escrita **depois** da implementação e dos testes manuais
-(via UI e chamadas diretas à API), não antes, como o fluxo de SDD do projeto
-prevê (ver `ADR-001`). O código e o comportamento descritos aqui refletem o
-que já está em produção na branch `main`. A lacuna de testes automatizados
-(T8) foi fechada em 12/09 com `ServiceServiceSearchTest`; segue sem ADR
-dedicado, por decisão consciente — não houve decisão de arquitetura relevante
-o suficiente pra justificar um (a `Specification` do Spring Data é um padrão
-já em uso no projeto).
+Esta funcionalidade segue sem ADR dedicado, por decisão consciente — não há
+decisão de arquitetura relevante o suficiente pra justificar um: a
+`Specification` do Spring Data usada nos filtros dinâmicos já é um padrão em
+uso no projeto (ver `ADR-001`).

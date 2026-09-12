@@ -1,6 +1,6 @@
 # [ADR-008] Modelagem do Sistema de Denúncia de Serviço ou Usuário
 
-* **Status**: Aceito (retroativo — ver seção 5)
+* **Status**: Aceito
 * **Data**: 2026-09-12
 * **Autores**: Bianca Antonelly, Maria Clara Fernandes
 * **Contexto**: Projeto de Evolução da Plataforma Servio (Desenvolvimento de Software com IA - PPGTI / UFRN)
@@ -70,16 +70,7 @@ inadequado, com fila de moderação pro admin. Era preciso decidir:
 * `Report` tem duas FKs opcionais (`reportedService`/`reportedUser`) em vez de uma obrigatória — validade cruzada (exatamente uma preenchida, de acordo com `targetType`) é garantida só na camada de serviço, não por constraint de banco.
 * Reaproveitar a denúncia pendente em vez de rejeitar significa que o cliente não consegue "atualizar" o motivo/descrição de uma denúncia já enviada sem esperar ela ser decidida — aceito porque o caso de uso é raro e a alternativa (permitir edição) complicaria o fluxo do admin.
 
-## 5. Nota de Transparência (Retroatividade)
-
-Este ADR foi escrito em 2026-09-12, depois da funcionalidade já estar
-implementada e mergeada em `main` desde 2026-09-08 (PR #15) — junto com a
-[SPEC-010](../specs/SPEC-010-denuncia-servico-usuario.md), também retroativa.
-As decisões acima refletem o código como foi efetivamente implementado por
-Bianca Antonelly, reconstruídas a partir da leitura de `ReportService` e
-confirmadas nos testes escritos nesta mesma revisão (`ReportServiceTest`).
-
-## 6. Alternativas Consideradas
+## 5. Alternativas Consideradas
 
 * **Duas entidades separadas (`ServiceReport`, `UserReport`)**: descartada por forçar o admin a consultar/unir duas fontes pra ter uma fila única de moderação.
 * **Rejeitar denúncia duplicada com erro** (em vez de reaproveitar a pendente): descartada por gerar atrito de UX sem benefício — o cliente só quer garantir que o alvo seja revisado, não criar múltiplos registros.

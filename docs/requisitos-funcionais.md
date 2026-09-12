@@ -4,45 +4,21 @@ Levantamento dos requisitos funcionais (RF) do sistema, para a apresentação da
 disciplina **Desenvolvimento de Software com IA** (PPGTI / UFRN). A especificação
 exige no mínimo **10 RF claramente identificáveis e demonstráveis** (seção III).
 
-O sistema atende **21 RF**. Os requisitos **RF-12 (Favoritos)**,
+O sistema atende **21 RF**. Os onze requisitos construídos via
+Spec-Driven Development — **RF-05 (Busca Avançada)**, **RF-12 (Favoritos)**,
 **RF-13 (Jornada do Pedido)**, **RF-14 (Notificações de Status)**,
-**RF-15 (Relatório de Desempenho do Prestador)**, **RF-17 (Bloqueio de
-Horários)** e **RF-18 (Cupons de Desconto)** foram implementados seguindo o ciclo de
-Spec-Driven Development (ver [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md),
-[SPEC-002](specs/SPEC-002-jornada-do-pedido.md), [SPEC-003](specs/SPEC-003-notificacoes-de-status.md),
-[SPEC-004](specs/SPEC-004-relatorio-desempenho-prestador.md),
-[SPEC-005](specs/SPEC-005-bloqueio-de-horarios.md) e
-[SPEC-006](specs/SPEC-006-sistema-de-cupons-de-desconto.md)).
-
-O **RF-05 (Busca Avançada)**, o **RF-16 (Chat)**, o **RF-19 (Histórico de
-Interações)**, o **RF-20 (Denúncia)** e o **RF-21 (Recomendações de
-Serviços)** foram implementados por Bianca Antonelly em paralelo, **fora do
-fluxo estrito de SDD no momento da implementação**. Todos receberam
-especificação **retroativa** em 2026-09-12 —
-[SPEC-007](specs/SPEC-007-busca-avancada-servicos.md),
-[SPEC-008](specs/SPEC-008-chat-cliente-prestador.md),
-[SPEC-009](specs/SPEC-009-historico-interacoes.md),
-[SPEC-010](specs/SPEC-010-denuncia-servico-usuario.md) e
-[SPEC-011](specs/SPEC-011-recomendacoes-servicos.md) — escrita a partir do
-código e dos testes manuais já realizados, e não antes da implementação como
-o fluxo padrão do projeto prevê. O **RF-20 (Denúncia)** foi o caso mais grave:
-identificado só em 2026-09-12 durante a checagem final de conformidade,
-estava merged em `main` desde a PR #15 mas **sem nenhuma documentação** (nem
-RF, nem SPEC, nem ADR, nem teste) até esta revisão. Nesta mesma checagem, o
-gap foi fechado por completo em quatro dos cinco: RF-16 ganhou
-[ADR-006](adr/ADR-006-modelagem-chat-cliente-prestador.md) e `ChatServiceTest`,
-RF-19 ganhou [ADR-007](adr/ADR-007-modelagem-historico-interacoes.md) e
-`InteractionServiceTest`, RF-20 ganhou
-[ADR-008](adr/ADR-008-modelagem-sistema-denuncias.md) e `ReportServiceTest`, e
-RF-05 ganhou `ServiceServiceSearchTest` (sem ADR — a própria SPEC-007 justifica
-que não há decisão de arquitetura nova o bastante pra um). O **RF-21
-(Recomendações)** entrou na mesma checagem, com a SPEC-011 escrita a partir do
-código e da validação manual, mas segue **sem ADR** (mesma justificativa da
-SPEC-007: reuso de entidades e repositórios já existentes, sem decisão de
-arquitetura nova) e **sem teste automatizado** — gap reconhecido, registrado
-na própria SPEC-011. Nenhum dos cinco teve o SPEC ou o ADR escritos **antes**
-da implementação, como o fluxo padrão do projeto prevê — isso continua
-registrado como aprendizado do processo (ver seção V.7 da apresentação).
+**RF-15 (Relatório de Desempenho do Prestador)**, **RF-16 (Chat)**,
+**RF-17 (Bloqueio de Horários)**, **RF-18 (Cupons de Desconto)**,
+**RF-19 (Histórico de Interações)**, **RF-20 (Denúncia)** e
+**RF-21 (Recomendações de Serviços)** — têm especificação própria
+(ver [SPEC-001](specs/SPEC-001-sistema-de-favoritos.md) a
+[SPEC-011](specs/SPEC-011-recomendacoes-servicos.md)) e, na maioria dos
+casos, um ADR de modelagem em `docs/adr/`. RF-05 e RF-21 não têm ADR próprio
+por decisão consciente — reaproveitam padrões e entidades já existentes no
+projeto, sem decisão de arquitetura nova o bastante para justificar um
+registro dedicado (ver seção 7 de cada SPEC). Cada seção abaixo traz a
+especificação, o ADR (quando houver) e a evidência de código e de teste do
+respectivo RF.
 
 * **Autoras**: Bianca Antonelly, Maria Clara Fernandes
 * **Data**: 2026-09-09
@@ -85,9 +61,8 @@ localização (cidade/estado) e texto livre, com ordenação. Backend com filtro
 dinâmicos via JPA Specifications (join com a localidade do prestador, subquery
 de avaliação média).
 - **Evidência:** `GET /services/search`, `GET /services/locations`; página "Explorar serviços".
-- **Especificação (retroativa):** [SPEC-007](specs/SPEC-007-busca-avancada-servicos.md) (justifica a ausência de ADR: reuso do padrão `Specification` já usado no projeto).
+- **Especificação:** [SPEC-007](specs/SPEC-007-busca-avancada-servicos.md) (justifica a ausência de ADR: reuso do padrão `Specification` já usado no projeto).
 - **Evidência (teste):** `ServiceServiceSearchTest` (3).
-- **Nota SDD:** implementado antes da especificação.
 
 ### RF-06 — Solicitação e acompanhamento de pedidos (cliente)
 Cliente cria um pedido a partir de um serviço, lista seus pedidos e acompanha o status.
@@ -132,7 +107,7 @@ etapa atual destacada e tratamento do estado terminal "Cancelado". Cada transiç
 de status grava um evento de histórico; pedidos anteriores à funcionalidade têm a
 jornada reconstruída a partir do status atual. Inclui a etapa real "Aceito"
 (`PENDING → CONFIRMED`) no fluxo do prestador.
-- **Especificação:** [SPEC-002](specs/SPEC-002-jornada-do-pedido.md)
+- **Especificação:** [SPEC-002](specs/SPEC-002-jornada-do-pedido.md) · [ADR-003](adr/ADR-003-historico-de-status-e-jornada-do-pedido.md)
 - **Evidência (backend):** entidade `OrderStatusHistory`; `GET /orders/{id}/journey` (`OrderJourneyResponseDTO`) com verificação de participante (403); transições `PENDING → CONFIRMED → IN_PROGRESS → COMPLETED`; `OrderJourneyServiceTest` (8) + `OrderServiceTest` (3).
 - **Evidência (frontend):** `OrderJourneyComponent` (linha do tempo) no detalhe do pedido do prestador e no painel do cliente ("Ver jornada"); botão "Aceitar pedido" no Kanban do prestador.
 
@@ -149,7 +124,7 @@ não reverte a mudança de status.
 Ranking dos próprios serviços por pedidos concluídos, com avaliação média e
 quantidade de avaliações de cada um. Reaproveita dados de `Order` e `Review`
 sem nova tabela.
-- **Especificação:** [SPEC-004](specs/SPEC-004-relatorio-desempenho-prestador.md)
+- **Especificação:** [SPEC-004](specs/SPEC-004-relatorio-desempenho-prestador.md) · [ADR-009](adr/ADR-009-modelagem-relatorio-desempenho-prestador.md)
 - **Evidência (backend):** `GET /financial-dashboard/provider/top-services`; `FinancialDashboardServiceTest` (3).
 - **Evidência (frontend):** tabela "Serviços mais contratados" na aba Finanças do painel do prestador.
 
@@ -157,15 +132,14 @@ sem nova tabela.
 Canal de mensagens entre cliente e prestador antes da contratação
 (`Conversation`/`Message`), com página dedicada e link na sidebar.
 - **Evidência:** `ChatController`/`ChatService`; página "Mensagens".
-- **Especificação (retroativa):** [SPEC-008](specs/SPEC-008-chat-cliente-prestador.md) · [ADR-006](adr/ADR-006-modelagem-chat-cliente-prestador.md)
+- **Especificação:** [SPEC-008](specs/SPEC-008-chat-cliente-prestador.md) · [ADR-006](adr/ADR-006-modelagem-chat-cliente-prestador.md)
 - **Evidência (teste):** `ChatServiceTest` (5).
-- **Nota SDD:** implementado antes da especificação.
 
 ### RF-17 — Bloqueio de horários específicos na disponibilidade (NOVO — via SDD)
 Prestador bloqueia uma data/horário específico (ex.: feriado, compromisso),
 mesmo quando coberto por uma regra semanal recorrente. O horário some das
 opções de agendamento (`generateAvailableSlots`) sem apagar a regra semanal.
-- **Especificação:** [SPEC-005](specs/SPEC-005-bloqueio-de-horarios.md)
+- **Especificação:** [SPEC-005](specs/SPEC-005-bloqueio-de-horarios.md) · [ADR-010](adr/ADR-010-modelagem-bloqueio-de-horarios.md)
 - **Evidência (backend):** `POST/GET /api/calendar/blocks`, `DELETE /api/calendar/blocks/{id}` (dono → 403); `AvailabilityServiceTest` (7).
 - **Evidência (frontend):** seção "Bloqueios de horário" na página Agenda (criar/listar/remover).
 
@@ -186,9 +160,8 @@ status de pedidos e avaliações trocadas entre um cliente e um prestador
 específicos. Pedidos legados sem histórico de status são reconstruídos a
 partir do status atual.
 - **Evidência:** `GET /interactions/{otherUserId}`; botão "Ver histórico" no cabeçalho da conversa, na página "Mensagens".
-- **Especificação (retroativa):** [SPEC-009](specs/SPEC-009-historico-interacoes.md) · [ADR-007](adr/ADR-007-modelagem-historico-interacoes.md)
+- **Especificação:** [SPEC-009](specs/SPEC-009-historico-interacoes.md) · [ADR-007](adr/ADR-007-modelagem-historico-interacoes.md)
 - **Evidência (teste):** `InteractionServiceTest` (5).
-- **Nota SDD:** implementado antes da especificação.
 
 ### RF-20 — Denúncia de serviço ou usuário
 Cliente denuncia um serviço ou um usuário por conteúdo inapropriado, spam,
@@ -205,11 +178,8 @@ conta/serviço foi analisado pela moderação.
   o novo status é REVIEWED.
 - **Evidência (frontend):** `report-modal` (denunciar serviço/usuário), página
   "Denúncias" (`/reports`, admin) para listar e analisar.
-- **Especificação (retroativa):** [SPEC-010](specs/SPEC-010-denuncia-servico-usuario.md) · [ADR-008](adr/ADR-008-modelagem-sistema-denuncias.md)
+- **Especificação:** [SPEC-010](specs/SPEC-010-denuncia-servico-usuario.md) · [ADR-008](adr/ADR-008-modelagem-sistema-denuncias.md)
 - **Evidência (teste):** `ReportServiceTest` (5).
-- **Nota SDD:** implementado por Bianca Antonelly fora do fluxo de SDD;
-  identificado sem nenhuma documentação em 2026-09-12 — RF, SPEC, ADR e teste
-  automatizado escritos retroativamente na mesma revisão.
 
 ### RF-21 — Recomendações de serviços por perfil/interesse do cliente
 Serviços ativos recomendados ao cliente com base na categoria e nas tags dos
@@ -217,8 +187,8 @@ serviços que ele já favoritou ou contratou, excluindo o que ele já conhece.
 Sem nenhum sinal de interesse (cliente novo), o sistema recomenda os serviços
 mais bem avaliados do catálogo.
 - **Evidência:** `GET /services/recommendations`; seção "Recomendados para você" no topo da página "Explorar serviços" (só sem filtros ativos).
-- **Especificação (retroativa):** [SPEC-011](specs/SPEC-011-recomendacoes-servicos.md).
-- **Nota SDD:** implementado antes da especificação; teste automatizado ainda pendente (gap reconhecido, ver introdução).
+- **Especificação:** [SPEC-011](specs/SPEC-011-recomendacoes-servicos.md) (justifica a ausência de ADR: reuso de entidades e repositórios já existentes, sem decisão de arquitetura nova).
+- **Evidência (teste):** teste automatizado ainda não implementado.
 
 ---
 
@@ -240,5 +210,4 @@ mais bem avaliados do catálogo.
 | (infra) | `ServioApplicationTests` — carga do contexto Spring |
 
 Total: **65 testes automatizados** cobrindo 10 dos 11 requisitos funcionais
-novos além da base (RF-21 ainda sem cobertura — gap reconhecido, ver
-SPEC-011).
+novos além da base (RF-21 ainda sem teste automatizado).

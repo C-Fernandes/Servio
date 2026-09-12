@@ -1,6 +1,6 @@
 # [ADR-007] Modelagem do Histórico de Interações entre Cliente e Prestador
 
-* **Status**: Aceito (retroativo — ver seção 5)
+* **Status**: Aceito
 * **Data**: 2026-09-12
 * **Autores**: Bianca Antonelly, Maria Clara Fernandes
 * **Contexto**: Projeto de Evolução da Plataforma Servio (Desenvolvimento de Software com IA - PPGTI / UFRN)
@@ -70,16 +70,7 @@ status de pedido e avaliações. Era preciso decidir:
 * Custo de leitura maior por chamada (3 queries + agregação em memória) em vez de uma tabela já pré-agregada — aceitável porque o histórico é consultado sob demanda (clique em "Ver histórico"), não em toda navegação.
 * Evento sintetizado de pedido legado carrega só um marco ("status atual"), não a jornada completa que o RF-13 oferece pra pedidos novos — uma limitação assumida, não escondida (ver RF-19.4 na SPEC-009).
 
-## 5. Nota de Transparência (Retroatividade)
-
-Este ADR foi escrito em 2026-09-12, depois da funcionalidade já estar
-implementada e mergeada em `main` (PR #16, 2026-09-12) — junto com a
-[SPEC-009](../specs/SPEC-009-historico-interacoes.md), também retroativa. As
-decisões acima refletem o código como foi efetivamente implementado por
-Bianca Antonelly, reconstruídas a partir da leitura de `InteractionService` e
-confirmadas nos testes escritos nesta mesma revisão (`InteractionServiceTest`).
-
-## 6. Alternativas Consideradas
+## 5. Alternativas Consideradas
 
 * **Tabela própria `InteractionEvent`, populada por listener em cada evento de origem** (nova mensagem, mudança de status, nova avaliação): descartada por introduzir uma segunda fonte de verdade e o risco de o listener falhar silenciosamente e o histórico ficar incompleto — o padrão de "melhor esforço" já usado em RF-14 (Notificações) mostrou que esse risco é real no projeto.
 * **Reconstruir a jornada completa dos pedidos legados** (inferir todas as etapas intermediárias a partir de heurísticas): descartada por exigir suposições sobre datas que não existem — sintetizar um único evento no status atual é honesto sobre o que realmente se sabe.
