@@ -1,0 +1,39 @@
+@if (target) {
+<div class="modal-backdrop" (click)="onClose()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <div>
+                <h2>Histórico de interações</h2>
+                <p>com {{ target.userName }}</p>
+            </div>
+
+            <button type="button" class="close-btn" (click)="onClose()">
+                <span class="mat-icon">close</span>
+            </button>
+        </div>
+
+        <div class="timeline">
+            @if (loading) {
+            <p class="status-text">Carregando histórico...</p>
+            } @else if (events.length === 0) {
+            <div class="empty-state">
+                <span class="mat-icon">history</span>
+                <p>Nenhuma interação registrada com {{ target.userName }} ainda.</p>
+            </div>
+            } @else {
+            @for (event of events; track event.type + event.referenceId + event.timestamp) {
+            <div class="timeline-item">
+                <span class="timeline-icon" [class]="event.type.toLowerCase()">
+                    <span class="mat-icon">{{ iconFor(event.type) }}</span>
+                </span>
+                <div class="timeline-body">
+                    <p class="timeline-description">{{ event.description }}</p>
+                    <span class="timeline-time">{{ event.timestamp | date: 'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+            </div>
+            }
+            }
+        </div>
+    </div>
+</div>
+}

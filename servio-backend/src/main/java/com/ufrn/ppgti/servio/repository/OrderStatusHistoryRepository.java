@@ -11,4 +11,7 @@ import com.ufrn.ppgti.servio.model.OrderStatusHistory;
 public interface OrderStatusHistoryRepository extends JpaRepository<OrderStatusHistory, Long> {
 
     List<OrderStatusHistory> findByOrderIdOrderByChangedAtAsc(Long orderId);
+
+    List<OrderStatusHistory> findByOrder_Client_IdAndOrder_Provider_IdOrderByChangedAtAsc(Long clientId,
+            Long providerId);
 }

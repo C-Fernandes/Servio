@@ -76,6 +76,16 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Optional<Review> findByIdWithRelations(@Param("reviewId") Long reviewId);
 
     @Query("""
+                SELECT r
+                FROM Review r
+                JOIN FETCH r.order o
+                JOIN FETCH o.service s
+                WHERE o.client.id = :clientId AND s.provider.id = :providerId
+                ORDER BY r.createdAt ASC
+            """)
+    List<Review> findByClientIdAndProviderId(@Param("clientId") Long clientId, @Param("providerId") Long providerId);
+
+    @Query("""
                 SELECT COALESCE(AVG(r.rating), 0)
                 FROM Review r
                 WHERE r.order.service.id = :serviceId

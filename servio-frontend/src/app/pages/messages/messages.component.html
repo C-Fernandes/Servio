@@ -57,6 +57,10 @@
                 <p class="name">{{ selectedConversation.otherUserName }}</p>
                 <p class="service-title">Sobre: {{ selectedConversation.serviceTitle }}</p>
             </div>
+            <button type="button" class="history-btn" (click)="openHistoryModal()">
+                <span class="mat-icon">history</span>
+                Ver histórico
+            </button>
             <button type="button" class="report-user-btn" (click)="openReportModal()">
                 <span class="mat-icon">flag</span>
                 Denunciar
@@ -100,3 +104,8 @@
     (close)="closeReportModal()"
     (submitReport)="submitReport($event)">
 </app-report-modal>
+
+<app-interaction-history-modal
+    [target]="historyTarget"
+    (close)="closeHistoryModal()">
+</app-interaction-history-modal>
